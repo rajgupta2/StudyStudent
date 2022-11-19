@@ -1,0 +1,61 @@
+<style>
+    #welcome{
+        background:linear-gradient(168deg,blue,pink);
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("[type*='submit']").click(function () {
+            var StudentId = $("#StudentId").val().trim();
+            var Password = $("#Password").val().trim();
+            var status = true;
+            $(".err").remove();
+            if (StudentId.length < 2) {
+                status= false;
+                $("#StudentId").after("<span class='err'>Please enter valid StudentId(EMail).</span>");
+            }
+            if (Password.length < 3) {
+                status=false;
+                $("#Password").after("<span class='err'>Please Enter valid Password.</span>");
+            }
+            $(".err").addClass("text-warning");
+            return status;
+        });
+        $("#forgot").click(function () {
+            alert("There is no option to recover password.Please, create a new account.");
+        });
+    });
+</script>
+<div class="container my-5 pt-5">
+    <h1 class="text-success text-center">Login Page </h1>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+    <div class="row mt-5 py-5 " id="welcome">
+
+        <div class="col-sm-6">
+            <center>
+                <h1>Welcome back</h1>
+                <h4>Explore new things!</h4>
+            </center>
+
+        </div>
+        <div class="col-sm-5">
+            <form action="/Home/Login" method="post">
+                <input class="form-control mt-4" id="StudentId" name="StudentId" placeholder="Email" type="text" value="" />
+                <input class="form-control mt-4" id="Password" name="Password" placeholder="Password" type="password" />
+                <input type="submit" value="Login" class="btn btn-success btn-block my-4">
+            </form>
+            <div class="row text-right">
+                <div class="col-sm-12">
+                    <a class="text-dark text-decoration-none" href="/Home/Login?Length=4" id="forgot">Forgot Passoword</a>
+                </div>
+            </div>
+            <h6 class="text-dark d-inline">
+                Have no Account?
+            </h6>
+            <a class="text-decoration-none text-dark" href="/Home/Registration?Length=4">Sign up</a>
+        </div>
+
+    </div>
+</div>
+
+

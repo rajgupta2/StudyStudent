@@ -1,0 +1,73 @@
+<script>
+    $(document).ready(function () {
+        $("input,textarea").addClass("form-control mt-4");
+        $("#submit").click(function () {
+            var result = true;
+            var Name = $("#Name").val().trim();
+            var Email = $("#Email").val().trim();
+            var Contact = $("#Contact").val().trim();
+            var Query1 = $("#Query1").val().trim();
+            $(".err").remove();
+            //validation for name
+            if (Name.length == 0) {
+                result = false;
+                $("#Name").after("<span class='err'>Enter your name..</span>");
+            } else if (Name.length < 2) {
+                result = false;
+                $("#Name").after("<span class='err'>Enter a valid name..</span>");
+            }
+            //validation for Email
+            if (Email.length == 0) {
+                result = false;
+                $("#Email").after("<span class='err'>Enter a valid Email</span>");
+            }
+            //validation for phone number
+            if (Contact.length != 10) {
+                $("#Contact").after("<span class='err'>Enter valid mobile number.</span>");
+                result = false;
+            }
+            //validation for Query
+            if (Query1.length ==0) {
+                result = false;
+                $("#Query1").after("<span class='err'>Enter Query</span>");
+            } else if (Query1.length< 10) {
+                result = false;
+                $("#Query1").after("<span class='err'>Describe Query Briefly</span>");
+            } 
+            $(".err").addClass("text-danger");
+            return result;
+        });
+    });
+</script>
+<div class="container mt-lg-5 mb-5">
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+    <div class="row  py-5">
+        <div class="col-sm-5 mt-4 mr-5">
+            <h2>Query</h2>
+            <form action="/Home/Contact" method="post">
+                <input id="Name" name="Name" placeholder="Name" type="text" value="" />
+                <input id="Email" name="Email" placeholder="Email" type="email" value="" />
+                <input id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
+                <textarea cols="20" id="Query1" name="Query1" placeholder="Type your query here.." rows="2" style="resize:none">
+</textarea>
+                <input type="submit" id="submit" value="Save" class="btn btn-success" />
+            </form>
+        </div>
+        <div class="col-sm-5">
+            <!-- Content -->
+            <h2>
+                <a href="/Home">StudyStudent Pvt. Ltd.</a>
+            </h2>
+            <p class="pl-2">
+                We are located at  Gandhi Nagar,Chitrakoot,UP,
+                India&emsp;Post Office:Karwi
+            </p>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.6506873457674!2d80.92771131493399!3d25.214999983887903!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3984af6da7a30a83%3A0x4e0b04136c965312!2sPunjab%20National%20Bank!5e0!3m2!1sen!2sin!4v1664677135747!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <i class="bi bi-house"></i> Karwi,Chitrakoot,UP
+            <a href="mailto:rajgupta.ckt22@gmail.com "><i class="bi bi-envelope ml-2"></i> gupta@example.com</a><br />
+            <a href="tel:0123456780"><i class="bi bi-phone"></i>&ensp;+91 0123456780</a><br />
+        </div>
+    </div>
+</div>
+       
+

@@ -1,0 +1,577 @@
+
+<script>
+    $(document).ready(function () {
+        var used_url = window.location.href;
+        $("#CTutorial,#C2Tutorial,#C3Tutorial,#JSTutorial, #jQuery, #Bootstrap, #HTML,#CSS, #ASP").hide();
+        var shown = "#" + used_url.split("?").pop();
+        $(shown).show();
+    });
+</script>
+<style>
+    p,h2,h4,li{
+       text-align:justify;
+    }
+</style>
+<!--CTutorial-->
+<div class="container my-5" id="CTutorial">
+    <h2 class="text-success">Welcome to the StudyStudent C Tutorial</h2>
+    <p>We will discuss about:</p>
+    <ul>
+        <li>What is C?</li>
+        <li>Why is C imporatnt?</li>
+        <li>Some Basic Concept of Programming</li>
+        <li>Keywords,Identifiers,Constant</li>
+        <li>Operators and its types</li>
+        <li>Data Types in C</li>
+        <li>Formatting Specifier and Escape Sequences</li>
+        <li>Input/Output function in C</li>
+        <li>Control Statements and Loops</li>
+        <li>Arrays</li>
+        <li>String</li>
+        <li>Pointer</li>
+        <li>Function and its types</li>
+        <li>Structure</li>
+        <li>File Handling</li>
+    </ul>
+    <h4>What is C language?</h4>
+    <p>C language is structured(procedural) programming language, developed by Dennis Ritchie at Bell Labs in 1972 BC.</p>
+    <h4>Why is C imporatnt?</h4>
+    <ul>
+        <li>C is a mother language of today's modern languange that is why everyone recommended to learn C firstly while starting to learn coding.</li>
+        <li>It is high speed programming in execution.</li>
+        <li>It is prortable language means it is not forced by any operating system.</li>
+        <li>It is Wide Acceptable.</li>
+        <li>Used for writing OS as well as application software.</li>
+    </ul>
+    <h4>Compiler</h4>
+    <p>
+        It is a translator which is used to translate the whole programming code to machine level (binary)language at a single time.<br />
+        Ex-Turbo C, Dev C++ etc.
+    </p>
+    <h4>Interpreter</h4>
+    <p>
+        It is a translator which is used to translate the single line of programming code to machine level (binary)language at a single time.<br />
+        Ex of  interpreted language-Perl,Python etc.
+    </p>
+    <h4>Keywords</h4>
+    <p>
+        These are the reserved words in C which is not used as user defined word.These are used to write the statement(instruction).There are 32 keywords in C language.<br>
+        Ex- int,char,float,if,else etc.
+    </p>
+    <h4>Identifier</h4>
+    <p>These are the user defined words to give the name to variables,function etc.</p>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!--C++Tutorial-->
+<div class="container my-5" id="C2Tutorial">
+    <h2 class="text-success">Welcome to the StudyStudent C++ Tutorial</h2>
+    <p>We will discuss about:</p>
+    <div class="row">
+        <div class="col-sm-6">
+            <ul>
+                <li>What is C++?</li>
+                <li>Why to use C++?</li>
+                <li>Some Basic Concept of Programming</li>
+                <li>Keywords,Identifiers,Constant</li>
+                <li>Operators and its types</li>
+                <li>Data Types in C++</li>
+                <li>Input/Output function in C</li>
+                <li>Control Statements and Loops</li>
+                <li>Arrays</li>
+                <li>String</li>
+                <li>Pointer</li>
+                <li>Function and its types</li>
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <ul>
+                <li>Structure</li>
+                <li>File Handling</li>
+                <li>Collection in C++</li>
+                <li>OOPs</li>
+                <li>Pillars of OOPs</li>
+                <li>Class</li>
+                <li>Object</li>
+                <li>Data Abstarction</li>
+                <li>Data Encapsulation</li>
+                <li>Inheritance</li>
+                <li>Polymorphism</li>
+                <li>Message Passing</li>
+            </ul>
+        </div>
+    </div>
+
+    <h4>What is C++ language?</h4>
+    <p>C++ language is object oriented programming language, developed by Bjarne Stroustrup at AT & T bell Laboratory in 1979.</p>
+    <h4>Why to use C++?</h4>
+    <ul>
+        <li>Provided Security by the concept of data abstraction.</li>
+        <li>It is high speed programming in execution.</li>
+        <li>It is prortable language means it is not forced by any operating system.</li>
+        <li>It is Wide Acceptable.</li>
+        <li>Used for writing OS as well as application software.</li>
+    </ul>
+    <h4>Compiler</h4>
+    <p>
+        It is a translator which is used to translate the whole programming code to machine level (binary)language at a single time.<br />
+        Ex-Turbo C++, Dev C++ etc.
+    </p>
+    <h4>Interpreter</h4>
+    <p>
+        It is a translator which is used to translate the single line of programming code to machine level (binary)language at a single time.<br />
+        Ex of  interpreted language-Perl,Python etc.
+    </p>
+    <h4>Keywords</h4>
+    <p>
+        These are the reserved words in C++ which is not used as user defined word.These are used to write the statement(instruction)..<br>
+        Ex- int,char,float,if,else etc.
+    </p>
+    <h4>Identifier</h4>
+    <p>These are the user defined words to give the name to variables,function etc.</p>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!--C#Tutorial-->
+<div class="container my-5" id="C3Tutorial">
+    <h2 class="text-success">Welcome to the StudyStudent C# Tutorial</h2>
+    <p>We will discuss about:</p>
+    <div class="row">
+        <div class="col-sm-6">
+            <ul>
+                <li>History of C#</li>
+                <li>Keywords,Identifiers,Constant</li>
+                <li>Operators and its types</li>
+                <li>Input/Output function in C</li>
+                <li>Control Statements and Loops</li>
+                <li>Arrays</li>
+                <li>String</li>
+                <li>Function and its types</li>
+                <li>File Handling</li>
+            </ul>
+        </div>
+        <div class="col-sm-6">
+            <ul>
+                <li>Collection in C#</li>
+                <li>OOPs</li>
+                <li>Pillars of OOPs</li>
+                <li>Class</li>
+                <li>Object</li>
+                <li>Data Abstarction</li>
+                <li>Data Encapsulation</li>
+                <li>Inheritance</li>
+                <li>Polymorphism</li>
+                <li>Message Passing</li>
+            </ul>
+        </div>
+    </div>
+
+    <h4>History of C#</h4>
+    <ul>
+        <li>Developed by Microsoft in 2000.</li>
+        <li>It is high speed programming in execution.</li>
+        <li>Based on Java and C++.</li>
+        <li>It is prortable language means it is not forced by any operating system.</li>
+        <li>It is Wide Acceptable.</li>
+        <li>Used for writing OS as well as application software.</li>
+        <li>Cross-developement with visual basic ,visual c++ and many more .net languages.</li>
+    </ul>
+    <h4>Why to use C#</h4>
+    <ul>
+        <li>Pure object oriented language.</li>
+        <li>Power of C with ease of Microsoft Visual Basic.</li>
+        <li>Much cleaner than c++</li>
+        <li>Easy to learn.</li>
+        <li>Provides more support for web developement</li>
+        <li>More powerful like java</li>
+    </ul>
+    <h4>Keywords</h4>
+    <p>
+        These are the reserved words in C# which is not used as user defined word.These are used to write the statement(instruction).<br>
+        Ex- int,char,float,if,else,return etc.
+    </p>
+    <h4>Identifier</h4>
+    <p>These are the user defined words to give the name to variables,function etc.</p>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!--JSTutorial-->
+<div class="container my-5" id="JSTutorial">
+    <h2 class="text-success">Welcome to the StudyStudent JS Tutorial</h2>
+    <p>We will discuss about:</p>
+    <ul>
+        <li>Introduction of JS</li>
+        <li>Some Basic Methods of JS</li>
+        <li>Keywords,Identifiers,Constant</li>
+        <li>Ways to add JS in Webpage</li>
+        <li>JS Overview</li>
+        <li>Popup message</li>
+        <li>Operators</li>
+        <li>Control Statements and Loops</li>
+        <li>Arrays</li>
+        <li>String</li>
+        <li>Dates</li>
+        <li>JS Errors</li>
+        <li>HTML DOM to access by JS</li>
+        <li>Function in JS</li>
+    </ul>
+    <h4>Introduction of JS</h4>
+    <ul>
+        <li>JavaScript is the programming language of HTML.</li>
+        <li>JavaScript is a client side scripting language.</li>
+        <li>JavaScript is a high level, untyped language.</li>
+        <li>JavaScript is interpreted programming language.</li>
+        <li>JavaScript runs in client’s browser.</li>
+        <li>JavaScript has been standardized in the ECMAScript language specification.</li>
+        <li>JavaScript is ‘object based’ language.</li>
+        <li>Created in May 1995.</li>
+        <li>JavaScript is created by Netscape Corporation.</li>
+        <li>Inventor of JavaScrip-Brendan Eich</li>
+    </ul>
+    <h4>Features Of JS</h4>
+    <ul>
+        <li>JS provides Client side validation.</li>
+        <li>JS can detect the client’s browser and OS.</li>
+        <li>JS is simple.</li>
+        <li>DOM Traversing.</li>
+        <li>DOM Manipulation.</li>
+        <li>Event Handling.</li>
+        <li>Fast Execution.</li>
+        <li>Cross Browser Support.</li>
+    </ul>
+    <h4>Prerequisites for JavaScript</h4>
+    <ul>
+        <li>HTML</li>
+        <li> CSS</li>
+    </ul>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!-- jQueryTutorial-->
+<div class="container my-5" id="jQuery">
+    <h2 class="text-success">Welcome to the StudyStudent jQuery Tutorial</h2>
+    <h4>Introduction of jQuery</h4>
+    <ul>
+        <li> JQuery is a JavaScript library.</li>
+        <li> JQuery is developed completely based on JavaScript.</li>
+        <li>JQuery is an Open Source JavaScript library.</li>
+        <li>
+            JQuery is not replacement of JavaScript. It simplifies the
+            JavaScript tasks.
+        </li>
+        <li>
+            JQuery is a cross-platform JavaScript library designed to simplify
+            the client-side scripting of HTML.
+        </li>
+        <li>
+            JQuery is used to overcome the load on server. Many tasks can
+            be performed in client side by using JQuery.
+        </li>
+        <li> It’s punch line is “Write less do more…”</li>
+        <li> Created in 2006.</li>
+        <li>Inventor of JQuery- John Resig </li>
+    </ul>
+    <h4>Features Of JQuery</h4>
+    <ul>
+        <li> Simple</li>
+        <li>DOM Traversing</li>
+        <li>DOM Manipulation</li>
+        <li>Event Handling</li>
+        <li>Styles Modifications</li>
+        <li> Effects and Animations</li>
+        <li>AJAX Support</li>
+        <li>JQuery - UI</li>
+        <li>CSS3 Compliant</li>
+        <li>Light Weight Library</li>
+        <li> Cross Browser Support</li>
+        <li>Interpreted</li>
+    </ul>
+    <h4>Prerequisites for JQuery</h4>
+    <ul>
+        <li>HTML</li>
+        <li> CSS</li>
+        <li>JavaScript</li>
+    </ul>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!-- Bootstrap tutorial-->
+<div class="container my-5" id="Bootstrap">
+    <h2 class="text-success">Welcome to the StudyStudent BootStrap Tutorial</h2>
+    <h4>Introduction of BootStrap</h4>
+    <ul>
+        <li>Bootstrap is a free front-end framework for faster and easier web development.</li>
+        <li>
+            Bootstrap includes HTML and CSS based design templates for forms, buttons,
+            tables, navigation, modals, image carousels and many other, as well as optional
+            JavaScript plugins.
+        </li>
+        <li>
+            Bootstrap also gives you the ability to easily create responsive designs.
+            Responsive Web Design - It is about creating web sites which automatically
+            adjust themselves to look good on all devices, from small phones to large
+            desktopsJQuery is a JavaScript library.
+        </li>
+    </ul>
+    <h4>History Of BootStrap</h4>
+    <ul>
+        <li>
+            Bootstrap was developed by Mark Otto and Jacob Thornton at
+            Twitter, and released as an open source product in August 2011
+            on GitHub.
+        </li>
+        <li>In June 2014 Bootstrap was the No.1 project on GitHub!</li>
+    </ul>
+    <h4> Why Use Bootstrap</h4>
+    <ul>
+        <li>
+            Easy to use: Anybody with just basic knowledge of HTML and CSS can start using
+            Bootstrap.
+        </li>
+        <li>
+            Responsive features: Bootstrap's responsive CSS adjusts to phones, tablets, and
+            desktops.
+        </li>
+        <li>
+            Mobile-first approach: In Bootstrap 3, mobile-first styles are part of the core
+            framework.
+        </li>
+        <li>
+            Browser compatibility: Bootstrap is compatible with all modern browsers (Chrome,
+            Firefox, Internet Explorer, Edge, Safari, and Opera.
+        </li>
+    </ul>
+    <h4>Where to Get Bootstrap?</h4>
+    <p> There are two ways to start using Bootstrap on your own web site.</p>
+    ⋆ Download Bootstrap from getbootstrap.com<br />
+    ⋆ Include Bootstrap from a CDN
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!-- HTML Tutorial-->
+<div class="container my-5" id="HTML">
+    <h2 class="text-success">Welcome to the StudyStudent HTML Tutorial</h2>
+    <h4>Introduction of HTML</h4>
+    <p>
+        HTML stands for<b> Hyper Text Markup Language</b> which is used
+        for creating web page.
+    </p>
+    <p>
+        <b>Hyper Text -</b> Hyper Text simply means a text has a link
+        within it, is a hypertext. Whenever you click on a link
+        which brings you to a new webpage.
+    </p>
+    <p>
+        <b>Markup language -</b> A markup language is a computer
+        language that is used to apply layout and formatting
+        conventions to a text document.
+    </p>
+    <ul>
+        <li>
+            HTML is used to create webpages.
+        </li>
+        <li>
+            HTML standards are developed under the authority of the
+            World Wide Web Consortium (W3C), headed by Tim Berners
+            Lee.
+        </li>
+        <li>
+            HTML documents are simple text documents with .html or
+            .htm extensions.
+        </li>
+        <li>
+            HTML uses many tags to make a webpage. So it is a tag based
+            language.
+        </li>
+        <li>The tags of HTML are surrounded by < > (Angular Brackets). </li>
+        <li>
+            It have wide ranges of colors, objects and layouts.JQuery is a JavaScript library.
+        </li>
+    </ul>
+    <h4>History Of HTML</h4>
+    <ul>
+        <li>
+            HTML was created by Tim Berners Lee in late 1991.
+        </li>
+        <li>
+            HTML 2.0" was the first standard HTML
+            specification which was published in 1995.
+        </li>
+        <li>
+            HTML 4.01 was a major version of HTML and it was
+            published in late 1999.
+        </li>
+        <li>
+            Currently we are having HTML-5 version which is an
+            extension to HTML 4.01, and this version was
+            published in 2012.
+        </li>
+    </ul>
+    <h4>Features of HTML</h4>
+    <ol>
+        <li> First advantage it is widely used.</li>
+        <li> Every browser supports HTML language.</li>
+        <li> Easy to learn and use.</li>
+        <li>HTML and XML syntax is very similar.</li>
+        <li> HTML is not case sensitive.</li>
+        <li> HTML is free.</li>
+        <li>
+            It is by default in every Browser so you
+            don't need to purchase extra software.
+        </li>
+    </ol>
+    <h4>Advantages of HTML</h4>
+    <ol>
+        <li> First advantage it is widely used.</li>
+        <li> Every browser supports HTML language.</li>
+        <li>Easy to learn and use.</li>
+        <li> HTML and XML syntax is very similar.</li>
+        <li> HTML is not case sensitive.</li>
+        <li> HTML is free.</li>
+        <li>
+            It is by default in every Browser so you
+            don't need to purchase extra software.
+        </li>
+    </ol>
+    <h4>Disadvantages of HTML</h4>
+    <ol>
+        <li>
+            It can create only static and plain pages so if we need
+            dynamic pages then HTML is not useful.
+        </li>
+        <li>Need to write lot of code for making simple webpage.</li>
+        <li>Security features are not good in HTML.</li>
+        <li>
+            If we need to write long code for making a webpage
+            then it produces some complexity.
+        </li>
+    </ol>
+    <h4>Requirement for HTML</h4>
+    <ol>
+        <li>
+            <b> Text Editor -</b> Notepad, Notepad++ etc.
+        </li>
+        <li>
+            <b>Web Browser - </b>Google Chrome, IE,
+            Opera Mini, Safari, Firefox, TOR etc.
+        </li>
+    </ol>
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!--CSS Tutorial -->
+<div class="container my-5" id="CSS">
+    <h2 class="text-success">Welcome to the StudyStudent CSS Tutorial</h2>
+    <h4>Introduction of CSS</h4>
+    <ul>
+        <li>CSS stands for Cascading Style Sheet.</li>
+        <li>
+            CSS takes care of the presentation and helps you determine how the pages and
+            content that you make with HTML are going to look and display.
+        </li>
+        <li>
+            CSS is a style sheet language used for describing the presentation of a document
+            written in a markup language, commonly HTML.
+        </li>
+        <li>They can be used to define text styles, table sizes, and other aspects of Web pages.</li>
+        <li>
+            CSS is responsible for look and feel of webpages. CSS is also called Beauty parlor of
+            CSS.
+        </li>
+        <li>CSS saves a lot of work, It can control the layout of multiple web pages all at once.</li>
+    </ul>
+    <h4>History Of CSS</h4>
+    <ol>
+        <li>CSS was first proposed by Hakon Wium Lie on October 10,1994 and he is known as father of CSS.The CSS specifications are now maintained by the World Wide Web Consortium(W3C).</li>
+    </ol>
+    <h4>Features of CSS</h4>
+    <ol>
+        <li>
+            Browser Compatibility
+        </li>
+        <li> Appearance</li>
+        <li> Maintainability</li>
+        <li>Saves Time</li>
+        <li>
+            Variety of properties
+            <ol type="a">
+                <li> Color of the text,</li>
+                <li> Style of fonts,</li>
+                <li> Spacing between paragraphs,</li>
+                <li>How columns are sized and laid out,</li>
+                <li>Background images or colors,</li>
+                <li> Layout designs,</li>
+                <li>
+                    Variations in display according to screen sizes
+                </li>
+            </ol>
+        </li>
+    </ol>
+    <h4>Why use CSS</h4>
+    <ol>
+        <li>
+            Solves a big problem (Before CSS, tags like font, color,
+            background style, element alignments, border and size).
+        </li>
+        <li>
+            Saves a lot of time.
+        </li>
+        <li>
+            Provide more attributes.
+        </li>
+        <li>
+            Avoid duplication.
+        </li>
+        <li>
+            Make maintenance easier.
+        </li>
+        <li>
+            Use the same content with different styles for
+            different purposes.
+        </li>
+    </ol>
+
+    <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>
+<!-- ASP .NET Tutorial -->
+<div class="container my-5" id="ASP">
+    <center>
+        <h2 class="text-success">Welcome to the StudyStudent ASP .Net MVC Tutorial</h2>
+    </center>
+    <h4>Introduction of ASP .Net MVC</h4>
+    <ol>
+        <li>It is a web application framework developed by Microsoft.</li>
+        <li>It is a development framework for building webpages and websites.</li>
+        <li>MVC stands for Model View Controller.</li>
+        <li>MVC is open source software design pattern.</li>
+        <li>This framework is a light weight,highly testable framework that is integrated with existing ASP .Net features.</li>
+        <li>First Official version 1.0 of ASP .NET MVC is released in 2009.</li>
+        <li>Its inventor is Scott Guthrie.</li>
+    </ol>
+    <h4>Its Features-</h4>
+    <p>ASP.NET is a free web framework for building websites and web applications on .NET Framework using HTML, CSS, and JavaScript. ASP.NET MVC 5 is a web framework based on Model-View-Controller (MVC) architecture. Developers can build dynamic web applications using ASP.NET MVC framework that enables a clean separation of concerns, fast development, and TDD friendly.</p>
+    <h4>Overview</h4>
+    <p>
+        MVC stands for Model, View, and Controller. MVC separates an application into three components - Model, View, and Controller.
+    </p>
+    <p><b> Model:</b> Model represents the shape of the data. A class in C# is used to describe a model. Model objects store data retrieved from the database.</p>
+    <p>
+        Model represents the data.
+    </p>
+    <p>
+        <b>View:</b> View in MVC is a user interface. View display model data to the user and also enables them to modify them. View in ASP.NET MVC is HTML, CSS, and some special syntax (Razor syntax) that makes it easy to communicate with the model and the controller.
+    </p><p>
+        View is the User Interface.
+    </p>
+    <p>
+        <b>Controller:</b> The controller handles the user request. Typically, the user uses the view and raises an HTTP request, which will be handled by the controller. The controller processes the request and returns the appropriate view as a response.
+    </p>
+    <p>
+        Controller is the request handler.
+    </p>
+    <p>
+        When a user enters a URL in the browser, it goes to the webserver and routed to a controller. A controller executes related view and models for that request and create the response and sends it back to the browser.
+        <div>
+            <b> Points to Remember</b>
+            <ol>
+                <li> MVC stands for Model, View and Controller.</li>
+                <li> Model represents the data</li>
+                <li> View is the User Interface.</li>
+                <li> Controller is the request handler.</li>
+            </ol>
+        </div>
+        <a href="/Home/Registration" class="btn btn-success w-25 float-right mb-5">Next</a>
+</div>

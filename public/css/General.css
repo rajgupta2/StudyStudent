@@ -1,0 +1,22 @@
+a.nav-link {
+    color: #007bff !important;
+}
+
+.dropdown-menu {
+    width: max-content;
+}
+
+a {
+    text-decoration: none !important;
+}
+.dark {
+    background-color: #222;
+    color: #e6e6e6;
+}
+#backtotop {
+    position: fixed;
+    right: 20px;
+    bottom: 35px;
+    border-radius: 50%;
+    z-index: 2;
+}

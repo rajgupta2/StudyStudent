@@ -1,0 +1,86 @@
+
+<script src="/JS/Validation.js"></script>
+<style>
+    form {
+        box-shadow: 4px 4px 12px blue;
+    }
+</style>
+<div class="container my-5">
+    <form action="/Home/Registration" method="post" enctype="multipart/form-data" class=" my-5 py-5 px-5">
+        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="EnrollmentNumber" name="EnrollmentNumber" placeholder="Enrollment Number " type="text" value="" />
+            </div>
+            <div class="col-sm-6">
+                <input id="Name" name="Name" placeholder="Name" type="text" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-control mt-4 ">
+                    <input checked="true" id="Gen" name="Gender" type="radio" value="Male" />Male
+                    <input id="Gender" name="Gender" type="radio" value="Female" />Female
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <input id="College" name="College" placeholder="College Name" type="text" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="Course" name="Course" placeholder="Course" type="text" value="" />
+            </div>
+            <div class="col-sm-6">
+                <input data-val="true" data-val-number="The field Year must be a number." id="Year" name="Year" placeholder="Year" type="number" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="Email" name="Email" placeholder="Email" type="email" value="" />
+            </div>
+            <div class="col-sm-6">
+                <input data-val="true" data-val-number="The field Contact must be a number." id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea cols="20" id="Address" name="Address" placeholder="Address..." rows="2" style="resize:none;">
+</textarea>
+            </div>
+            <div class="col-sm-6 mt-4">
+                <div class="custom-file">
+                    <label class="custom-file-label">Profile Picture</label>
+                    <input type="file" class="custom-file-input" id="ProfilePicture" name="ProfilePicture" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input id="Password" name="Password" placeholder="Password" type="password" value="" />
+            </div>
+            <div class="col-sm-6">
+                <input id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm Password" type="password" value="" />
+            </div>
+        </div><br />
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="g-recaptcha" data-sitekey="6LcwPQoiAAAAABFw0PyCEgc8bjWCR1LmDsIJ8s2n"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                If you registered,you are agreed terms and conditions of StudyStudent .
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <input type="submit" id="submit" class="btn btn-block btn-success" value="Save">
+            </div>
+            <div class="col-sm-6">
+                <input type="reset" value="Reset" class="btn btn-block btn-danger" />
+            </div>
+        </div>
+    </form>
+</div>
+
