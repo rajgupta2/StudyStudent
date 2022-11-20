@@ -16,6 +16,7 @@ app.set("view engine", "ejs");
 //Routes
 //Index
 app.get("/",(req,res)=>{
+    alert("Welcome to our page");
     res.render("./Home/index");
 });
 
