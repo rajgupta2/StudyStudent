@@ -16,11 +16,7 @@ app.set("view engine", "ejs");
 //Routes
 //Index
 app.get("/",(req,res)=>{
-    if(req.url=="/"){
     res.render("./Home/index");
-    }else{
-    res.render("./Home/index");
-   } 
 });
 
 //Registration Page
