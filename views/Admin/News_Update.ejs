@@ -1,0 +1,87 @@
+
+<script>
+    $(document).ready(function () {
+        $("#submit").click(function () {
+            var Notification_Msg = $("#Notification_Msg").val().trim();
+            $('.err').remove();
+            var status = true;
+            if (Notification_Msg.length == 0) {
+                $("#Notification_Msg").after("<span class='err'>Enter your message</span>");
+                status = false;
+            } else if (Notification_Msg.length < 10) {
+                $("#Notification_Msg").after("<span class='err'>Decribe your message briefly.</span>");
+                status = false;
+            }
+            $(".err").addClass("text-danger");
+            return status;
+        });
+        $("#addNotification").click(function () {
+            $("#newUpdate").show();
+            $("#previousNotification").hide();
+        });
+        $("#previ_Notification").click(function () {
+            $("#newUpdate").hide();
+            $("#previousNotification").show();
+        });
+    });
+</script>
+<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <h5 class="nav-link active" id="addNotification" data-toggle="tab">Add Notification </h5>
+    </li>
+    <li class="nav-item" role="presentation">
+        <h5 id="previ_Notification" data-toggle="tab" class="nav-link">Manage Previous Notification</h5>
+    </li>
+</ul>
+<div class="container mt-5 py-5" id="newUpdate">
+    <p id="presponse" class="alert alert-dark text-center h4 " style="display:none;">@ViewBag.msg</p>
+    <div class="row py-5" style="background: linear-gradient(185deg,#ffffff,#726f6f)">
+        <div class="col-sm-5 my-5 pb-5">
+            <h1>Add Some Update</h1>
+
+        </div>
+        <div class="col-sm-6 mt-5">
+            <form action="/Admin/News_Update" method="post">
+                <textarea   id="Notification_Msg" name="Notification_Msg" placeholder = "Type your notification here...." class = "form-control" style = "resize:none;" ></textarea><br />
+                <input type="submit" id="submit" class="btn btn-success btn-block" value="Save" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2" id="previousNotification" style="display:none;">
+    <h2>Manage Previous Notification</h2>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="table-info text-success">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Notification Message</th>
+                        <th>Notification Date</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int x = 1;
+                        if (Model != null)
+                        {
+                            foreach (Tbl_Notification tn in Model)
+                            {
+                            <tr>
+                                <td>@x</td>
+                                <td>@tn.Notification_Msg</td>
+                                <td>@tn.Notification_DT</td>
+                                <td><a href="/Admin/DeleteNotification?pk=@tn.Notification_ID" class="btn btn-warning">Delete</a></td>
+                            </tr>
+                                    x++;
+                                }
+                            }
+                        }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

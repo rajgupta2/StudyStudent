@@ -1,0 +1,16 @@
+
+<div class="container my-5 pt-lg-5 shadow">
+    <h2>Send_Email</h2>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.Message</p>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6 my-5">
+            <form action="/Admin/Send_Email" method="post">
+                <input type="email" placeholder="Send To" name="SendTo" class="form-control" /><br />
+                <input type="text" placeholder="Subject Of Email" name="Subject" class="form-control" /><br />
+                <textarea placeholder="Type your message here..." name="Message" class="form-control" style="resize:none;"></textarea><br />
+                <button class="btn btn-success w-50" type="submit">Send Email</button>
+            </form>
+        </div>
+    </div>
+</div>

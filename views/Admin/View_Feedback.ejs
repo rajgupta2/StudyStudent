@@ -1,0 +1,35 @@
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1 class="text-center text-success">View Feedback</h1>
+            <table class="table table-hover  table-bordered text-center">
+                <thead>
+                    <tr class="text-dark table-primary">
+                        <th>Name</th>
+                        <th>Student-ID</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                  
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (Tbl_Feedback e in Model)
+                        {
+                                        <tr>
+                                            <td>@e.Student_Name</td>
+                                            <td>@e.Student_Id</td>
+                                            <td>@e.Feedback_Subject</td>
+                                            <td>@e.Message</td>
+                                            <td>@e.Feedback_DT</td>
+                                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

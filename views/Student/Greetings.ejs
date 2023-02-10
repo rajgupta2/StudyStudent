@@ -1,0 +1,39 @@
+<script>
+    $(document).ready(function () {
+        $("#greetings>a").addClass("py-5 my-2");
+    });
+</script>
+<style>
+    #RightSide{
+        position:fixed;
+        right:20%;
+        top:0px;
+        z-index:1050;
+    }
+</style>
+<div class="nav-item dropdown" id="RightSide" >
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#Test">Test</a>
+    <div class="dropdown-menu" id="Test">
+        @{
+            foreach (Tbl_Subject ts in Model)
+            {
+                <a class="dropdown-item" href="/Student/Test?sub=@ts.Subject">@ts.Subject</a>
+            }
+        }
+    </div>
+</div>
+<center>
+    <h1 class="text-success">Greetings</h1>
+    <div class="row mr-0" id="greetings">
+        <a href="/Student/Greetings" class="col-sm-3"><i class="bi bi-house h1"></i><div class="h5">Home</div></a>
+        <a href="/Student/Submit_Assignment" class="col-sm-3"><i class="bi bi-upload h1"></i><div class="h5">Submit Assignment</div></a>
+        <a href="/Student/View_Assignment" class="col-sm-3">
+            <i class="bi bi-folder h1"></i><div class="h5">View Assignment</div>
+        </a>
+        <a class="col-sm-3" href="/Student/Study_Materials"><i class="bi bi-emoji-smile h1"></i><div class="h5">Study Materials</div></a>
+
+        <a href="/Student/Give_FeedBack" class="col-sm-3"><i class="bi bi-chat-square-dots h1"></i><div class="h5">Feedback</div></a>
+        <a href="/Student/ChangePassword" class="col-sm-3"><i class="bi bi-key h1"></i><div class="h5">Change Password</div></a>
+        <a href="/Student/LogOut" class="col-sm-3"><i class="bi bi-box-arrow-in-right h1"></i><div class="h5">Logout</div></a>
+    </div>
+</center>

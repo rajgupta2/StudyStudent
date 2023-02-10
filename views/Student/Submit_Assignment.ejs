@@ -1,0 +1,57 @@
+
+<script>
+    $(document).ready(function () {
+        $("input,textarea").addClass("form-control");
+
+        //Change on the selecting of file tag
+        $(".custom-file-input").change(function () {
+            var filename = $(this).val().split("\\").pop();
+            $(".custom-file-label").html(filename);
+        });
+
+            $("#submit").click(function () {
+                var Subject = $("#Subject").val().trim();
+                var Assignment = $("#Assignment").val().trim();
+                $('.err').remove();
+                var result = true;
+                if (Subject.length == 0) {
+                    result = false;
+                    $("#Subject").after("<span class='err'>Enter Subject of assignment.<br></span>");
+                }
+                if (Assignment.length == 0) {
+                    result = false;
+                    $("#Assignment").after("<span class='err'>Upload Assignment.<br></span>")
+                }
+                $('.err').addClass("text-warning");
+                return result;
+            });
+
+    });
+</script>
+<div class="container my-5 py-lg-5">
+    <h2 class="text-info">Submit Assignment</h2>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#423838,#bc81eb)">
+        <div class="col-sm-6 pt-5">
+            <h2 class="text-success mt-3">
+                Submit assignment and be happy.
+            </h2>
+        </div>
+        <div class="col-sm-5">
+
+            <form action="/Student/Submit_Assignment" method="post" enctype="multipart/form-data">
+                @Html.LabelFor(m => m.Subject)
+                @Html.TextBoxFor(m => m.Subject, new { @placeholder = "Subject" })
+                @Html.LabelFor(m=>m.Assignment)
+                <div class="custom-file mb-4">
+                    <label class="custom-file-label">Assignment</label>
+                    <input type="file" class="custom-file-input" id="Assignment" name="Assignment" />
+                </div>
+                <input type="submit" id="submit" value="Save" class="btn btn-info" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+

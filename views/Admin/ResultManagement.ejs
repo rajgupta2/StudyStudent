@@ -1,0 +1,37 @@
+
+<div class="container mt-5">
+    <h2>Result Management</h2>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="table-info text-success">
+                    <tr>
+                        <th>Name (Email)</th>
+                        <th>Course</th>
+                        <th>Subject of Exam</th>
+                        <th>Marks</th>
+                        <th>Exam's Date</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (Tbl_Result tn in Model)
+                        {
+                            <tr>
+                                <td>@tn.Name (@tn.Email_OF_Student)</td>
+                                <td>@tn.Course</td>
+                                <td>@tn.Subject</td>
+                                <td>@tn.Marks_Obtained / @tn.Full_Marks</td>
+                                <td>@tn.Date_Of_Exam</td>
+                                <td><a href="/Admin/DeleteResult?pk=@tn.Id" class=" nav-link">Delete</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

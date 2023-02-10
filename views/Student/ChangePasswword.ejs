@@ -1,0 +1,53 @@
+<style>
+    #welcome {
+        background: linear-gradient(168deg,blue,pink);
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("[type*='submit']").click(function () {
+            var Password = $("#Password").val().trim();
+            var NewPassword = $("#NewPassword").val().trim();
+            var ConfirmPassword = $("#ConfirmPassword").val().trim();
+            var status = true;
+            $(".err").remove();
+            if (Password.length==0){
+                status=false;
+                $("#Password").after("<span class='err'>Please Enter valid Password.</span>");
+            }
+            if (NewPassword.length<8) {
+                status = false;
+                $("#NewPassword").after("<span class='err'>Password must be 8 characters long..</span>");
+            }
+            if (NewPassword != ConfirmPassword) {
+                status = false;
+                $("#ConfirmPassword").after("<span class='err'>Password doesn't match.</span>");
+            }
+            $(".err").addClass("text-warning");
+            return status;
+        });
+    });
+</script>
+<div class="container my-5 pt-lg-5"  >
+    <h1 class="text-success text-center">Change Password</h1>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <div class="row  pb-5 " id="welcome">
+
+        <div class="col-sm-6 pt-4">
+            <center>
+                <h1>Enhace your Security</h1>
+                <h4>Make Strong Password</h4>
+            </center>
+
+        </div>
+        <div class="col-sm-5">
+            <form action="/Student/ChangePassword" method="post">
+                @Html.PasswordFor(m => m.Password, new { @placeholder = "Old Password", @class = "form-control mt-4" })
+                @Html.Password("NewPassword", "", new { @placeholder = "New Password", @class = "form-control mt-4" })
+                @Html.Password("ConfirmPassword", "", new { @placeholder = "Confirm Password", @class = "form-control mt-4" })
+                <input type="submit" value="Save" class="btn btn-success btn-block my-4">
+            </form>
+        </div>
+
+    </div>
+</div>

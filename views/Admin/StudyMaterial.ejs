@@ -1,0 +1,118 @@
+   
+<script>
+    $(document).ready(function () {
+        $("#Study").click(function () {
+            $("#StudyMat").show();
+            $("#UploadStudyMaterial").hide();
+        });
+        $("input,textarea").addClass("form-control");
+        //Change on the selecting of file tag
+        $(".custom-file-input").change(function () {
+            var filename = $(this).val().split("\\").pop();
+            $(".custom-file-label").html(filename);
+        });
+
+        $("#submit").click(function () {
+            var Subject = $("#Subject").val().trim();
+            var Description = $("#Description").val().trim();
+            var StudyMaterial = $("#StudyMaterial").val().trim();
+            $('.err').remove();
+            var result = true;
+            if (Subject.length == 0) {
+                result = false;
+                $("#Subject").after("<span class='err'>Enter Subject.<br></span>");
+            }
+            if (Description.length < 8) {
+                result = false;
+                $("#Description").after("<span class='err'>Describe about study material.<br></span>");
+            }
+            if (StudyMaterial.length == 0) {
+                result = false;
+                $("#StudyMaterial").after("<span class='err'>Upload study material.<br></span>")
+            }
+            $('.err').addClass("text-warning");
+            return result;
+        });
+        $("#Upload").click(function () {
+            $("#UploadStudyMaterial").show();
+            $("#StudyMat").hide();
+        });
+
+
+    });
+</script>
+<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <h3 class="nav-link text-info active" id="Upload" data-toggle="tab">Upload Study Material </h3>
+    </li>
+    <li class="nav-item" role="presentation">
+        <h3 id="Study" data-toggle="tab" class="nav-link text-info">Study Material</h3>
+    </li>
+</ul>
+<div class="container my-5 " id="UploadStudyMaterial">
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#423838,#bc81eb)">
+        <div class="col-sm-6 pt-5">
+            <h2 class="text-success mt-3">
+                Upload study materials for students.
+            </h2>
+        </div>
+        <div class="col-sm-5">
+
+            <form action="/Admin/StudyMaterial" method="post" enctype="multipart/form-data">
+                @Html.LabelFor(m => m.Subject)
+                @Html.TextBoxFor(m => m.Subject, new { @placeholder = "Subject" })
+                @Html.LabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description, new { @placeholder = "Description about study material", @style = "resize:none;" })
+                @Html.LabelFor(m => m.StudyMaterial)
+                <div class="custom-file mb-4">
+                    <label class="custom-file-label">Study Material</label>
+                    <input type="file" class="custom-file-input" id="StudyMaterial" name="StudyMaterial" />
+                </div>
+                <input type="submit" id="submit" value="Save" class="btn btn-info" />
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-2" id="StudyMat" style="display:none"  >
+        <h2>Study Materials</h2>
+        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-hover">
+                    <thead class="table-info text-success">
+                        <tr>
+                            <th>S.No</th>
+                            <th>Subject</th>
+                            <th>Description</th>
+                            <th>Attachment</th>
+                            <th>Uploaded Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int x = 1;
+                                IEnumerable<Tbl_StudyMaterial> ListOFStudyMaterial = TempData["Study"] as IEnumerable<Tbl_StudyMaterial>;
+
+
+                                foreach (Tbl_StudyMaterial tn in ListOFStudyMaterial)
+                                {
+                                            <tr>
+                                                <td>@x</td>
+                                                <td>@tn.Subject</td>
+                                                <td>@tn.Description</td>
+                                                <td><a href="/Content/StudyMaterials/@tn.StudyMaterial">Download</td>
+                                                <td>@tn.Date</td>
+                                                <td><a href="/Admin/DeleteStudy?pk=@tn.Id" class="btn btn-warning">Remove</a></td>
+                                            </tr>
+                                    x++;
+                                }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+

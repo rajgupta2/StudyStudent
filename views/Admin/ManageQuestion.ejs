@@ -1,0 +1,76 @@
+
+<script>
+    $(document).ready(function () {
+        $("#Add").click(function () {
+            $("#hi").hide();
+            $("#AddNewQuestion").show();
+        })
+    });
+</script>
+<div class="container mt-5" id="hi">
+    <h2>Manage Question</h2>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12 ">
+            <h3 class=" text-info float-right " style="cursor:pointer;" id="Add">
+                Add New Question
+            </h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="table-info">
+                    <tr>
+                        <td>S.N.</td>
+                        <td>Questions</td>
+                        <td>Option1</td>
+                        <td>Option2</td>
+                        <td>Option3</td>
+                        <td>Option4</td>
+                        <td>Answer</td>
+                        <td>Remove Question</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int x = 1;
+                        foreach (Tbl_Question sd in Model)
+                        {
+                            <tr>
+                                <td>@x</td>
+                                <td>@sd.Question</td>
+                                <td>@sd.Option1</td>
+                                <td>@sd.Option2</td>
+                                <td>@sd.Option3</td>
+                                <td>@sd.Option4</td>
+                                <td>@sd.Answer</td>
+                                <td><a href="/Admin/RemoveQuestion?pk=@sd.Id">Delete</a></td>
+                            </tr>
+                            x++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@*Onclick of add new Question this div will display*@
+<div class="container mt-5" id="AddNewQuestion" style="display:none;">
+    <div class="row mt-5">
+        <div class="col-sm-12 px-5 mt-5 py-5 bg-dark">
+            <h2 class="text-info">Add New Question</h2>
+            <form action="/Admin/AddQuestion" method="post" class="col-sm-5 my-5">
+                <input type="hidden" name="Subject" class="form-control mb-4" placeholder="Subject Name" value="@TempData["Subject"]" />
+                <textarea name="Question" rows="3" class="form-control mt-4" style="resize:none;" placeholder="Question "></textarea>
+                <input type="text" name="Option1" class="form-control-sm mt-4" placeholder="Option 1" />
+                <input type="text" name="Option2" class="form-control-sm mt-4" placeholder="Option 2" />
+                <input type="text" name="Option3" class="form-control-sm mt-4" placeholder="Option 3" />
+                <input type="text" name="Option4" class="form-control-sm mt-4" placeholder="Option 4" />
+                <input type="text" name="Answer" class="form-control my-4" placeholder="Answer" />
+                <input type="submit" class="btn btn-success" value="Save" />
+                <a href="/Admin/ManageQuestion?pk=@TempData["Subject"]" class="btn btn-warning">Back</a>
+            </form>
+        </div>
+    </div>
+</div>

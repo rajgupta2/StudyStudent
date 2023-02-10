@@ -1,0 +1,40 @@
+
+
+<div class="container mt-5">
+    <h2>Assignment Management</h2>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="table-info text-success">
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Uploaded Date</th>
+                        <th>Deadline</th>
+                        <th>Attachment</th>
+                        <th>Update</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (Tbl_GiveAssignment tn in Model)
+                        {
+                            <tr>
+                                <td>@tn.Title</td>
+                                <td>@tn.Description</td>
+                                <td>@tn.Date</td>
+                                <td>@tn.Deadline</td>
+                                <td><a href="~/Content/Assignment_Attachments/@tn.Attachment" class="nav-link">View</a></td>
+                                <td><a href="/Admin/EditAssignment?pk=@tn.Id"  class="nav-link" >Edit</a></td>
+                                <td><a href="/Admin/DeleteAssignment?pk=@tn.Id" class="nav-link">Delete</a></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,20 @@
+
+
+<div class="container my-5 pt-lg-5">
+    <h2>AnswerQuery</h2>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.Message</p>
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-6">
+            <form action="/Admin/Send_Email" method="post">
+                <label>Send To</label>
+                <input type="email" name="SendTo" class="form-control" value=" @Model.Email" readonly/><br />
+                <label>Reply of this Query</label>
+                <input type="text" value="Reply of this query=> @Model.Query1" name="Subject" class="form-control" readonly/><br />
+                <label>Answer</label>
+                <textarea placeholder="Type your answer here..." name="Message" class="form-control" style="resize:none;"></textarea><br />
+                <button class="btn btn-success w-50" type="submit">Send Answer</button>
+            </form>
+        </div>
+    </div>
+</div>

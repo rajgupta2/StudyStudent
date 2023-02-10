@@ -1,0 +1,59 @@
+
+<div class="container mt-5">
+    <h2>Student's Record</h2>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table table-hover">
+                <thead class="table-info">
+                    <tr>
+                        <th>Enrollment Number</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Photo</th>
+                        <th>Course(Year)</th>
+                        <th>Contact</th>
+                        <th>Address</th>
+                        <th>Take Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (StudentData sd in Model)
+                        {
+                            <tr>
+                                <td>@sd.EnrollmentNumber</td>
+                                <td>@sd.Name</td>
+                                <td>@sd.Email</td>
+                                <td>@sd.Gender</td>
+                                <td><a href="~/Content/StudentProfilePicture/@sd.ProfilePicture">View Photo</a></td>
+                                <td>@sd.Course (@sd.Year)</td>
+                                <td>@sd.Contact</td>
+                                <td>@sd.Address</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Action</a>
+                                        <div class="dropdown-menu">
+                                            @if(sd.Status == "Active")
+                                            {
+                                                <a class="dropdown-item" href="/Admin/Block?pk=@sd.Email">Block</a>
+                                            }
+                                            else
+                                            {
+                                                <a class="dropdown-item" href="/Admin/Unblock?pk=@sd.Email">Unblock</a>
+                                            }
+
+                                            <a class="dropdown-item" href="/Admin/DeleteStudent?pk=@sd.Email"  >Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

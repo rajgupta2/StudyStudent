@@ -1,0 +1,79 @@
+@{
+    ViewBag.Title = "UploadQuestionPaper";
+    Layout = "~/Views/Shared/admin.cshtml";
+}
+@using EStudyCorner.Models
+@model IEnumerable<Tbl_Subject>
+<script>
+    $(document).ready(function () {
+        $("#Add").click(function () {
+            $("#hi").hide();
+            $("#AddNewSubject").show();
+        });
+        $("#Subject_Management").click(function () {
+            $("#hi").show();
+            $("#AddNewSubject").hide();
+        });
+    });
+</script>
+<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <h5 class="nav-link active" id="Subject_Management" data-toggle="tab">Subject Management</h5>
+    </li>
+    <li class="nav-item" role="presentation">
+        <h5 id="Add" data-toggle="tab" class="nav-link">Add New Subject</h5>
+    </li>
+</ul>
+<div class="container mt-5" id="hi">
+    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="float-right">
+                <form action="/Admin/Subject_Management" method="post">
+                    <input type="text" name="searchSubject" class="form-control-sm">
+                    <button class="btn btn-success" type="submit">Search a Subject</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @{
+            foreach (Tbl_Subject t in Model)
+            {
+                <div class="card mx-3 my-3 px-0 mh-100">
+                    <div class="card-body py-5">
+                        <h3 class="text-center text-dark">@t.Subject</h3>
+                    </div>
+                    <div class="card-footer">
+                        <a href="/Admin/RemoveSubject?pk=@t.Subject" class="border-right pr-2">Remove Subject</a>
+                        <a href="/Admin/ManageQuestion?pk=@t.Subject" class="">Manage Question</a>
+                    </div>
+                    <div class="card-footer">Exam Mode-
+                        @if (@t.Status == "Off")
+                        {  <a href="/Admin/ChangeExamMode?sub=@t.Subject&mode=On" class="float-right">Enable the Exam</a>
+                        }
+                        else
+                        {
+                        <a href="/Admin/ChangeExamMode?sub=@t.Subject&mode=Off" class="float-right">Disabled the Exam</a>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+@*Onclick of add new subject this div will display*@
+<div class="container mt-5" id="AddNewSubject" style="display:none;">
+    <div class="row mt-5">
+        <div class="col-sm-12 px-5 mt-5 py-5 bg-dark">
+            <h2 class="text-info">Add New Subject</h2>
+            <form action="/Admin/AddSubject" method="post" class="col-sm-5 my-5">
+                <input type="text" name="Subject" class="form-control mb-4" placeholder="Subject Name" />
+                <input type="submit" class="btn btn-success" value="Save" />
+                <a href="/Admin/Subject_Management" class="btn btn-warning">Back</a>
+            </form>
+        </div>
+    </div>
+</div>

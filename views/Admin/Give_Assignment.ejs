@@ -1,0 +1,68 @@
+
+<script>
+    $(document).ready(function () {
+        $("input,textarea").addClass("form-control");
+        $("label").addClass("text-warning");
+        //Change on the selecting of file tag
+        $(".custom-file-input").change(function () {
+            var filename = $(this).val().split("\\").pop();
+            $(".custom-file-label").html(filename);
+        });
+
+            $("#submit").click(function () {
+                var Title = $("#Title").val().trim();
+                var Deadline = $("#Deadline").val().trim();
+                var Description = $("#Description").val().trim();
+                var Attachment = $("#Attachment").val().trim();
+                $('.err').remove();
+                var result = true;
+                if (Title.length == 0) {
+                    result = false;
+                    $("#Title").after("<span class='err'>Enter Title of project.<br></span>");
+                }
+                if (Deadline.length == 0) {
+                    result = false;
+                    $("#Deadline").after("<span class='err'>Enter deadline of project submission.<br></span>");
+                }
+                if (Description.length< 8 ) {
+                    result = false;
+                    $("#Description").after("<span class='err'>Describe your project briefly.<br></span>");
+                }
+                //if (Attachment.length == 0) {
+                //    result = false;
+                //    $("#Attachment").after("<span class='err'>Enter Attachment.<br></span>")
+                //}
+                $('.err').addClass("text-warning");
+                return result;
+            });
+
+    });
+</script>
+<div class="container my-5 py-lg-5">
+    <p id="presponse" class="alert alert-dark text-center h4 text " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#000000,#808080">
+        <div class="col-sm-6 pt-5">
+            <h2 class="text-success mt-3">
+                Upload some tasks for students and make their future bright.
+            </h2>
+        </div>
+        <div class="col-sm-5">
+            <h2 class="text-info">Give Assignment</h2>
+            <form action="/Admin/Give_Assignment" method="post" enctype="multipart/form-data">
+                @Html.LabelFor(m => m.Title)
+                @Html.TextBoxFor(m => m.Title, new { @placeholder = "Title of Assignment" })
+                @Html.LabelFor(m => m.Description)
+                @Html.TextAreaFor(m => m.Description, new { @placeholder = "Description about assignment", @style = "resize:none;" })
+                @Html.LabelFor(m => m.Deadline)
+                @Html.TextBoxFor(m => m.Deadline, new { @type = "date" })
+                @Html.LabelFor(m => m.Attachment)
+                <div class="custom-file mb-4">
+                    <label class="custom-file-label">Attachment</label>
+                    <input type="file" class="custom-file-input" id="Attachment" name="Attachment" />
+                </div>
+                <input type="submit" id="submit" value="Save" class="btn btn-info" />
+            </form>
+        </div>
+    </div>
+</div>
+

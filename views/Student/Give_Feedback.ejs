@@ -1,0 +1,49 @@
+<script>
+    $(document).ready(function () {
+        $("[type*='submit']").click(function () {
+            var Feedback_Subject = $("#Feedback_Subject").val().trim();
+            var Message = $("#Message").val().trim();
+            var status = true;
+            $(".err").remove();
+            if (Feedback_Subject.length==0){
+                status=false;
+                $("#Feedback_Subject").after("<span class='err'>Please Enter Feedback Subject.</span>");
+            }
+            if (Message.length<8) {
+                status = false;
+                $("#Message").after("<span class='err'>Feedback Message must be 12 characters long..</span>");
+            }
+            $(".err").addClass("text-warning");
+            return status;
+        });
+    });
+</script>
+<style>
+    #feedback {
+        background: linear-gradient(168deg,blue,pink);
+    }
+</style>
+<div class="container my-5 pt-lg-5"  >
+    <h1 class="text-success">Feedback</h1>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <div class="row pb-5  pt-lg-5" id="feedback">
+
+        <div class="col-sm-6 pt-4">
+            <center>
+                <h1>We are exited </h1>
+                <h3>to hear from you.</h3>
+            </center>
+
+        </div>
+        <div class="col-sm-5">
+            <form action="/Student/Give_FeedBack" method="post">
+                @Html.TextBoxFor(m => m.Feedback_Subject, new { @placeholder = "Subject of feedback", @class = "form-control mt-4" })
+                @Html.TextAreaFor(m => m.Message, new { @placeholder = "Feedback Message", @class = "form-control mt-4",@style="resize:none;" })
+                <input type="submit" value="Save" class="btn btn-success btn-block my-4">
+                <input type="reset" value="Reset" class="btn btn-warning btn-block my-4">
+            </form>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudyStudent Admin</title>
+    <script src="/JS/jquery-3.6.0.min.js"></script>
+    <script src="/JS/bootstrap.bundle.min.js"></script>
+    <script src="/JS/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <link href="/css/bootstrap-grid.min.css" rel="stylesheet" />
+    <link href="/css/bootstrap.min.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            //Adding Some Effect On messeging from server-side
+            if ($("#presponse").text().length > 0) {
+                $("#presponse").fadeToggle(1500).delay(2000).fadeToggle(1000);
+                $("input,textarea").text("");
+            }
+
+            var fg = $("[href*='#']");
+            $(fg).hover(function () {
+                $(this).next().show();
+            });
+            $(fg.next()).hover(function () {
+                $(this).show();
+            });
+            $(fg).mouseleave(function () {
+                $("[href*='#']").next().delay(1500).hide();
+            });
+            $(fg.next()).mouseleave(function () {
+                $(this).hide();
+            });
+            if ($("html,body").width() < 1000) {
+                $("#navBtn").css({ position: "absolute", left: $("html,body").width() - 100 });
+            }
+            $(window).scroll(function () {
+                if ($(window).scrollTop() > 20) {
+                    $("#backtotop").show();
+                    $(".navbar").addClass("alert-dark");
+                } else {
+                    $("#backtotop").hide();
+                    $(".navbar").removeClass("alert-dark");
+                }
+
+                if ($(".navbar").hasClass("alert-dark"))
+                    $(".navbar-brand").removeClass("text-white");
+                else
+                    $(".navbar-brand").addClass("text-white");
+
+                if ($(".mode>i").hasClass("bi-toggle-off")) {
+                    $(".navbar-brand").removeClass("text-white");
+                }
+            });
+            $(".navbar-toggler-icon").click(function () {
+                $(".navbar").addClass("alert-dark");
+                $(".navbar-brand").removeClass("text-white");
+
+            });
+            $(".change").click(function () {
+                if ($("body").hasClass("dark")) {
+                    $("body").removeClass("dark");
+                    $(".change").addClass("bi bi-toggle-off");
+                    $(".change").removeClass("bi bi-toggle-on");
+                    $(".navbar-brand").removeClass("text-white");
+
+                } else {
+                    $("body").addClass("dark");
+                    $(".change").removeClass("bi bi-toggle-off");
+                    $(".change").addClass("bi bi-toggle-on");
+                    $(".navbar-brand").addClass("text-white");
+                }
+                if ($(".mode>i").hasClass("bi-toggle-off")) {
+                    $("td").removeClass("text-white");
+                } else
+                    $("td").addClass("text-white");
+            });
+            //backtotop
+            $("#backtotop").click(function () {
+                $("html,body").animate({ scrollTop: 0 }, '1500');
+            });
+            if ($(".mode>i").hasClass("bi-toggle-off")) {
+                $("td").removeClass("text-white");
+            } else
+                $("td").addClass("text-white");
+
+        });
+    </script>
+    <style>
+        a.nav-link{
+            color: #007bff !important;
+        }
+        .dropdown-menu {
+          width: max-content;
+        }
+        a{
+            text-decoration:none !important;
+        }
+        .dark {
+            background-color: #222;
+            color: #e6e6e6;
+        }
+        #backtotop {
+            position: fixed;
+            right: 20px;
+            bottom: 35px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="dark">
+    <!--back to top btn-->
+    <a id="backtotop" class="bg-info btn" style="display:none;"><i class="bi bi-arrow-up"></i></a>
+    <div class="container">
+        <div class="row navbar navbar-expand-lg navbar-light py-0 fixed-top pl-lg-5">
+            <div class="col-sm-3">
+                <a class="navbar-brand text-white ml-lg-5 pl-lg-5" href="/">StudyStudent</a>
+                <button class="navbar-toggler float-right border-0" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" id="navBtn">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <div class="col-sm-4">
+                    <span class="font-weight-bold">Follow us:</span>
+                    <a href="https://www.facebook.com" target="_blank" class="p-2"><i class="bi bi-facebook" style="color:#347dc0;"></i></a>
+                    <a href="https://www.twitter.com" target="_blank" class="p-2"><i class="bi bi-twitter" style="color:#1156aa;"></i></a>
+                    <a href="https://www.google.com" target="_blank" class="p-2"><i class="bi bi-google" style="color:#1bbb34;"></i></a>
+                    <a href="https://www.instagram.com" target="_blank" class="p-2"> <i class="bi bi-instagram" style="color:#dd3427;"></i></a>
+                    <a href="https://www.linkedin.com" class="p-2"><i class="bi bi-linkedin" style="color:#347dc0;"></i></a>
+                    <a href="https://www.github.com" class="p-2"><i class="bi bi-github" style="color:#789b95;"></i></a>
+                </div>
+                <div class="col-sm-5">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Admin/Welcome">Dashboard</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Student</a>
+                            <div class="dropdown-menu">
+                                <a class="nav-link" href="/Admin/Student_Management">Student Management</a>
+                                <a class="nav-link" href="/Admin/Give_Assignment">Upload Assignment</a>
+                                <a class="nav-link" href="/Admin/StudyMaterial">Study Materials</a>
+                                <a class="nav-link" href="/Admin/Download">Download</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#Management"> Management</a>
+                            <div class="dropdown-menu" id="Management">
+                                <a class="nav-link" href="/Admin/ShowEnquiry">Enquiry</a>
+                                <a class="nav-link" href="/Admin/News_Update">News & Update </a>
+                                <a class="nav-link" href="/Admin/Subject_Management">Subject Management</a>
+
+                                <a class="nav-link" href="/Admin/Send_Email">Send Email</a>
+                                <a class="nav-link" href="/Admin/ResultManagement">Result Management</a>
+                                <a class="nav-link" href="/Admin/Assignment_Management">Assignment Management</a>
+                                <a class="nav-link" href="/Admin/View_Feedback">Feedback Management</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                               href="#Settings">Settings</a>
+                            <div class="dropdown-menu" id="Settings">
+                                <a class="nav-link" href="/Admin/ChangePassword">Change Password</a>
+                                <a class="nav-link" href="/Admin/Logout">LogOut</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mode pl-3">
+                    Dark mode:
+                    <i class="bi bi-toggle-on change"></i>
+                </div>
+            </div>
+        </div>
+        <div class="mt-5">
+                <%- body %>
+        </div>
+        @*Footer  bottom*@
+        <div class="row pl-4 mr-0 bg-dark text-white fixed-bottom">
+            <div class="col-sm-6">
+                © 2021 Copyright:All rights are reserved by<a href="/Home">StudyStudent.com</a>
+            </div>
+            <div class="col-sm-4">
+                Developed By<a href="/Home">Student</a> Team
+            </div>
+        </div>
+    </div>
+</body>
+</html>
