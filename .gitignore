@@ -5,3 +5,7 @@ node_modules/
 
 # ignore ALL .json files
 *.json
+
+App_Code/
+
+Models/

@@ -28,7 +28,9 @@
 </script>
 <div class="container my-5 pt-5">
     <h1 class="text-success text-center">Login Page </h1>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"><% if(locals.msg){ %>
+        <%= msg%>
+        <% } %></p>
     <div class="row mt-5 py-5 " id="welcome">
 
         <div class="col-sm-6">

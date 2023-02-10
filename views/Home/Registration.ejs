@@ -1,13 +1,15 @@
 
-<script src="/JS/Validation.js"></script>
+<!--<script src="/JS/Validation.js"></script>-->
 <style>
     form {
         box-shadow: 4px 4px 12px blue;
     }
 </style>
 <div class="container my-5">
-    <form action="/Home/Registration" method="post" enctype="multipart/form-data" class=" my-5 py-5 px-5">
-        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"><% if(locals.msg){ %>
+        <%= msg%>
+        <% } %></p>
+    <form action="/Home/Registration" method="post"  class=" my-5 py-5 px-5" enctype="multipart/form-data">
         <div class="row">
             <div class="col-sm-6">
                 <input id="EnrollmentNumber" name="EnrollmentNumber" placeholder="Enrollment Number " type="text" value="" />
@@ -65,7 +67,7 @@
         </div><br />
         <div class="row">
             <div class="col-sm-6">
-                <div class="g-recaptcha" data-sitekey="6LcwPQoiAAAAABFw0PyCEgc8bjWCR1LmDsIJ8s2n"></div>
+        <!--     <div class="g-recaptcha" data-sitekey="6LcwPQoiAAAAABFw0PyCEgc8bjWCR1LmDsIJ8s2n"></div>-->
             </div>
         </div>
         <div class="row">

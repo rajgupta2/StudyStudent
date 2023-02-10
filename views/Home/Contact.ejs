@@ -6,7 +6,7 @@
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
             var Contact = $("#Contact").val().trim();
-            var Query1 = $("#Query1").val().trim();
+            var Query1 = $("#Query").val().trim();
             $(".err").remove();
             //validation for name
             if (Name.length == 0) {
@@ -29,10 +29,10 @@
             //validation for Query
             if (Query1.length ==0) {
                 result = false;
-                $("#Query1").after("<span class='err'>Enter Query</span>");
+                $("#Query").after("<span class='err'>Enter Query</span>");
             } else if (Query1.length< 10) {
                 result = false;
-                $("#Query1").after("<span class='err'>Describe Query Briefly</span>");
+                $("#Query").after("<span class='err'>Describe Query Briefly</span>");
             } 
             $(".err").addClass("text-danger");
             return result;
@@ -40,7 +40,9 @@
     });
 </script>
 <div class="container mt-lg-5 mb-5">
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"></p>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"><% if(locals.msg){%>
+    <%=msg%>
+<%}%></p>
     <div class="row  py-5">
         <div class="col-sm-5 mt-4 mr-5">
             <h2>Query</h2>
@@ -48,7 +50,7 @@
                 <input id="Name" name="Name" placeholder="Name" type="text" value="" />
                 <input id="Email" name="Email" placeholder="Email" type="email" value="" />
                 <input id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
-                <textarea cols="20" id="Query1" name="Query1" placeholder="Type your query here.." rows="2" style="resize:none">
+                <textarea cols="20" id="Query" name="Query" placeholder="Type your query here.." rows="2" style="resize:none">
 </textarea>
                 <input type="submit" id="submit" value="Save" class="btn btn-success" />
             </form>

@@ -26,7 +26,7 @@ $(document).ready(function () {
         var Password = $("#Password").val().trim();
         var ConfirmPassword = $("#ConfirmPassword").val().trim();
         $(".err").remove();
-        //    //validation for name
+        //validation for name
         if (Name.length == 0) {
             result = false;
             $("#Name").after("<span class='err'>Enter your name..</span>");
