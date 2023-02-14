@@ -1,9 +1,3 @@
-@{
-    ViewBag.Title = "UploadQuestionPaper";
-    Layout = "~/Views/Shared/admin.cshtml";
-}
-@using EStudyCorner.Models
-@model IEnumerable<Tbl_Subject>
 <script>
     $(document).ready(function () {
         $("#Add").click(function () {
@@ -24,8 +18,13 @@
         <h5 id="Add" data-toggle="tab" class="nav-link">Add New Subject</h5>
     </li>
 </ul>
-<div class="container mt-5" id="hi">
-    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+<div class="container mt-5 pb-5" id="hi">
+    <% if(locals.addmsg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+        <%= addmsg%>
+        </p>
+    <% } %>
+
     <div class="row">
         <div class="col-sm-12">
             <div class="float-right">
@@ -37,34 +36,29 @@
         </div>
     </div>
     <div class="row">
-        @{
-            foreach (Tbl_Subject t in Model)
-            {
-                <div class="card mx-3 my-3 px-0 mh-100">
-                    <div class="card-body py-5">
-                        <h3 class="text-center text-dark">@t.Subject</h3>
-                    </div>
-                    <div class="card-footer">
-                        <a href="/Admin/RemoveSubject?pk=@t.Subject" class="border-right pr-2">Remove Subject</a>
-                        <a href="/Admin/ManageQuestion?pk=@t.Subject" class="">Manage Question</a>
-                    </div>
-                    <div class="card-footer">Exam Mode-
-                        @if (@t.Status == "Off")
-                        {  <a href="/Admin/ChangeExamMode?sub=@t.Subject&mode=On" class="float-right">Enable the Exam</a>
-                        }
-                        else
-                        {
-                        <a href="/Admin/ChangeExamMode?sub=@t.Subject&mode=Off" class="float-right">Disabled the Exam</a>
-                        }
-                    </div>
+
+        <%Subjects.forEach(function(t){%>
+            <div class="card mx-3 my-3 px-0 mh-100">
+                <div class="card-body py-5">
+                    <h3 class="text-center text-dark"><%=t.Subject%></h3>
                 </div>
-            }
-        }
+                <div class="card-footer">
+                    <a href="/Admin/RemoveSubject?sub=<%=t.Subject%>" class="border-right pr-2">Remove Subject</a>
+                    <a href="/Admin/ManageQuestion?sub=<%=t.Subject%>" class="">Manage Question</a>
+                </div>
+                <div class="card-footer">Exam Mode-
+                    <%if (t.Status == "Off"){ %>
+                      <a href="/Admin/ChangeExamMode?id=<%=t._id%>&mode=On" class="float-right">Enable the Exam</a>
+                    <%}else{%>
+                    <a href="/Admin/ChangeExamMode?id=<%=t._id%>&mode=Off" class="float-right">Disabled the Exam</a>
+                    <%}%>
+                </div>
+            </div>
+        <%});%>
     </div>
 </div>
 
 
-@*Onclick of add new subject this div will display*@
 <div class="container mt-5" id="AddNewSubject" style="display:none;">
     <div class="row mt-5">
         <div class="col-sm-12 px-5 mt-5 py-5 bg-dark">

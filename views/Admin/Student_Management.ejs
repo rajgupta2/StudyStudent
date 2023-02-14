@@ -1,7 +1,6 @@
-
 <div class="container mt-5">
     <h2>Student's Record</h2>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+    <p id="presponse" class="alert alert-dark text-center h4" style="display:none"></p>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">
@@ -15,42 +14,37 @@
                         <th>Course(Year)</th>
                         <th>Contact</th>
                         <th>Address</th>
+                        <th>Status</th>
                         <th>Take Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        foreach (StudentData sd in Model)
-                        {
-                            <tr>
-                                <td>@sd.EnrollmentNumber</td>
-                                <td>@sd.Name</td>
-                                <td>@sd.Email</td>
-                                <td>@sd.Gender</td>
-                                <td><a href="~/Content/StudentProfilePicture/@sd.ProfilePicture">View Photo</a></td>
-                                <td>@sd.Course (@sd.Year)</td>
-                                <td>@sd.Contact</td>
-                                <td>@sd.Address</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Action</a>
-                                        <div class="dropdown-menu">
-                                            @if(sd.Status == "Active")
-                                            {
-                                                <a class="dropdown-item" href="/Admin/Block?pk=@sd.Email">Block</a>
-                                            }
-                                            else
-                                            {
-                                                <a class="dropdown-item" href="/Admin/Unblock?pk=@sd.Email">Unblock</a>
-                                            }
-
-                                            <a class="dropdown-item" href="/Admin/DeleteStudent?pk=@sd.Email"  >Delete</a>
-                                        </div>
+                 <% StdData.forEach(function(e){  %>
+                        <tr>
+                            <td><%= e.EnrollmentNumber %></td>
+                            <td><%= e.Name %></td>
+                            <td><%= e.Email %></td>
+                            <td><%= e.Gender %></td>
+                            <td><a href="../../Content/StudentProfilePicture/<%= e.ProfilePicture %>">View Photo</a></td>
+                            <td><%= e.Course %> <%= e.Year %></td>
+                            <td><%= e.Contact %></td>
+                            <td><%= e.Address %></td>
+                            <td><%= e.Status %></td>
+                            <td>
+                              <div class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Action</a>
+                                    <div class="dropdown-menu">
+                                        <%if(e.Status == "Active"){%>
+                                            <a class="dropdown-item" href="/Admin/Block?pk=<%= e.Email %>">Block</a>
+                                        <%}else{ %>
+                                            <a class="dropdown-item" href="/Admin/Unblock?pk=<%= e.Email %>">Unblock</a>
+                                        <%}%>
+                                            <a class="dropdown-item" href="/Admin/DeleteStudent?pk=<%=e.Email %>"  >Delete</a>
                                     </div>
-                                </td>
-                            </tr>
-                        }
-                    }
+                                </div> 
+                            </td>
+                        </tr>
+                        <% })  %>
                 </tbody>
             </table>
         </div>

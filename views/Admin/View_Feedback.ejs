@@ -15,18 +15,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        foreach (Tbl_Feedback e in Model)
-                        {
-                                        <tr>
-                                            <td>@e.Student_Name</td>
-                                            <td>@e.Student_Id</td>
-                                            <td>@e.Feedback_Subject</td>
-                                            <td>@e.Message</td>
-                                            <td>@e.Feedback_DT</td>
-                                        </tr>
-                        }
-                    }
+                   <% Feedbacks.forEach(function(e){%>
+                        <tr>
+                            <td><%=e.Student_Name%></td>
+                            <td><%=e.Student_Id%></td>
+                            <td><%=e.Feedback_Subject%></td>
+                            <td><%=e.Message%></td>
+                            <td><%=e.Feedback_DT%></td>
+                        </tr>
+                    <%});%>                
                 </tbody>
             </table>
         </div>

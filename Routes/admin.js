@@ -1,7 +1,6 @@
 const express=require("express");
 const ejs=require("ejs");
 const expressLayouts = require('express-ejs-layouts');
-
 //Database File Module
 const DB=require("../Models/DB");
 
@@ -9,6 +8,9 @@ const DB=require("../Models/DB");
 const formidable=require("formidable");
 const fs=require("fs");
 const path=require("path");
+const  mongoose = require("mongoose");
+const { Db } = require("mongodb");
+const ObjectId=require("mongodb").ObjectId;
 
 const admin=express();
 const port = process.env.PORT || 7000;
@@ -28,35 +30,242 @@ admin.get("/Admin/Welcome",(req,res)=>{
     res.render("./Admin/Welcome.ejs");
 });
 
-//Download
-admin.get("/Admin/Download",function(req,res){
-    var sa =DB.Colls_SubmitAssignment.find();
-    res.render("./Admin/Download.ejs");
+//Upload_Assignment
+admin.get("/Admin/Give_Assignment",function(req,res){
+    res.render("./Admin/Give_Assignment.ejs");
 });
 
-//StudyMaterial
-admin.get("/Admin/StudyMaterial",function(req,res){
-    var sa =DB.Colls_StudyMaterial.find();
-    res.render("./Admin/StudyMaterial.ejs");
+//Upload_Assignment post
+admin.post("/Admin/Give_Assignment",function(req,res){
+    var msg="";
+    var form= new formidable.IncomingForm();
+    form.parse(req,function(err,fields,file){
+        var oldPath=file.Attachment.filepath;
+        var AssignmentAttachments=file.Attachment.newFilename+ path.extname(file.Attachment.originalFilename);
+        var newpath="./Content/AssignmentAttachments/"+AssignmentAttachments;
+        fs.readFile(oldPath,function(err,data){
+                 fs.writeFile(newpath,data,function(err){
+                     if(err)
+                       msg="Oops! error occured in saving the attachement.";
+                     else{
+                        const ass=new DB.Colls_GiveAssignment({
+                            Title: fields.Title,
+                            Deadline:fields.Deadline,
+                            Description: fields.Description,
+                            Attachment :AssignmentAttachments
+                        });
+                        ass.save(function(err,succ){
+                            if(err)
+                             msg="Sorry! Due to some technicle issue we are unable to upload assignment.";
+                            else
+                             msg="Saved assignment successfully.";
+                             res.render("./Admin/Give_Assignment.ejs",{upmsg:msg});
+                        });
+                     }
+                  });
+                //Deleting file from temporary location
+                 fs.unlink(oldPath,function(err){
+                   if(err)
+                     msg="Oops! error occured in deleting the temporary file.";
+                 });
+        });    
+    });
+});
+    
+//Show Enquiry
+admin.get("/Admin/ShowEnquiry",function(req,res){
+    DB.Colls_Query.find(function(err,q){
+        res.render("./Admin/ShowEnquiry.ejs",{DBqueries:q});
+    });
 });
 
-//Assignment_Management
-admin.get("/Admin/Assignment_Management",function(req,res){
-    var sa =DB.Colls_AssignmentManagement.find();
-    res.render("./Admin/Assignment_Management.ejs");
+//Delete Enquiry
+admin.get("/Admin/DeleteNotification",function(req,res){
+    DB.Colls_Notification.deleteOne({_id:new ObjectId(req.query.pk)},function(err){
+        if(err){
+            res.redirect("/Admin/News_Update?msg=Error Occured in deletion");
+        }else{
+            res.redirect("/Admin/News_Update?msg=Successfully Deleted.");
+        }
+    });
 });
+
 
 //Student_Management
 admin.get("/Admin/Student_Management",function(req,res){
-    var sa =DB.Colls_StdData.find();
-    res.render("./Admin/Student_Management.ejs");
+    DB.Colls_StdData.find(function(err,sm){
+        res.render("./Admin/Student_Management.ejs",{StdData:sm});
+    });
+});
+
+
+//News_Update
+admin.get("/Admin/News_Update",function(req,res){
+    DB.Colls_Notification.find(function(err,succ){
+        res.render("./Admin/News_Update.ejs",{Notification:succ,addmsg:req.query.msg});
+    });
+});
+
+//Feedback
+admin.get("/Admin/View_Feedback",function(req,res){
+    DB.Colls_Feedback.find(function(err,succ){
+        res.render("./Admin/View_Feedback.ejs",{Feedbacks:succ});
+    });
 });
 
 //Subject_Management
 admin.get("/Admin/Subject_Management",function(req,res){
-    var sa =DB.Colls_Subject.find();
-    res.render("./Admin/Subject_Management.ejs");
+    DB.Colls_Subject.find(function(err,sub){
+        res.render("./Admin/Subject_Management.ejs",{Subjects:sub,addmsg:admin.get("addsub")});
+        admin.set("addsub","");
+    });
 });
+
+
+//Subject_Management post
+admin.post("/Admin/Subject_Management",function(req,res){
+    DB.Colls_Subject.find({Subject:req.body.searchSubject},function(err,sub){
+        if(sub.length>0)
+        res.render("./Admin/Subject_Management.ejs",{Subjects:sub});
+        else
+        res.render("./Admin/Subject_Management.ejs",{Subjects:sub,addmsg:"Subject Not found."});
+    });
+});
+
+//ADD Subject post
+admin.post("/Admin/AddSubject",function(req,res){
+    var sub=new DB.Colls_Subject({
+        Subject:req.body.Subject
+    });
+    sub.save(function(err){
+        if(err)
+             admin.set("addsub","Failed to save");
+        else
+             admin.set("addsub","Saved succesfully.");
+        res.redirect("/Admin/Subject_Management");
+    });
+});
+
+//Remove Subject get
+admin.get("/Admin/RemoveSubject",function(req,res){
+  
+    //REMOVE ALL QUESTIONS RELATED THIS SUBJECT
+    DB.Colls_Questions.deleteMany({Subject:req.query.sub});
+    //Removing Subject      
+    DB.Colls_Subject.deleteOne({Subject:req.query.sub},function(err,sub){
+            if(err){
+              admin.set("addsub","Failed to remove");
+            }else{
+              admin.set("addsub","Subject removed successfully");
+            }
+            res.redirect("/Admin/Subject_Management");; 
+    });
+});
+
+//News_Update post
+admin.post("/Admin/News_Update",function(req,res){
+    var nt=new  DB.Colls_Notification({
+        Notification_Msg:req.body.Notification_Msg
+    });
+    nt.save(function(err){
+            if(err)
+              res.redirect("/Admin/News_Update?msg=Failed to save news update.");
+            else
+              res.redirect("/Admin/News_Update?msg=Notification saved successfully.");
+    });
+});
+
+//Download
+admin.get("/Admin/Download",function(req,res){
+    DB.Colls_SubmitAssignment.find(function(std){
+        res.render("./Admin/Download.ejs",{Assignment:std});        
+    });
+});
+
+//StudyMaterial
+admin.get("/Admin/StudyMaterial",function(req,res){
+    DB.Colls_StudyMaterial.find(function(err,sa){
+        res.render("./Admin/StudyMaterial.ejs",{StudyMaterials:sa,msg:req.query.msg});        
+    });
+});
+
+admin.post("/Admin/StudyMaterial",function(req,res){
+    var msg="";
+    var form=new formidable.IncomingForm();
+    form.parse(req,function(err,fields,file){
+      var oldPath=file.StudyMaterial.filepath;
+      var StdMAt=file.StudyMaterial.newFilename + path.extname(file.StudyMaterial.originalFilename);
+      var newpath="./Content/StudyMaterials/"+StdMAt;
+      fs.readFile(oldPath,function(err,data){
+        if(!err)
+        {
+            fs.writeFile(newpath,data,function(err){
+                if(!err)
+                {
+                    var sm=new DB.Colls_StudyMaterial({
+                        Subject :req.body.Subject,
+                        StudyMaterial :StdMAt,
+                        Description :req.body.Description
+                    });
+                    sm.save(()=>{
+                       res.redirect("/Admin/StudyMaterial?msg=Saved Successfully.");
+                    });
+                }else
+                  res.redirect("/Admin/StudyMaterial?msg=Oops! error occured in saving the Study Material..");
+                 
+            })
+        }else
+           res.redirect("/Admin/StudyMaterial?msg=Oops! error occured in reading the Study Material.");
+      });
+       //Deleting file from temporary location
+       fs.unlink(oldPath,function(err){
+        if(err)
+          msg="Oops! error occured in deleting the temporary file.";
+      });
+    }); 
+});
+
+//StudyMaterial Delete
+admin.get("/Admin/DeleteStudy",function(req,res){
+
+    DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk),function(err,std){
+           if(err)
+           res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");       
+           else{
+           //Removing Study MAterial file
+           var filepath=path.resolve("./Content/StudyMaterial/"+std.StudyMaterial);
+           fs.unlink(filepath,function(err){
+              res.redirect("/Admin/StudyMaterial?msg='Removed Suceessfully.'"); 
+           });
+           }
+        });
+});
+
+//Change Exam Mode
+admin.get("/Admin/ChangeExamMode",function(req,res){
+    DB.Colls_Subject.updateOne({_id:new ObjectId(req.query.id)},{Status:req.query.mode},function(err,st){
+        if(err)
+        res.redirect("/Admin/Subject_Management");
+        else
+        res.redirect("/Admin/Subject_Management");
+    });
+});
+
+//Assignment_Management
+admin.get("/Admin/Assignment_Management",function(req,res){
+    DB.Colls_SubmitAssignment.find(function(err,sa){
+        res.render("./Admin/Assignment_Management.ejs",{ASSIGNMENTS:sa});
+    });
+});
+
+//Result_Management
+admin.get("/Admin/ResultManagement",function(req,res){
+    DB.Colls_Result.find(function(err,sa){
+        res.render("./Admin/ResultManagement.ejs",{Results:sa});
+    });
+});
+
+
 
 //AnswerQuery
 admin.get("/Admin/AnswerQuery",function(req,res){
@@ -64,35 +273,68 @@ admin.get("/Admin/AnswerQuery",function(req,res){
     res.render("./Admin/AnswerQuery.ejs");
 });
 
-//Give_Assignment
-admin.get("/Admin/Give_Assignment",function(req,res){
-    var sa =DB.Colls_Give_Assignment.find();
-    res.render("./Admin/Give_Assignment.ejs");
+//Block get
+admin.get("/Admin/Block",function(req,res){
+   DB.Colls_StdData.updateOne({Email:req.query.pk},{Status:"Block"},function(err){
+      res.redirect("/Admin/Student_Management");
+   });
 });
 
-//News_Update
-admin.get("/Admin/News_Update",function(req,res){
-    var sa =DB.Colls_Notification.find();
-    res.render("./Admin/News_Update.ejs");
+//Unblock get
+admin.get("/Admin/Unblock",function(req,res){
+    DB.Colls_StdData.updateOne({Email:req.query.pk},{Status:"Active"},function(err){
+       res.redirect("/Admin/Student_Management");
+    });
+ });
+
+ //Delete Student 
+admin.get("/Admin/DeleteStudent",function(req,res){
+    DB.Colls_StdData.deleteOne({Email:req.query.pk},function(err){
+       res.redirect("/Admin/Student_Management");
+    });
+ });
+
+//Manage Question
+admin.get("/Admin/ManageQuestion",function(req,res){
+    if(req.query.sub!=undefined)
+    admin.set("Subject",req.query.sub);
+    DB.Colls_Questions.find({Subject:admin.get("Subject")},function(err,ques){
+        res.render("./Admin/ManageQuestion.ejs",{Questions:ques,msg:req.query.msg});
+    });
+ });
+ 
+admin.post("/Admin/AddQuestion",function(req,res){
+      var q=new DB.Colls_Questions({
+         Subject :admin.get("Subject"),
+         Question :req.body.Question,
+         Option1 :req.body.Option1,
+         Option2 :req.body.Option2,
+         Option3 :req.body.Option3,
+         Option4 :req.body.Option4,
+         Answer :req.body.Answer
+      });
+      q.save(function(err){
+        if(err)
+        res.redirect("/Admin/ManageQuestion?msg=Unable to saved.");
+        else
+        res.redirect("/Admin/ManageQuestion?msg=Saved successfully.");
+      });
 });
 
-
+admin.get("/Admin/RemoveQuestion",function(req,res){
+    DB.Colls_Questions.deleteOne({_id:new ObjectId(req.query.pk)},function(err){
+      if(err)
+      res.redirect("/Admin/ManageQuestion?msg=Unable to Delete.");
+      else
+      res.redirect("/Admin/ManageQuestion?msg=Deleted Successfully.");
+    });
+});
 
 
 
 /*
 
-admin.get("/DeleteNotification",function(req,res){
-    if (IsValidUser() == false)
-        return redirect("./Home/Login");
-        DB.Colls_Notifications.find({_id:req.body.pk},function(err,succ){
-            if(err){
-                res.render("./Admin/News_Update",{msg="Error occured"});
-            }else{
-                res.render("./Admin/News_Update",{msg="Successfully Deleted."});
-            }
-        });      
-});
+
 
 
 
@@ -115,18 +357,6 @@ admin.get("DeleteStudent",function(req,res){
         msg = "Record deleted successfully.";
     TempData["msg"] = msg;
     return RedirectToAction("Student_Management","Admin");
-}
-public ActionResult ChangeExamMode(string sub,string mode)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    Tbl_Subject ts=db.Tbl_Subject.Find(sub);
-    ts.Status = mode;
-    db.Entry(ts);
-    db.SaveChanges();
-    return RedirectToAction("Subject_Management", "Admin");
 }
 public ActionResult DeleteAssignment(int pk)
 {
@@ -158,55 +388,6 @@ public ActionResult EditAssignment(int pk)
 
 StudyStudentEntities2 db =new StudyStudentEntities2();
 /
-
-public ActionResult Block(string pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    StudentLoginData sd=db.StudentLoginDatas.Find(pk);
-    StudentData sm=db.StudentDatas.Find(pk);
-    try
-    {
-        sd.Status = "Inactive";
-        sm.Status = "Inactive";
-        db.Entry(sd);
-        db.Entry(sm);
-        db.SaveChanges();
-        TempData["msg"] = "Blocked Successfully";
-    }
-    catch (Exception ex)
-    {
-        TempData["msg"] = "An error occured.";
-
-    }
-    return RedirectToAction("Student_Management", "Admin");
-}
-public ActionResult Unblock(string pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    StudentLoginData sd = db.StudentLoginDatas.Find(pk);
-    StudentData sm= db.StudentDatas.Find(pk);
-    try
-    {
-        sd.Status = "Active";
-        sm.Status = "Active";
-
-        db.Entry(sd);
-        db.Entry(sm);
-        db.SaveChanges();
-        TempData["msg"] = "Unblock Successfully";
-    }catch(Exception ex)
-    {
-        TempData["msg"] = "An error occured.";
-    }
-    return RedirectToAction("Student_Management", "Admin");
-
-}
 
 public ActionResult DeleteStudy(int pk)
 {
@@ -285,15 +466,6 @@ public ActionResult StudyMaterial(Tbl_StudyMaterial sm)
     return View();
 
 }
-public ActionResult ShowEnquiry()
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    List<Query> query =db.Queries.OrderByDescending(m=>m.ID).ToList();
-    return View(query);
-}
 public ActionResult ResultManagement()
 {
     if (IsValidUser() == false)
@@ -306,237 +478,12 @@ public ActionResult ResultManagement()
 
 }
 
-[HttpPost]
-public ActionResult News_Update(Tbl_Notification cn)
-{
-
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-   try{
-        cn.Notification_DT = DateTime.Now.ToString();
-        //for updation of existing news
-        if (cn.Notification_ID > 0)
-        {
-            Tbl_Notification n = db.Tbl_Notification.Find(cn.Notification_ID);
-            n.Notification_Msg=cn.Notification_Msg;
-            n.Notification_DT=cn.Notification_DT;
-            db.Entry(n);
-            msg = "Notification Updated Successfully.";
-        }//for adding new news
-        else
-        {
-            db.Tbl_Notification.Add(cn);
-            msg = "Notification Added Successfully.";
-        }
-        db.SaveChanges();
-}catch(Exception ex)
-{
-        msg = "Unable to save message";
-}
-    List<Tbl_Notification> tn = db.Tbl_Notification.OrderByDescending(m=>m.Notification_ID).ToList();
-    ViewBag.msg = msg;
-    return View(tn);
-}
-
 
 [HttpPost]
-public ActionResult Give_Assignment(Tbl_GiveAssignment ga)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-          string msg = "";
-        //Started saving Attachment and its verification
-        HttpPostedFileBase fileobj = Request.Files["Attachment"];
-        if (fileobj!=null)
-        {
-            string filename = fileobj.FileName;
-            string finalname = Path.GetRandomFileName() + "_" + filename;
-            //To Get Extension Of Attachment
-            string attach_Extension = filename.Substring(filename.LastIndexOf('.')).ToUpper();
-            //validation for Attachment
-            string[] AllowedExtension = new string[] { ".JPG", ".PDF", ".DOCX", ".PNG", ".JPEG", ".JPIF" };
-            int x = Array.IndexOf(AllowedExtension, attach_Extension);
-            if (x >= 0)
-            {
-             string FinalFilePath = Server.MapPath("/Content/Assignment_Attachments");
-              if (Directory.Exists(FinalFilePath) == false)
-              {
-                Directory.CreateDirectory(FinalFilePath);
-              }
-                fileobj.SaveAs(FinalFilePath + "/" + finalname);
-                ga.Attachment = finalname;
-           }
-           else
-           {
-            msg = "Invalid Attcahment File.";
-           }
-        }
-    try
-    {
-        ga.Date = DateTime.Now.ToString();
-        if (ga.Id > 0)
-        {
-            db.Entry(ga);
-            msg = "Assignment Updated Successfully";
-        }
-        else
-        {
-            db.Tbl_GiveAssignment.Add(ga);
-        msg = "Assignment Uploaded successfully.";
-        }
-        db.SaveChanges();
-    }
-    catch (Exception ex)
-    {
-        msg = "Failed to upload assignment.";
-    }
-    ViewBag.msg = msg;
-    return View();
-}
 
 
-public ActionResult ManageQuestion(string pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    if (pk != null)
-    {
-        TempData["Subject"] = pk;
-    }else
-        pk = (string)TempData["Subject"];
-    List<Tbl_Question> tq = db.Tbl_Question.Where(x => x.Subject == pk).ToList();
-    TempData["Subject"] =pk;
-    TempData.Keep("Subject");
-    ViewBag.msg = TempData["msg"];
-    return View(tq);
-}
-public ActionResult AddQuestion(Tbl_Question ts)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-        try
-        {
-            db.Tbl_Question.Add(ts);
-            db.SaveChanges();
-        msg = "Question Added Successfully."; 
-        }
-        catch (Exception ex)
-        {
-            msg = "Failed to save subject.";
-        }
-        TempData["msg"] = msg;
-        TempData["Subject"] = ts.Subject;
-    return RedirectToAction("ManageQuestion", "Admin");
 
-}
-public ActionResult RemoveQuestion(int pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    try
-    {
-        Tbl_Question sd = db.Tbl_Question.Find(pk);
-        db.Tbl_Question.Remove(sd);
-        db.SaveChanges();
-        TempData["Subject"] = sd.Subject;
-    msg = "Question removed successfully";
-    }catch(Exception ex)
-    {
-        msg = "Failed to remove";
-    }
-    TempData["msg"] = msg;
-    return RedirectToAction("ManageQuestion", "Admin");
-}
 
-[HttpPost]
-public ActionResult Subject_Management(string searchSubject)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-
-    List<Tbl_Subject> td = db.Tbl_Subject.Where(x=>x.Subject.Contains(searchSubject)).ToList();
-    if (td.Count <= 0)
-    {
-        ViewBag.msg = "Subject Not found";
-    }
-    return View(td);
-}
-public ActionResult AddSubject(Tbl_Subject ts)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-        try
-        {
-            Tbl_Subject ns = db.Tbl_Subject.Find(ts.Subject);
-            if (ns == null)
-            {
-                db.Tbl_Subject.Add(ts);
-                db.SaveChanges();
-                msg = "Subject saved successfully.";
-            }
-            else
-            {
-                msg = "Subject already found.";
-            }
-        }
-        catch (Exception ex)
-        {
-            msg = "Failed to save subject.";
-        }
-        TempData["msg"] = msg;
-    return RedirectToAction("Subject_Management", "Admin");
-
-}
-public ActionResult RemoveSubject(string pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    try
-    {
-        Tbl_Subject sd = db.Tbl_Subject.Find(pk);
-        //Removing of all question related to this subject
-        List<Tbl_Question> tq = db.Tbl_Question.Where(x => x.Subject == pk).ToList();
-        db.Tbl_Question.RemoveRange(tq);
-        db.Tbl_Subject.Remove(sd);
-        db.SaveChanges();
-    msg = "Subject removed successfully";
-    }catch(Exception ex)
-    {
-        msg = "Failed to remove";
-    }
-    TempData["msg"] = msg;
-    return RedirectToAction("Subject_Management", "Admin");
-}
-public ActionResult View_Feedback()
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    List<Tbl_Feedback> tf=db.Tbl_Feedback.OrderByDescending(m=>m.Feedback_Id).ToList();
-    return View(tf);
-}
 
 public ActionResult ChangePassword()
 {
@@ -627,4 +574,4 @@ public ActionResult DeleteResult(int pk)
 }
 /*
 */
-//admin.listen(port,()=>console.log("server is running"));
+admin.listen(port,()=>console.log("server is running"));

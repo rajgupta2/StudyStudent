@@ -41,17 +41,11 @@
                 $("#presponse").fadeToggle(1500).delay(2000).fadeToggle(1000);
             //for adding hover effect on navbar
             var fg = $("[href*='#']");
-            fg.hover(function () {
-                $(this).next().show();
+            $(fg).hover(function () {
+                $(this).next().stop(2500).fadeToggle();
             });
-            (fg.next()).hover(function () {
-                $(this).show();
-            });
-            fg.mouseleave(function () {
-                $("[href*='#']").next().delay(2500).hide();
-            });
-            (fg.next()).mouseleave(function () {
-                $(this).hide();
+            $(fg.next()).hover(function () {
+                $(this).stop(2000).fadeToggle();
             });
             if ($("html,body").width() < 1000) {
                 $("#navBtn").css({ position: "absolute", left: $("html,body").width() - 100 });

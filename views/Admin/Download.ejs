@@ -1,8 +1,5 @@
-
-
 <div class="container mt-5" >
     <h2>Submitted Assignment by students</h2>
-    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">
@@ -16,18 +13,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        foreach (Tbl_SubmitAssignment tn in Model)
-                        {
-                                        <tr>
-                                            <td>@tn.Student_Name</td>
-                                            <td>@tn.Student_ID</td>
-                                            <td>@tn.Subject</td>
-                                            <td><a href="~//Content/SubmittedAssignment/@tn.Assignment" download>View</a></td>
-                                            <td>@tn.Date</td>
-                                        </tr>
-                        }
-                    }
+
+                    <% if(Assignment!=null) {
+                     Assignment.forEach(function(e){ %>
+                        <tr>
+                            <td><%=e.Student_Name%></td>
+                            <td><%=e.Student_Email%></td>
+                            <td><%=e.Subject%></td>
+                            <td><a href="../../Content/SubmittedAssignment/<%=e.Assignment%>" download>View</a></td>
+                            <td><%=e.Date%></td>
+                        </tr>
+                    <%});
+                    }%>
                 </tbody>
             </table>
         </div>

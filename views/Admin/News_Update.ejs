@@ -34,11 +34,14 @@
     </li>
 </ul>
 <div class="container mt-5 py-5" id="newUpdate">
-    <p id="presponse" class="alert alert-dark text-center h4 " style="display:none;">@ViewBag.msg</p>
+    <p id="presponse" class="alert alert-dark text-center h4 " style="display:none;">
+        <% if(locals.addmsg){ %>
+            <%= addmsg%>
+            <% } %>
+    </p>
     <div class="row py-5" style="background: linear-gradient(185deg,#ffffff,#726f6f)">
         <div class="col-sm-5 my-5 pb-5">
             <h1>Add Some Update</h1>
-
         </div>
         <div class="col-sm-6 mt-5">
             <form action="/Admin/News_Update" method="post">
@@ -51,7 +54,6 @@
 
 <div class="container mt-2" id="previousNotification" style="display:none;">
     <h2>Manage Previous Notification</h2>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">
@@ -64,22 +66,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        int x = 1;
-                        if (Model != null)
-                        {
-                            foreach (Tbl_Notification tn in Model)
-                            {
-                            <tr>
-                                <td>@x</td>
-                                <td>@tn.Notification_Msg</td>
-                                <td>@tn.Notification_DT</td>
-                                <td><a href="/Admin/DeleteNotification?pk=@tn.Notification_ID" class="btn btn-warning">Delete</a></td>
-                            </tr>
-                                    x++;
-                                }
-                            }
-                        }
+                    <% var x=1; %> 
+                     <%  Notification.forEach(function(e){ %>
+                     <tr>
+                        <td><%=x%></td>
+                        <td><%= e.Notification_Msg%></td>
+                        <td><%= e.Notification_DT%></td>
+                        <td><a href="/Admin/DeleteNotification?pk=<%=e._id%>" class="btn btn-warning">Delete</a></td>
+                     </tr>
+                        <% x++ %>
+                        <% }); %>
                 </tbody>
             </table>
         </div>

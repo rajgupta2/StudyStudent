@@ -39,8 +39,11 @@
     });
 </script>
 <div class="container my-5 py-lg-5">
-    <p id="presponse" class="alert alert-dark text-center h4 text " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
-    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#000000,#808080">
+    <p id="presponse" class="alert alert-dark text-center h4 text " style="min-height:40px; width:100%;display:none;"><% if(locals.upmsg){ %>
+        <%= upmsg%>
+        <% } %>
+    </p>
+    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#000000,#808080)">
         <div class="col-sm-6 pt-5">
             <h2 class="text-success mt-3">
                 Upload some tasks for students and make their future bright.
@@ -49,13 +52,14 @@
         <div class="col-sm-5">
             <h2 class="text-info">Give Assignment</h2>
             <form action="/Admin/Give_Assignment" method="post" enctype="multipart/form-data">
-                @Html.LabelFor(m => m.Title)
-                @Html.TextBoxFor(m => m.Title, new { @placeholder = "Title of Assignment" })
-                @Html.LabelFor(m => m.Description)
-                @Html.TextAreaFor(m => m.Description, new { @placeholder = "Description about assignment", @style = "resize:none;" })
-                @Html.LabelFor(m => m.Deadline)
-                @Html.TextBoxFor(m => m.Deadline, new { @type = "date" })
-                @Html.LabelFor(m => m.Attachment)
+                <label for="Title">Title</label>
+                <input id="Title" name="Title" placeholder="Title of Assignment" type="text" value="" />
+                <label for="Description">Description</label>
+                <textarea cols="20" id="Description" name="Description" placeholder="Description about assignment" rows="2" style="resize:none;">
+</textarea>
+                <label for="Deadline">Deadline</label>
+                <input id="Deadline" name="Deadline" type="date" value="" />
+                <label for="Attachment">Attachment</label>
                 <div class="custom-file mb-4">
                     <label class="custom-file-label">Attachment</label>
                     <input type="file" class="custom-file-input" id="Attachment" name="Attachment" />

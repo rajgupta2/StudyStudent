@@ -50,7 +50,11 @@
     </li>
 </ul>
 <div class="container my-5 " id="UploadStudyMaterial">
-    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <% if(locals.msg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+        <%=msg%>
+        </p>
+    <% } %>
     <div class="row py-5 px-5" style="background:linear-gradient(135deg,#423838,#bc81eb)">
         <div class="col-sm-6 pt-5">
             <h2 class="text-success mt-3">
@@ -60,11 +64,12 @@
         <div class="col-sm-5">
 
             <form action="/Admin/StudyMaterial" method="post" enctype="multipart/form-data">
-                @Html.LabelFor(m => m.Subject)
-                @Html.TextBoxFor(m => m.Subject, new { @placeholder = "Subject" })
-                @Html.LabelFor(m => m.Description)
-                @Html.TextAreaFor(m => m.Description, new { @placeholder = "Description about study material", @style = "resize:none;" })
-                @Html.LabelFor(m => m.StudyMaterial)
+                <label for="Subject">Subject</label>
+                <input id="Subject" name="Subject" placeholder="Subject" type="text" value="" />
+                <label for="Description">Description</label>
+                <textarea cols="20" id="Description" name="Description" placeholder="Description about study material" rows="2" style="resize:none;">
+</textarea>
+                <label for="StudyMaterial">StudyMaterial</label>
                 <div class="custom-file mb-4">
                     <label class="custom-file-label">Study Material</label>
                     <input type="file" class="custom-file-input" id="StudyMaterial" name="StudyMaterial" />
@@ -77,7 +82,7 @@
 
 <div class="container mt-2" id="StudyMat" style="display:none"  >
         <h2>Study Materials</h2>
-        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
+        
         <div class="row">
             <div class="col-sm-12">
                 <table class="table table-hover">
@@ -92,24 +97,21 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @{
-                            int x = 1;
-                                IEnumerable<Tbl_StudyMaterial> ListOFStudyMaterial = TempData["Study"] as IEnumerable<Tbl_StudyMaterial>;
-
-
-                                foreach (Tbl_StudyMaterial tn in ListOFStudyMaterial)
-                                {
-                                            <tr>
-                                                <td>@x</td>
-                                                <td>@tn.Subject</td>
-                                                <td>@tn.Description</td>
-                                                <td><a href="/Content/StudyMaterials/@tn.StudyMaterial">Download</td>
-                                                <td>@tn.Date</td>
-                                                <td><a href="/Admin/DeleteStudy?pk=@tn.Id" class="btn btn-warning">Remove</a></td>
-                                            </tr>
-                                    x++;
-                                }
-                        }
+                        <% 
+                            var x = 1;
+                            if(StudyMaterials!=null){
+                                StudyMaterials.forEach(function(e){ %>
+                                    <tr>
+                                        <td><%x%></td>
+                                        <td><%=e.Subject%></td>
+                                        <td><%=e.Description%></td>
+                                        <td><a href="../Content/StudyMaterials/<%=e.StudyMaterial%>">Download</td>
+                                        <td><%=e.Date%></td>
+                                        <td><a href="/Admin/DeleteStudy?pk=<%=e._id%>" class="btn btn-warning">Remove</a></td>
+                                    </tr>
+                       <% x++;
+                                 });
+                            } %>
                     </tbody>
                 </table>
             </div>
