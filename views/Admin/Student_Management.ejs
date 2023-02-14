@@ -1,6 +1,5 @@
 <div class="container mt-5">
     <h2>Student's Record</h2>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none"></p>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">
@@ -25,7 +24,7 @@
                             <td><%= e.Name %></td>
                             <td><%= e.Email %></td>
                             <td><%= e.Gender %></td>
-                            <td><a href="../../Content/StudentProfilePicture/<%= e.ProfilePicture %>">View Photo</a></td>
+                            <td><a href="/Download?file=StudentProfileImage/<%=e.ProfilePicture %>">View Photo</a></td>
                             <td><%= e.Course %> <%= e.Year %></td>
                             <td><%= e.Contact %></td>
                             <td><%= e.Address %></td>

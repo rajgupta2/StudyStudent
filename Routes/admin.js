@@ -203,9 +203,9 @@ admin.post("/Admin/StudyMaterial",function(req,res){
                 if(!err)
                 {
                     var sm=new DB.Colls_StudyMaterial({
-                        Subject :req.body.Subject,
+                        Subject :fields.Subject,
                         StudyMaterial :StdMAt,
-                        Description :req.body.Description
+                        Description :fields.Description
                     });
                     sm.save(()=>{
                        res.redirect("/Admin/StudyMaterial?msg=Saved Successfully.");
@@ -227,18 +227,25 @@ admin.post("/Admin/StudyMaterial",function(req,res){
 
 //StudyMaterial Delete
 admin.get("/Admin/DeleteStudy",function(req,res){
-
     DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk),function(err,std){
            if(err)
            res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");       
            else{
-           //Removing Study MAterial file
-           var filepath=path.resolve("./Content/StudyMaterial/"+std.StudyMaterial);
+           //Removing Study Material file
+           var filepath=path.resolve("./Content/StudyMaterials/"+std.StudyMaterial);
            fs.unlink(filepath,function(err){
-              res.redirect("/Admin/StudyMaterial?msg='Removed Suceessfully.'"); 
+            if(err)
+             msg="Unable to remove file.";//For erroer case,console.log(err);
+            res.redirect("/Admin/StudyMaterial?msg='Removed Suceessfully.'"); 
            });
            }
         });
+});
+
+//Download file
+admin.get("/Download",function(req,res){
+   var filepath="./Content/"+req.query.file;
+   res.download(filepath);
 });
 
 //Change Exam Mode
@@ -253,8 +260,8 @@ admin.get("/Admin/ChangeExamMode",function(req,res){
 
 //Assignment_Management
 admin.get("/Admin/Assignment_Management",function(req,res){
-    DB.Colls_SubmitAssignment.find(function(err,sa){
-        res.render("./Admin/Assignment_Management.ejs",{ASSIGNMENTS:sa});
+    DB.Colls_GiveAssignment.find(function(err,sa){
+        res.render("./Admin/Assignment_Management.ejs",{ASSIGNMENTS:sa,msg:req.query.msg});
     });
 });
 
@@ -265,6 +272,11 @@ admin.get("/Admin/ResultManagement",function(req,res){
     });
 });
 
+admin.get("/Admin/DeleteResult",function(req,res){
+    DB.Colls_Result.deleteOne({_id:req.query.pk},function(err){
+        res.redirect("/Admin/ResultManagement");
+    });
+});
 
 
 //AnswerQuery
@@ -331,247 +343,19 @@ admin.get("/Admin/RemoveQuestion",function(req,res){
 });
 
 
+admin.get("/Admin/DeleteAssignment",function(req,res){
+    DB.Colls_GiveAssignment.deleteOne({_id:new ObjectId(req.query.pk)},function(err,data){
+       res.redirect("/Admin/Assignment_Management?msg=Deleted Successfully.");
+    });
+});
 
-/*
+admin.get("/Admin/ChangePassword",function(req,res){
+   res.render("./Admin/ChangePassword.ejs");
+});
 
-
-
-
-
-admin.get("DeleteStudent",function(req,res){
-   
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    StudentData sd = db.StudentDatas.Find(pk);
-    string filePath= Server.MapPath("/Content/StudentProfilePicture/");
-    string finalPath =filePath+ sd.ProfilePicture; ;
-    System.IO.File.Delete(finalPath);
-    db.StudentDatas.Remove(sd);
-    StudentLoginData sl=db.StudentLoginDatas.Find(pk);
-    db.StudentLoginDatas.Remove(sl);
-        db.SaveChanges();
-        msg = "Record deleted successfully.";
-    TempData["msg"] = msg;
-    return RedirectToAction("Student_Management","Admin");
-}
-public ActionResult DeleteAssignment(int pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    Tbl_GiveAssignment sd = db.Tbl_GiveAssignment.Find(pk);
-    string FileDire = Server.MapPath("/Content/Assignment_Attachments/");
-    string filePath =FileDire + sd.Attachment;
-    System.IO.File.Delete(filePath);
-    db.Tbl_GiveAssignment.Remove(sd);
-    db.SaveChanges();
-    msg = "Record deleted successfully.";
-    TempData["msg"] = msg;
-    return RedirectToAction("Assignment_Management", "Admin");
-}
-public ActionResult EditAssignment(int pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    Tbl_GiveAssignment sd = db.Tbl_GiveAssignment.Find(pk);
-    TempData["msg"] = sd;
-    return RedirectToAction("Give_Assignment", "Admin");
-}
-
-StudyStudentEntities2 db =new StudyStudentEntities2();
-/
-
-public ActionResult DeleteStudy(int pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    try
-    {
-        Tbl_StudyMaterial tsm = db.Tbl_StudyMaterial.Find(pk);
-        string filePath = Server.MapPath("/Content/StudyMaterials/");
-        string finalPath = filePath + tsm.Subject;
-        System.IO.File.Delete(finalPath);
-        db.Tbl_StudyMaterial.Remove(tsm);
-        db.SaveChanges();
-        msg = "Record removed successfully";
-    }catch(Exception ex)
-    {
-        msg = "An error occured";
-    }
-    TempData["msg"] = msg;
-    return RedirectToAction("StudyMaterial", "Admin");
-}
-
-[HttpPost]
-public ActionResult StudyMaterial(Tbl_StudyMaterial sm)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    HttpPostedFileBase fo = Request.Files["StudyMaterial"];
-    try { 
-    if (fo.ContentLength > 0)
-    {
-        string filename = fo.FileName;
-        string finalfilename = Path.GetRandomFileName() + filename;
-        //To get extension of file name
-        string fileExtension = filename.Substring(filename.LastIndexOf('.') + 1).ToUpper();
-        string[] allowExtension = new string[] { "PDF", "DOCX" };
-        int x = Array.IndexOf(allowExtension, fileExtension);
-        if (x >= 0)
-        {
-            string FinalPath = Server.MapPath("/Content/StudyMaterials");
-            if (Directory.Exists(FinalPath) == false)
-            {
-                Directory.CreateDirectory(FinalPath);
-            }
-            fo.SaveAs(FinalPath + "/" + finalfilename);
-            sm.StudyMaterial = finalfilename;
-            sm.Date = DateTime.Now.ToString();
-            db.Tbl_StudyMaterial.Add(sm);
-            db.SaveChanges();
-            msg = "Study material uploaded successfully";
-        }
-        else
-        {
-            msg = "Please upload valid Document as pdf,docx etc";
-        }
-    }
-    else
-    {
-        msg = "Please Choose study material to upload";
-    }
-
-}catch(Exception ex)
-    {
-        msg = "Failes to upload study material,please try later";
-
-    }
-    List<Tbl_StudyMaterial> sa = db.Tbl_StudyMaterial.ToList();
-    TempData["Study"] = sa;
-    ViewBag.msg = msg;
-    return View();
-
-}
-public ActionResult ResultManagement()
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    List<Tbl_Result> tr=db.Tbl_Result.OrderByDescending(m=>m.Id).ToList();
-    ViewBag.msg = TempData["msg"];
-    return View(tr);
-
-}
+admin.post("/Admin/ChangePassword",function(req,res){
+    res.render("./Admin/ChangePassword.ejs");
+ });
 
 
-[HttpPost]
-
-
-
-
-
-public ActionResult ChangePassword()
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    StudentLoginData sld = new StudentLoginData();
-    return View(sld);
-}
-[HttpPost]
-public ActionResult ChangePassword(StudentLoginData sld)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    try
-    {
-        sld.StudentId = Session["adm"].ToString();
-        StudentLoginData sd = db.StudentLoginDatas.Find(sld.StudentId);
-        Cryptography cg = new Cryptography();
-        sld.Password=cg.EncryptMyData(sld.Password);
-        if (sd.Password == sld.Password)
-        {
-            sd.Password = cg.EncryptMyData(Request["NewPassword"]);
-            db.Entry(sd);
-            db.SaveChanges();
-            msg = "Password Updated Successfully.";
-        }
-        else
-        {
-            msg = "Password doesn't match.";
-        }
-    }catch(Exception ex)
-    {
-        msg = "Due to technical erroe we are unable to change password.";
-    }
-    ViewBag.msg = msg;
-    return View();
-}
-public ActionResult Logout()
-{
-    Session.Abandon();
-    Session.Clear();
-    return RedirectToAction("Login","Home");
-}
-public ActionResult Send_Email()
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-  
-    return View();
-}
-[HttpPost]
-public ActionResult Send_Email(string SendTo, string Subject, string Message)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    string msg = "";
-    Email_Sender emailSender = new Email_Sender();
-    bool bl=emailSender.SendMyEmail(SendTo, Subject, Message);
-    if (bl)
-        msg = "Mail Sent Successfully.";
-    else
-        msg = "Failed to send mail.";
-    ViewBag.Message = msg;
-    return View();
-}
-public ActionResult DeleteResult(int pk)
-{
-    if (IsValidUser() == false)
-    {
-        return RedirectToAction("Login", "Home");
-    }
-    Tbl_Result tr = db.Tbl_Result.Find(pk);
-    db.Tbl_Result.Remove(tr);
-    db.SaveChanges();
-    TempData["msg"]="Recored Removed Successfully";
-    return RedirectToAction("ResultManagement", "Admin");
-}
-}
-}
-/*
-*/
 admin.listen(port,()=>console.log("server is running"));

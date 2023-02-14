@@ -1,7 +1,11 @@
 
 <div class="container mt-5">
     <h2>Result Management</h2>
-    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <% if(locals.msg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+        <%=msg%>
+        </p>
+    <% } %>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">

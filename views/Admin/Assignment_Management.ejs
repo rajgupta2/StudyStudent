@@ -2,7 +2,11 @@
 
 <div class="container mt-5">
     <h2>Assignment Management</h2>
-    <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">@ViewBag.msg</p>
+    <% if(locals.msg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+        <%=msg%>
+        </p>
+    <% } %>
     <div class="row">
         <div class="col-sm-12">
             <table class="table table-hover">
@@ -13,7 +17,6 @@
                         <th>Uploaded Date</th>
                         <th>Deadline</th>
                         <th>Attachment</th>
-                        <th>Update</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -24,8 +27,7 @@
                                 <td><%=e.Description%></td>
                                 <td><%=e.Date%></td>
                                 <td><%=e.Deadline%></td>
-                                <td><a href="~/Content/Assignment_Attachments/<%=e.Attachment%>" class="nav-link">View</a></td>
-                                <td><a href="/Admin/EditAssignment?pk=<%=e._id%>"  class="nav-link" >Edit</a></td>
+                                <td><a href="/Download?file=AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
                                 <td><a href="/Admin/DeleteAssignment?pk=<%=e._id%>" class="nav-link">Delete</a></td>
                             </tr>
                         <%});%>
