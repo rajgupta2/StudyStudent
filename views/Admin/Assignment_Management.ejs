@@ -27,7 +27,7 @@
                                 <td><%=e.Description%></td>
                                 <td><%=e.Date%></td>
                                 <td><%=e.Deadline%></td>
-                                <td><a href="/Download?file=AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
+                                <td><a href="/Admin/Download?file=AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
                                 <td><a href="/Admin/DeleteAssignment?pk=<%=e._id%>" class="nav-link">Delete</a></td>
                             </tr>
                         <%});%>

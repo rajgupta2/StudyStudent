@@ -12,17 +12,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @{
-                        foreach (Tbl_StudyMaterial e in Model)
-                        {
-                                        <tr>
-                                            <td>@e.Subject</td>
-                                            <td>@e.Description</td>
-                                            <td><a href="~/Content/StudyMaterials/@e.StudyMaterial" download>Download</a></td>
-                                            <td>@e.Date</td>
-                                        </tr>
-                        }
-                    }
+    
+          <%Study_Materials.forEach (function(e){%>
+        <tr>
+            <td><%=e.Subject%></td>
+            <td><%=e.Description%></td>
+            <td><a href="/Download?file=StudyMaterials/<%=e.StudyMaterial%>" download>Download</a></td>
+            <td><%=e.Date%></td>
+        </tr>
+         <%});%>
                 </tbody>
             </table>
         </div>

@@ -5,17 +5,19 @@ const expressLayouts = require('express-ejs-layouts');
 //Database File Module
 const DB=require("../Models/DB");
 
-//Password Encryption File Module
-const EncryptMyData=require("../config/Cryptography.js");
-
 //Used for File Uploading 
 const formidable=require("formidable");
 const fs=require("fs");
 const path=require("path");
 
-const AdminRoute=require("./admin")
 const app=express();
 const port = process.env.PORT || 7000;
+
+
+//Password Encryption 
+const bcrypt=require("bcrypt");
+const EncryptMyData=require("../config/Cryptography.js");
+
 
 //Static Files
 app.use(express.static(path.resolve("./public/")));
@@ -26,6 +28,14 @@ app.set("layout","./Layout/General");
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+//Admin Zone
+const AdminRoute=require("./Admin.js");
+app.use("/Admin",AdminRoute);
+
+//Student Zone
+const StudentRoute=require("./Student.js");
+app.use("/Student",StudentRoute);
 
 //Routes
 //Index
@@ -163,4 +173,4 @@ app.post("/Home/Login",(req,res)=>{
     });
 });
 
-//app.listen(port,()=>console.log("server is running"));
+app.listen(port,()=>console.log("server is running"));

@@ -25,15 +25,18 @@
 </style>
 <div class="container my-5 pt-lg-5"  >
     <h1 class="text-success">Feedback</h1>
+    <% if(locals.msg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+        <%=msg%>
+        </p>
+    <% } %>
     <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
     <div class="row pb-5  pt-lg-5" id="feedback">
-
         <div class="col-sm-6 pt-4">
             <center>
                 <h1>We are exited </h1>
                 <h3>to hear from you.</h3>
             </center>
-
         </div>
         <div class="col-sm-5">
             <form action="/Student/Give_FeedBack" method="post">

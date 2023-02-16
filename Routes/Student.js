@@ -1,38 +1,63 @@
 const express=require("express");
 const ejs=require("ejs");
 const expressLayouts = require('express-ejs-layouts');
-
 //Database File Module
-//const DB=require("./Models/DBStudyStudent.js");
-
-//Password Encryption File Module
-const EncryptMyData=require(".././App_Code/Cryptography.js");
+const DB=require("../Models/DB");
 
 //Used for File Uploading 
 const formidable=require("formidable");
 const fs=require("fs");
 const path=require("path");
-//const router=express.Router();
-const app=express();
-const port = process.env.PORT || 5000;
+const  mongoose = require("mongoose");
+const ObjectId=require("mongodb").ObjectId;
+
+const Student=express();
+
+//Static Files
+Student.use(express.static(path.resolve("./public/")));
 
 // Set Templating Engine and Layout 
-app.use(expressLayouts);
-app.set("layout","./Layout/Student");
-app.set("view engine", "ejs");
-app.use(express.json());
-
-
-
-app.use(express.urlencoded({extended: true}))
+Student.use(expressLayouts);
+Student.set("layout","./Layout/Student");
+Student.set("view engine", "ejs");
+Student.use(express.json());
+Student.use(express.urlencoded({extended: true}));
 
 //Routes
-//Index
-app.get("/",(req,res)=>{
-    res.render("./Home/index");
-    //res.render("/");
+Student.get("/Greetings",(req,res)=>{
+    res.render("./Student/Greetings.ejs");
 });
-app.listen(port,()=>console.log("server is running"));
+
+Student.get("/View_Assignment",(req,res)=>{
+    res.render("./Student/View_Assignment.ejs");
+});
+
+Student.get("/Study_Materials",(req,res)=>{
+    DB.Colls_StudyMaterial.find(function(err,sa){
+        res.render("./Student/Study_Materials.ejs",{Study_Materials:sa});
+    });
+});
+
+Student.get("/Give_FeedBack",(req,res)=>{
+        res.render("./Student/Give_FeedBack.ejs");
+});
+
+Student.post("/Give_FeedBack",(req,res)=>{
+    var fd=DB.Colls_Feedback({
+        Student_Id :String,
+        Student_Name :req.body.Student_Name,
+        Feedback_Subject: req.body.Feedback_Subject,
+        Message :req.body.Message,
+    });
+    fd.save(function(err){
+        if(err)
+        console.log(err);
+        else
+        res.render("./Student/Give_FeedBack.ejs");
+    });
+});
+
+module.exports=Student;
 /* 
 namespace EStudyCorner.Controllers
 {
@@ -90,17 +115,7 @@ namespace EStudyCorner.Controllers
             ViewBag.msg = msg;
             return View();
         }
-        public ActionResult View_Assignment()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            TempData["GivenAssignment"] = db.Tbl_GiveAssignment.ToList();
-            string uid = Session["std"].ToString();
-            List<Tbl_SubmitAssignment> sa= db.Tbl_SubmitAssignment.Where(x => x.Student_ID==uid).ToList();
-            return View(sa);
-        }
+      
         public ActionResult Submit_Assignment()
         {
             if (IsValidUser() == false)

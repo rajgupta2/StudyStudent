@@ -9,34 +9,32 @@ const formidable=require("formidable");
 const fs=require("fs");
 const path=require("path");
 const  mongoose = require("mongoose");
-const { Db } = require("mongodb");
 const ObjectId=require("mongodb").ObjectId;
 
-const admin=express();
-const port = process.env.PORT || 7000;
+const Admin=express();
 
 //Static Files
-admin.use(express.static(path.resolve("./public/")));
+Admin.use(express.static(path.resolve("./public/")));
 
 // Set Templating Engine and Layout 
-admin.use(expressLayouts);
-admin.set("layout","./Layout/admin");
-admin.set("view engine", "ejs");
-admin.use(express.json());
-admin.use(express.urlencoded({extended: true}));
+Admin.use(expressLayouts);
+Admin.set("layout","./Layout/Admin");
+Admin.set("view engine", "ejs");
+Admin.use(express.json());
+Admin.use(express.urlencoded({extended: true}));
 
 //Welcome
-admin.get("/Admin/Welcome",(req,res)=>{
+Admin.get("/Welcome",(req,res)=>{
     res.render("./Admin/Welcome.ejs");
 });
 
 //Upload_Assignment
-admin.get("/Admin/Give_Assignment",function(req,res){
+Admin.get("/Give_Assignment",function(req,res){
     res.render("./Admin/Give_Assignment.ejs");
 });
 
 //Upload_Assignment post
-admin.post("/Admin/Give_Assignment",function(req,res){
+Admin.post("/Give_Assignment",function(req,res){
     var msg="";
     var form= new formidable.IncomingForm();
     form.parse(req,function(err,fields,file){
@@ -73,14 +71,14 @@ admin.post("/Admin/Give_Assignment",function(req,res){
 });
     
 //Show Enquiry
-admin.get("/Admin/ShowEnquiry",function(req,res){
+Admin.get("/ShowEnquiry",function(req,res){
     DB.Colls_Query.find(function(err,q){
         res.render("./Admin/ShowEnquiry.ejs",{DBqueries:q});
     });
 });
 
 //Delete Enquiry
-admin.get("/Admin/DeleteNotification",function(req,res){
+Admin.get("/DeleteNotification",function(req,res){
     DB.Colls_Notification.deleteOne({_id:new ObjectId(req.query.pk)},function(err){
         if(err){
             res.redirect("/Admin/News_Update?msg=Error Occured in deletion");
@@ -92,7 +90,7 @@ admin.get("/Admin/DeleteNotification",function(req,res){
 
 
 //Student_Management
-admin.get("/Admin/Student_Management",function(req,res){
+Admin.get("/Student_Management",function(req,res){
     DB.Colls_StdData.find(function(err,sm){
         res.render("./Admin/Student_Management.ejs",{StdData:sm});
     });
@@ -100,30 +98,30 @@ admin.get("/Admin/Student_Management",function(req,res){
 
 
 //News_Update
-admin.get("/Admin/News_Update",function(req,res){
+Admin.get("/News_Update",function(req,res){
     DB.Colls_Notification.find(function(err,succ){
         res.render("./Admin/News_Update.ejs",{Notification:succ,addmsg:req.query.msg});
     });
 });
 
 //Feedback
-admin.get("/Admin/View_Feedback",function(req,res){
+Admin.get("/View_Feedback",function(req,res){
     DB.Colls_Feedback.find(function(err,succ){
         res.render("./Admin/View_Feedback.ejs",{Feedbacks:succ});
     });
 });
 
 //Subject_Management
-admin.get("/Admin/Subject_Management",function(req,res){
+Admin.get("/Subject_Management",function(req,res){
     DB.Colls_Subject.find(function(err,sub){
-        res.render("./Admin/Subject_Management.ejs",{Subjects:sub,addmsg:admin.get("addsub")});
-        admin.set("addsub","");
+        res.render("./Admin/Subject_Management.ejs",{Subjects:sub,addmsg:Admin.get("addsub")});
+        Admin.set("addsub","");
     });
 });
 
 
 //Subject_Management post
-admin.post("/Admin/Subject_Management",function(req,res){
+Admin.post("/Subject_Management",function(req,res){
     DB.Colls_Subject.find({Subject:req.body.searchSubject},function(err,sub){
         if(sub.length>0)
         res.render("./Admin/Subject_Management.ejs",{Subjects:sub});
@@ -133,37 +131,37 @@ admin.post("/Admin/Subject_Management",function(req,res){
 });
 
 //ADD Subject post
-admin.post("/Admin/AddSubject",function(req,res){
+Admin.post("/AddSubject",function(req,res){
     var sub=new DB.Colls_Subject({
         Subject:req.body.Subject
     });
     sub.save(function(err){
         if(err)
-             admin.set("addsub","Failed to save");
+             Admin.set("addsub","Failed to save");
         else
-             admin.set("addsub","Saved succesfully.");
+             Admin.set("addsub","Saved succesfully.");
         res.redirect("/Admin/Subject_Management");
     });
 });
 
 //Remove Subject get
-admin.get("/Admin/RemoveSubject",function(req,res){
+Admin.get("/RemoveSubject",function(req,res){
   
     //REMOVE ALL QUESTIONS RELATED THIS SUBJECT
     DB.Colls_Questions.deleteMany({Subject:req.query.sub});
     //Removing Subject      
     DB.Colls_Subject.deleteOne({Subject:req.query.sub},function(err,sub){
             if(err){
-              admin.set("addsub","Failed to remove");
+              Admin.set("addsub","Failed to remove");
             }else{
-              admin.set("addsub","Subject removed successfully");
+              Admin.set("addsub","Subject removed successfully");
             }
             res.redirect("/Admin/Subject_Management");; 
     });
 });
 
 //News_Update post
-admin.post("/Admin/News_Update",function(req,res){
+Admin.post("/News_Update",function(req,res){
     var nt=new  DB.Colls_Notification({
         Notification_Msg:req.body.Notification_Msg
     });
@@ -176,20 +174,25 @@ admin.post("/Admin/News_Update",function(req,res){
 });
 
 //Download
-admin.get("/Admin/Download",function(req,res){
+Admin.get("/Download",function(req,res){
+    if(req.query.file!=undefined){
+        filepath="./Content/"+req.query.file;
+      res.download(filepath);
+    }else{
     DB.Colls_SubmitAssignment.find(function(std){
         res.render("./Admin/Download.ejs",{Assignment:std});        
     });
+    }
 });
 
 //StudyMaterial
-admin.get("/Admin/StudyMaterial",function(req,res){
+Admin.get("/StudyMaterial",function(req,res){
     DB.Colls_StudyMaterial.find(function(err,sa){
         res.render("./Admin/StudyMaterial.ejs",{StudyMaterials:sa,msg:req.query.msg});        
     });
 });
 
-admin.post("/Admin/StudyMaterial",function(req,res){
+Admin.post("/StudyMaterial",function(req,res){
     var msg="";
     var form=new formidable.IncomingForm();
     form.parse(req,function(err,fields,file){
@@ -226,7 +229,7 @@ admin.post("/Admin/StudyMaterial",function(req,res){
 });
 
 //StudyMaterial Delete
-admin.get("/Admin/DeleteStudy",function(req,res){
+Admin.get("/DeleteStudy",function(req,res){
     DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk),function(err,std){
            if(err)
            res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");       
@@ -243,13 +246,13 @@ admin.get("/Admin/DeleteStudy",function(req,res){
 });
 
 //Download file
-admin.get("/Download",function(req,res){
+Admin.get("/Download",function(req,res){
    var filepath="./Content/"+req.query.file;
    res.download(filepath);
 });
 
 //Change Exam Mode
-admin.get("/Admin/ChangeExamMode",function(req,res){
+Admin.get("/ChangeExamMode",function(req,res){
     DB.Colls_Subject.updateOne({_id:new ObjectId(req.query.id)},{Status:req.query.mode},function(err,st){
         if(err)
         res.redirect("/Admin/Subject_Management");
@@ -259,20 +262,20 @@ admin.get("/Admin/ChangeExamMode",function(req,res){
 });
 
 //Assignment_Management
-admin.get("/Admin/Assignment_Management",function(req,res){
+Admin.get("/Assignment_Management",function(req,res){
     DB.Colls_GiveAssignment.find(function(err,sa){
         res.render("./Admin/Assignment_Management.ejs",{ASSIGNMENTS:sa,msg:req.query.msg});
     });
 });
 
 //Result_Management
-admin.get("/Admin/ResultManagement",function(req,res){
+Admin.get("/ResultManagement",function(req,res){
     DB.Colls_Result.find(function(err,sa){
         res.render("./Admin/ResultManagement.ejs",{Results:sa});
     });
 });
 
-admin.get("/Admin/DeleteResult",function(req,res){
+Admin.get("/DeleteResult",function(req,res){
     DB.Colls_Result.deleteOne({_id:req.query.pk},function(err){
         res.redirect("/Admin/ResultManagement");
     });
@@ -280,44 +283,44 @@ admin.get("/Admin/DeleteResult",function(req,res){
 
 
 //AnswerQuery
-admin.get("/Admin/AnswerQuery",function(req,res){
+Admin.get("/AnswerQuery",function(req,res){
     var sa =DB.Colls_Query.find();
     res.render("./Admin/AnswerQuery.ejs");
 });
 
 //Block get
-admin.get("/Admin/Block",function(req,res){
+Admin.get("/Block",function(req,res){
    DB.Colls_StdData.updateOne({Email:req.query.pk},{Status:"Block"},function(err){
       res.redirect("/Admin/Student_Management");
    });
 });
 
 //Unblock get
-admin.get("/Admin/Unblock",function(req,res){
+Admin.get("/Unblock",function(req,res){
     DB.Colls_StdData.updateOne({Email:req.query.pk},{Status:"Active"},function(err){
        res.redirect("/Admin/Student_Management");
     });
  });
 
  //Delete Student 
-admin.get("/Admin/DeleteStudent",function(req,res){
+Admin.get("/DeleteStudent",function(req,res){
     DB.Colls_StdData.deleteOne({Email:req.query.pk},function(err){
        res.redirect("/Admin/Student_Management");
     });
  });
 
 //Manage Question
-admin.get("/Admin/ManageQuestion",function(req,res){
+Admin.get("/ManageQuestion",function(req,res){
     if(req.query.sub!=undefined)
-    admin.set("Subject",req.query.sub);
-    DB.Colls_Questions.find({Subject:admin.get("Subject")},function(err,ques){
+    Admin.set("Subject",req.query.sub);
+    DB.Colls_Questions.find({Subject:Admin.get("Subject")},function(err,ques){
         res.render("./Admin/ManageQuestion.ejs",{Questions:ques,msg:req.query.msg});
     });
  });
  
-admin.post("/Admin/AddQuestion",function(req,res){
+Admin.post("/AddQuestion",function(req,res){
       var q=new DB.Colls_Questions({
-         Subject :admin.get("Subject"),
+         Subject :Admin.get("Subject"),
          Question :req.body.Question,
          Option1 :req.body.Option1,
          Option2 :req.body.Option2,
@@ -333,7 +336,7 @@ admin.post("/Admin/AddQuestion",function(req,res){
       });
 });
 
-admin.get("/Admin/RemoveQuestion",function(req,res){
+Admin.get("/RemoveQuestion",function(req,res){
     DB.Colls_Questions.deleteOne({_id:new ObjectId(req.query.pk)},function(err){
       if(err)
       res.redirect("/Admin/ManageQuestion?msg=Unable to Delete.");
@@ -343,19 +346,18 @@ admin.get("/Admin/RemoveQuestion",function(req,res){
 });
 
 
-admin.get("/Admin/DeleteAssignment",function(req,res){
+Admin.get("/DeleteAssignment",function(req,res){
     DB.Colls_GiveAssignment.deleteOne({_id:new ObjectId(req.query.pk)},function(err,data){
        res.redirect("/Admin/Assignment_Management?msg=Deleted Successfully.");
     });
 });
 
-admin.get("/Admin/ChangePassword",function(req,res){
+Admin.get("/ChangePassword",function(req,res){
    res.render("./Admin/ChangePassword.ejs");
 });
 
-admin.post("/Admin/ChangePassword",function(req,res){
-    res.render("./Admin/ChangePassword.ejs");
+Admin.post("/ChangePassword",function(req,res){
+    res.render(".Admin/ChangePassword.ejs");
  });
 
-
-admin.listen(port,()=>console.log("server is running"));
+ module.exports=Admin;
