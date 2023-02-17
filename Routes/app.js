@@ -15,9 +15,8 @@ const port = process.env.PORT || 7000;
 
 
 //Password Encryption 
-const bcrypt=require("bcrypt");
-const EncryptMyData=require("../config/Cryptography.js");
-
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 //Static Files
 app.use(express.static(path.resolve("./public/")));
@@ -35,6 +34,7 @@ app.use("/Admin",AdminRoute);
 
 //Student Zone
 const StudentRoute=require("./Student.js");
+const { captureRejectionSymbol } = require("events");
 app.use("/Student",StudentRoute);
 
 //Routes
@@ -64,7 +64,7 @@ app.get("/Home/Login",(req,res)=>{
 });
 
 //Contact Post
-app.post("/Home/Contact",(req,res)=>{
+app.post("/Home/Contact",function(req,res){
     const Query=new DB.Colls_Query({
         Name:req.body.Name,
         Email:req.body.Email,
@@ -82,78 +82,86 @@ app.post("/Home/Contact",(req,res)=>{
 });
 
 //Registration Post 
-app.post("/Home/Registration",(req,res)=>{
-    var msg="";
-    console.log(req.body.Email);
-    DB.Colls_StdData.find({Email:req.body.Email},function(err,std){
-        console.log(std);
-       if(std.length<=0){
-        console.log(std);
-        var form= new formidable.IncomingForm();
-        form.parse(req,function(err,fields,file){
+app.post("/Home/Registration",function(req,res){
+    var form= new formidable.IncomingForm();
+    form.parse(req,function(err,fields,file){
+    DB.Colls_StdData.find({Email:fields.Email},function(err,std){
+        if(std.length<=0){ 
             if(err)
                msg="Oops! error occured.";
             else{
             var oldPath=file.ProfilePicture.filepath;
             var StudentProfileImage=file.ProfilePicture.newFilename+ path.extname(file.ProfilePicture.originalFilename);
             var newpath= "./Content/StudentProfileImage/" + StudentProfileImage; 
-                fs.readFile(oldPath,function(err,data){
-                    if(err)
-                      msg="Oops! error occured in reading the profile picture.";
-                    else{
-                         fs.writeFile(newpath,data,function(err){
+            fs.readFile(oldPath,function(err,data){
+               fs.writeFile(newpath,data,function(err){
                              if(err)
                                msg="Oops! error occured in saving the profile picture.";
                              else{
-                                const stdData=new DB.Colls_StdData({
-                                EnrollmentNumber: fields.EnrollmentNumber,
-                                Name:fields.Name,
-                                Gender:fields.Gender,
-                                College:fields.College,
-                                Course:fields.Course,
-                                Year:fields.Year,
-                                Email:fields.Email,
-                                Contact:fields.Contact,
-                                Address:fields.Address,
-                                ProfilePicture:StudentProfileImage,
-                                Password:EncryptMyData(fields.Password),
-                                  });
-                               stdData.save(function(err,succ){
-                               var ans=msg;
-                               if(err){
-                                ans="Sorry! Due to some technicle issue we are unable to registerd you.";
-                                res.render("./Home/Registration",{msg:ans});    
-                               }else
-                                {
-                                    ans="You are successfully registered.Please continue to login.";
-                                    res.render("./Home/Login",{msg:ans});
-                                }
+                                bcrypt.hash(fields.Password,saltRounds,function(err,hash){
+                                    const stdData=new DB.Colls_StdData({
+                                        EnrollmentNumber: fields.EnrollmentNumber,
+                                        Name:fields.Name,
+                                        Gender:fields.Gender,
+                                        College:fields.College,
+                                        Course:fields.Course,
+                                        Year:fields.Year,
+                                        Email:fields.Email,
+                                        Contact:fields.Contact,
+                                        Address:fields.Address,
+                                        ProfilePicture:StudentProfileImage,
+                                        Password:hash
+                                       });
+                                       stdData.save(function(err,succ){
+                                        var ans=msg;
+                                        if(err){
+                                         console.log(err);
+                                         ans="Sorry! Due to some technicle issue we are unable to registerd you.";
+                                         res.render("./Home/Registration",{msg:ans});    
+                                        }else
+                                         {
+                                             ans="You are successfully registered.Please continue to login.";
+                                             res.render("./Home/Login",{msg:ans});
+                                         }
+                                });
                             });
                         }
                     });
-                  }
-               });
-               //Deleting file from temporary location
-               fs.unlink(oldPath,function(err){
+            });
+            //Deleting file from temporary location
+            fs.unlink(oldPath,function(err){
                 if(err)
+                console.log(err);
                 msg="Oops! error occured in deleting the temporary file.";
-                });    
-           }
-        });
-       }else{
+            });    
+            }
+        }else
         res.render("./Home/Registration",{msg:"Email Already registered. Please Login"});
-       }
+       });
     });
 });
 
 //Login Post
 app.post("/Home/Login",(req,res)=>{
     var msg="";
-    var pass=EncryptMyData(req.body.Password);
-    DB.Colls_StdData.find({Email:req.body.StudentId},function(err,sd){
-       if(sd.length!=0){
-          if(sd[0].Password==pass){
-             //Creating Session for admin
+    DB.Colls_StdData.findOne({Email:req.body.StudentId},function(err,sd){
+    if(!sd){
+        msg="Invalid Email";
+        res.render("./Home/Login",{msg:msg});
+    }else{
+    bcrypt.compare(req.body.Password,sd.Password,function(err,result){
+       if(result==true){
+           if(sd.Status!="Active")
+            res.render("./Home/Login",{msg:"Your account is blocked by admin"});
+           else{
+
+           }
+       }else
+         res.render("./Home/Login",{msg:"Incorrect Password"});
+    });
+       
+      
+           /*  //Creating Session for admin
              if (ID == "admin@gmail.com"){
                req.session="admin@gmail.com";
                res.redirect(path.resolve("./Routes/admin.js"));
@@ -163,13 +171,8 @@ app.post("/Home/Login",(req,res)=>{
                 res.redirect(path.resolve("./Routes/Student.js"));
              else
                  msg ="You account is blocked.";
-            }
-        }else
-            msg="Invalid Password";
-    }else
-        msg="Invalid Email";
-
-        res.render("./Home/Login",{msg:msg});
+            }*/
+        }    
     });
 });
 
