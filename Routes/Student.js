@@ -25,24 +25,41 @@ Student.use(express.urlencoded({extended: true}));
 
 //Routes
 Student.get("/Greetings",(req,res)=>{
+    if(!req.isAuthenticated())
+    res.redirect("/Home/Login")
+    else{
     res.render("./Student/Greetings.ejs");
+    }
 });
 
 Student.get("/View_Assignment",(req,res)=>{
+    if(!req.isAuthenticated())
+    res.redirect("/Home/Login")
+    else
     res.render("./Student/View_Assignment.ejs");
 });
 
 Student.get("/Study_Materials",(req,res)=>{
+    if(!req.isAuthenticated())
+    res.redirect("/Home/Login")
+    else{
     DB.Colls_StudyMaterial.find(function(err,sa){
         res.render("./Student/Study_Materials.ejs",{Study_Materials:sa});
     });
+}
 });
 
 Student.get("/Give_FeedBack",(req,res)=>{
+    if(!req.isAuthenticated())
+    res.redirect("/Home/Login")
+    else
         res.render("./Student/Give_FeedBack.ejs");
 });
 
 Student.post("/Give_FeedBack",(req,res)=>{
+    if(!req.isAuthenticated())
+    res.redirect("/Home/Login")
+    else{
     var fd=DB.Colls_Feedback({
         Student_Id :String,
         Student_Name :req.body.Student_Name,
@@ -55,6 +72,12 @@ Student.post("/Give_FeedBack",(req,res)=>{
         else
         res.render("./Student/Give_FeedBack.ejs");
     });
+}
+});
+
+Student.get("/logout",function(req,res){
+    req.logout();
+    res.redirect("/");
 });
 
 module.exports=Student;

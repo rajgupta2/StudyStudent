@@ -9,3 +9,4 @@ node_modules/
 config/
 Content/
 Models/
+.env

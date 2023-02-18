@@ -6,13 +6,13 @@
 <script>
     $(document).ready(function () {
         $("[type*='submit']").click(function () {
-            var StudentId = $("#StudentId").val().trim();
+            var Email = $("#Email").val().trim();
             var Password = $("#Password").val().trim();
             var status = true;
             $(".err").remove();
-            if (StudentId.length < 2) {
+            if (Email.length < 2) {
                 status= false;
-                $("#StudentId").after("<span class='err'>Please enter valid StudentId(EMail).</span>");
+                $("#Email").after("<span class='err'>Please enter valid Email.</span>");
             }
             if (Password.length < 3) {
                 status=false;
@@ -42,7 +42,7 @@
         </div>
         <div class="col-sm-5">
             <form action="/Home/Login" method="post">
-                <input class="form-control mt-4" id="StudentId" name="StudentId" placeholder="Email" type="text" value="" />
+                <input class="form-control mt-4" id="Email" name="Email" placeholder="Email" type="text" value="" />
                 <input class="form-control mt-4" id="Password" name="Password" placeholder="Password" type="password" />
                 <input type="submit" value="Login" class="btn btn-success btn-block my-4">
             </form>
