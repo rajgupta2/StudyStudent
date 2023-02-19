@@ -14,12 +14,11 @@
 <div class="nav-item dropdown" id="RightSide" >
     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#Test">Test</a>
     <div class="dropdown-menu" id="Test">
-        @{
-            foreach (Tbl_Subject ts in Model)
-            {
-                <a class="dropdown-item" href="/Student/Test?sub=@ts.Subject">@ts.Subject</a>
-            }
-        }
+        <% if(locals.Test){
+            Test.forEach(function(e){ %>
+                <a class="dropdown-item" href="/Student/Test?sub=<%=e.Subject%>"><%=e.Subject%></a>
+        <% })
+           } %>
     </div>
 </div>
 <center>

@@ -5,6 +5,7 @@
             <table class="table table-hover  table-bordered text-center">
                 <thead>
                     <tr class="text-dark table-primary">
+                        <th>S.No.</th>
                         <th>Subject</th>
                         <th>Description</th>
                         <th>Study Materials</th>
@@ -12,15 +13,20 @@
                     </tr>
                 </thead>
                 <tbody>
-    
-          <%Study_Materials.forEach (function(e){%>
-        <tr>
-            <td><%=e.Subject%></td>
-            <td><%=e.Description%></td>
-            <td><a href="/Download?file=StudyMaterials/<%=e.StudyMaterial%>" download>Download</a></td>
-            <td><%=e.Date%></td>
-        </tr>
-         <%});%>
+                    <% 
+                    var x = 1;
+                    if(StudyMaterials!=null){
+                        StudyMaterials.forEach(function(e){ %>
+                            <tr>
+                                <td><%=x%></td>
+                                <td><%=e.Subject%></td>
+                                <td><%=e.Description%></td>
+                                <td><a href="/Student/Download?file=StudyMaterials/<%=e.StudyMaterial%>">Download</td>
+                                <td><%=e.Date%></td>
+                            </tr>
+               <% x++;
+                         });
+                    } %>
                 </tbody>
             </table>
         </div>

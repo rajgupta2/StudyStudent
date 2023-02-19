@@ -2,46 +2,40 @@
     <center class=" mx-lg-5">
         <div class="row mt-5 pt-5 mx-lg-5">
             <div class="col-sm-12 mt-5 pt-lg-5">
-                 @if ( @ViewBag.msg !=null)
-                 {
-                    <p class="alert alert-dark text-center h2">@ViewBag.msg</p>
-                 }
+                 <%if ( locals.msg)
+                 { %>
+                    <p class="alert alert-dark text-center h2"><%=msg%></p>
+                 <%}
                  else
-                 {
+                 { %>
                 <h5>Don't leave the page after starting the exam otherwise exam will be submitted automatically.</h5>
                 <a class="btn btn-warning w-25" href="/Student/Greetings">Back</a>
                 <a class="btn btn-success w-25" id="start">Start</a>
-                 }
+                 <%}%>
             </div>
         </div>
     </center>
 </div>
 
 <div class="container mt-5 pb-5" id="Exam" style="display:none;">
-    @*Timer*@
+    <!--Timer-->
     <span class="alert alert-success text-dark float-right" id="timer" style="font-size:30px;display:none;"></span>
     <div class="row">
         <div class="col-sm-12 py-4">
             <form action="/Student/Test" method="post">
-                @{
-                    if (Model != null)
-                    {
-                        int x = 1;
-                        foreach (Tbl_Question tq in Model)
-                        {
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    Que @x:@tq.Question<br />
-                                    <input type="radio" name="ANS_@tq.Id" value="@tq.Option1" />@tq.Option1 <br />
-                                    <input type="radio" name="ANS_@tq.Id" value="@tq.Option2" />@tq.Option2 <br />
-                                    <input type="radio" name="ANS_@tq.Id" value="@tq.Option3" />@tq.Option3<br />
-                                    <input type="radio" name="ANS_@tq.Id" value="@tq.Option4" />@tq.Option4<br /> <hr />
-                                </div>
-                            </div>
-                            x++;
-                        }
-                    }
-                }
+               <% if(locals.Questions)
+                  Questions.forEach(function(e){
+                  var x = 1; %>
+                  <div class="row">
+                    <div class="col-sm-12">
+                        Que <%=x %> : <%=e.Question %><br />
+                        <input type="radio" name="ANS_<%=e._id%>" value="<%=e.Option1%>" /><%=e.Option1 %><br />
+                        <input type="radio" name="ANS_<%=e._id%>" value="<%=e.Option2%>" /><%=e.Option2 %><br />
+                        <input type="radio" name="ANS_<%=e._id%>" value="<%=e.Option3%>" /><%=e.Option3%><br />
+                        <input type="radio" name="ANS_<%=e._id%>" value="<%=e.Option4%>" /><%=e.Option4%><br /> <hr />
+                    </div>
+                </div>
+                 <% }); %>
                 <input type="reset" value="Reset" class="btn btn-warning" />
                 <input type="submit" value="Submit" class="btn btn-success" id="examButton" />
             </form>

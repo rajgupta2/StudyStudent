@@ -22,7 +22,7 @@ app.use(express.static(path.resolve("./public/")));
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-const LocalStrategy = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 const crypto = require("crypto");
 
 app.use(session({
@@ -34,26 +34,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy({ usernameField: 'Email', passwordField: 'Password' },
-    function (StudentId, password, cb) {
-        DB.Colls_StdData.findOne({ Email: StudentId },{salt:1,hash:1}, function (err, user) {
-            if (err) { return cb(err); }
-            if (!user) { return cb(null, false, { message: 'Incorrect email or password.' }); }
-            crypto.pbkdf2(password, user.salt, 310000, 32, 'sha256', function (err, hashedPassword) {
-                if (err) { return cb(err); }
-                var  b=new Buffer.alloc(32,user.hash);
-                //Error
-                if (!crypto.timingSafeEqual(b,hashedPassword)) {
-                    return cb(null, false, { message: 'Incorrect username or password.' });
-                }
-            });
-
-            return cb(null, user);
-        });
-    }
+DB.Colls_StdData.authenticate()   
 ));
-     
-//passport.use(DB.Colls_StdData.createStrategy({ usernameField: 'Email', passwordField: 'Password' }));
-//passport.use(DB.Colls_StdData.authenticate());
+
 // use static serialize and deserialize of model for passport session support
 passport.serializeUser(function (user, cb) {
     cb(null, user);
@@ -151,6 +134,7 @@ app.post("/Home/Registration", function (req, res) {
                                     Address: fields.Address,
                                     ProfilePicture: StudentProfileImage
                                 });
+                                
                                 DB.Colls_StdData.register(stdData, fields.Password, function (err, user) {
                                     if (err) {
                                         res.render("./Home/Registration", { msg: "Sorry! Due to some technicle issue we are unable to registerd you." + err });
@@ -177,27 +161,29 @@ app.post("/Home/Registration", function (req, res) {
 //Login Post
 app.post("/Home/Login", (req, res) => {
     const user = new DB.Colls_StdData({
-        Email: req.body.Email,
+        username: req.body.Email,
         Password: req.body.Password
     });
     req.login(user, function (err) {
         if (err) {
-            res.render("./Home/Login.ejs", { msg: "An error occured."+err});
+            res.render("./Home/Login.ejs", { msg: "An error occured."});
         } else {
-            passport.authenticate("local", function (err, user, info) {
-                if (err){
-                    res.render("./Home/Login.ejs", { msg:err});
-                }if(user==false) //user==false
-                    res.render("./Home/Login.ejs", { msg: info.message });
-            })(req, res, function () {
-                if (req.user.Email == "StudyStudent@gmail.com")
-                    res.redirect("/Admin/Welcome");
-                else {
-                    if (req.user.Status != "Active") {
-                        res.render("./Home/Login.ejs", { msg: "Your account is blocked by admin.You can't log-in." });
-                    } else
-                        res.redirect("/Student/Greetings");
-                }
+            const authenticate=DB.Colls_StdData.authenticate();
+            authenticate(req.body.Email,req.body.Password,function(err,result){
+               if(result==false)
+                res.render("./Home/Login.ejs", { msg: "Invalid email or password."});
+               else
+               {
+                  if (req.body.Email == "StudyStudent@gmail.com")
+                     res.redirect("/Admin/Welcome");
+                  else {
+                     if (req.user.Status != "Active") {
+                      res.render("./Home/Login.ejs", { msg: "Your account is blocked by admin.You can't log-in." });
+                     } else{
+                       res.redirect("/Student/Greetings");
+                     }
+                   }
+               }
             });
         }
     });

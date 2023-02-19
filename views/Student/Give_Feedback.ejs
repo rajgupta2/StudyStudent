@@ -30,7 +30,6 @@
         <%=msg%>
         </p>
     <% } %>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">@ViewBag.msg</p>
     <div class="row pb-5  pt-lg-5" id="feedback">
         <div class="col-sm-6 pt-4">
             <center>
@@ -40,8 +39,9 @@
         </div>
         <div class="col-sm-5">
             <form action="/Student/Give_FeedBack" method="post">
-                @Html.TextBoxFor(m => m.Feedback_Subject, new { @placeholder = "Subject of feedback", @class = "form-control mt-4" })
-                @Html.TextAreaFor(m => m.Message, new { @placeholder = "Feedback Message", @class = "form-control mt-4",@style="resize:none;" })
+                <input class="form-control mt-4" id="Feedback_Subject" name="Feedback_Subject" placeholder="Subject of feedback" type="text" value="" />
+                <textarea class="form-control mt-4" cols="20" id="Message" name="Message" placeholder="Feedback Message" rows="2" style="resize:none;">
+</textarea>
                 <input type="submit" value="Save" class="btn btn-success btn-block my-4">
                 <input type="reset" value="Reset" class="btn btn-warning btn-block my-4">
             </form>

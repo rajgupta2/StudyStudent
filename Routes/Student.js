@@ -1,324 +1,225 @@
-const express=require("express");
-const ejs=require("ejs");
+const express = require("express");
+const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 //Database File Module
-const DB=require("../Models/DB");
+const DB = require("../Models/DB");
 
 //Used for File Uploading 
-const formidable=require("formidable");
-const fs=require("fs");
-const path=require("path");
-const  mongoose = require("mongoose");
-const ObjectId=require("mongodb").ObjectId;
+const formidable = require("formidable");
+const fs = require("fs");
+const path = require("path");
+const mongoose = require("mongoose");
+const ObjectId = require("mongodb").ObjectId;
 
-const Student=express();
+const Student = express();
 
 //Static Files
 Student.use(express.static(path.resolve("./public/")));
 
 // Set Templating Engine and Layout 
 Student.use(expressLayouts);
-Student.set("layout","./Layout/Student");
+Student.set("layout", "./Layout/Student");
 Student.set("view engine", "ejs");
 Student.use(express.json());
-Student.use(express.urlencoded({extended: true}));
+Student.use(express.urlencoded({ extended: true }));
 
 //Routes
-Student.get("/Greetings",(req,res)=>{
-    if(!req.isAuthenticated())
-    res.redirect("/Home/Login")
-    else{
-    res.render("./Student/Greetings.ejs");
+Student.get("/Greetings", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login");
+    else {
+        DB.Colls_Subject.find({ Status: "On" }, function (err, sub) {
+            res.render("./Student/Greetings.ejs", { session: req.user.username, Test: sub });
+        });
     }
 });
 
-Student.get("/View_Assignment",(req,res)=>{
-    if(!req.isAuthenticated())
-    res.redirect("/Home/Login")
-    else
-    res.render("./Student/View_Assignment.ejs");
+Student.get("/Submit_Assignment", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login");
+    else {
+        res.render("./Student/Submit_Assignment.ejs", { session: req.user.username });
+    }
 });
 
-Student.get("/Study_Materials",(req,res)=>{
-    if(!req.isAuthenticated())
-    res.redirect("/Home/Login")
-    else{
-    DB.Colls_StudyMaterial.find(function(err,sa){
-        res.render("./Student/Study_Materials.ejs",{Study_Materials:sa});
-    });
-}
+Student.post("/Submit_Assignment", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login");
+    else {
+        var msg = "";
+        var form = new formidable.IncomingForm();
+        form.parse(req, function (err, fields, file) {
+            var oldPath = file.Assignment.filepath;
+            var SubAss = file.Assignment.newFilename + path.extname(file.Assignment.originalFilename);
+            var newpath = "./Content/SubmittedAssignment/" + SubAss;
+            fs.readFile(oldPath, function (err, data) {
+                if (!err) {
+                    fs.writeFile(newpath, data, function (err) {
+                        if (!err) {
+                            DB.Colls_StdData.find({ Email: req.user.username }, function (err, student) {
+                                var sa = new DB.Colls_SubmitAssignment({
+                                    Student_Email: req.user.username,
+                                    Student_Name: student.Name,
+                                    Subject: fields.Subject,
+                                    Assignment: SubAss,
+                                });
+                                sa.save(() => {
+                                    res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Saved Successfully." });
+                                });
+                            });
+                        } else
+                            res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Failed to save." });
+                    });
+                } else
+                    res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Error(read):Failed to save." });
+            });
+            //Deleting file from temporary location
+            fs.unlink(oldPath, function (err) {
+                if (err)
+                    msg = "Oops! error occured in deleting the temporary file.";
+            });
+        });
+    }
 });
 
-Student.get("/Give_FeedBack",(req,res)=>{
-    if(!req.isAuthenticated())
-    res.redirect("/Home/Login")
-    else
-        res.render("./Student/Give_FeedBack.ejs");
-});
-
-Student.post("/Give_FeedBack",(req,res)=>{
-    if(!req.isAuthenticated())
-    res.redirect("/Home/Login")
-    else{
-    var fd=DB.Colls_Feedback({
-        Student_Id :String,
-        Student_Name :req.body.Student_Name,
-        Feedback_Subject: req.body.Feedback_Subject,
-        Message :req.body.Message,
-    });
-    fd.save(function(err){
-        if(err)
-        console.log(err);
-        else
-        res.render("./Student/Give_FeedBack.ejs");
-    });
-}
-});
-
-Student.get("/logout",function(req,res){
-    req.logout();
-    res.redirect("/");
-});
-
-module.exports=Student;
-/* 
-namespace EStudyCorner.Controllers
-{
-    public class StudentController : Controller
-    {
-        StudyStudentEntities2 db = new StudyStudentEntities2();
-        bool IsValidUser()
-        {
-            if (Session["std"]!=null)
-            return true;
-            else
-                return false;
-        }
-
-        // GET: Student
-        public ActionResult Study_Materials()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            List<Tbl_StudyMaterial> sa = db.Tbl_StudyMaterial.ToList();
-            return View(sa);
-        }
-        public ActionResult Give_FeedBack()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Give_FeedBack(Tbl_Feedback tf)
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            string msg;
-            try
-            {
-                tf.Feedback_DT = DateTime.Now.ToString();
-                tf.Student_Id = Session["std"].ToString();
-                StudentData sd = db.StudentDatas.Find(Session["std"]);
-                tf.Student_Name = sd.Name;
-                db.Tbl_Feedback.Add(tf);
-                db.SaveChanges();
-                msg = "Thanks for your feedback.";
-            }
-            catch(Exception ex)
-            {
-                msg = "Failed to save feedback";
-            }
-            ViewBag.msg = msg;
-            return View();
-        }
-      
-        public ActionResult Submit_Assignment()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            Tbl_SubmitAssignment sa = new Tbl_SubmitAssignment();
-            return View(sa);
-        }
-
-        [HttpPost]
-        public ActionResult Submit_Assignment(Tbl_SubmitAssignment sa)
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            string msg = "";
-            try
-            {
-                sa.Student_ID = Session["std"].ToString();
-                StudentData sd = db.StudentDatas.Find(Session["std"].ToString());
-                sa.Student_Name = sd.Name;
-                HttpPostedFileBase fo = Request.Files["Assignment"];
-                if (fo.ContentLength>0)
-                {
-                   string filename=fo.FileName;
-                    string finalfilename = Path.GetRandomFileName() + filename;
-                    //To get extension of file name
-                    string fileExtension=filename.Substring(filename.LastIndexOf('.')+1).ToUpper();
-                    string []allowExtension=new string[] { "PDF","DOCX"};
-                    int x = Array.IndexOf(allowExtension, fileExtension);
-                    if (x >= 0) {
-                        string FinalPath = Server.MapPath("/Content/SubmittedAssignment");
-                        if (Directory.Exists(FinalPath) == false)
-                        {
-                            Directory.CreateDirectory(FinalPath);
-                        }
-                        fo.SaveAs(FinalPath + "/" + finalfilename);
-                        sa.Assignment = finalfilename;
-                        sa.Date = DateTime.Now.ToString();
-                        db.Tbl_SubmitAssignment.Add(sa);
-                        db.SaveChanges();
-                        msg = "Assignment submitted successfully";
-                    }
+Student.get("/View_Assignment", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        DB.Colls_GiveAssignment.find(function (err, GAssignment) {
+            if (err)
+                res.render("./Student/View_Assignment.ejs", { session: req.user.username, msg: "An error occured." });
+            else {
+                DB.Colls_SubmitAssignment.find({ Student_Email: req.user.username }, function (err, SAssignment) {
+                    if (err)
+                        res.render("./Student/View_Assignment.ejs", { session: req.user.username, msg: "An error occured." });
                     else
-                    {
-                        msg = "Please upload valid Document as pdf,docx etc";
-                    }
-                }
-                else
-                {
-                    msg = "Please Choose Assignment to upload";
-                }
-
-            }catch(Exception ex)
-            {
-                msg = "Failes to upload assignment,please try later";
-
+                        res.render("./Student/View_Assignment.ejs", { session: req.user.username, Assignment: GAssignment, SubmittedAssignment: SAssignment });
+                });
             }
-            ViewBag.msg = msg;
-            return View();
-        }
-        public ActionResult Greetings()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            List<Tbl_Subject> ts = db.Tbl_Subject.Where(x=>x.Status=="On").ToList();
-            return View(ts);
-        }
-        public ActionResult ChangePassword()
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            StudentLoginData sld = new StudentLoginData();
-            return View(sld);
-        }
-        [HttpPost]
-        public ActionResult ChangePassword(StudentLoginData sld)
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            string msg = "";
-            try
-            {
-                sld.StudentId = Session["std"].ToString();
-                StudentLoginData sd = db.StudentLoginDatas.Find(sld.StudentId);
-                Cryptography cg = new Cryptography();
-                sld.Password = cg.EncryptMyData(sld.Password);
-                if (sd.Password == sld.Password)
-                {
-                    sd.Password = cg.EncryptMyData(Request["NewPassword"]);
-                    db.Entry(sd);
-                    db.SaveChanges();
-                    msg = "Password Updated Successfully.";
-                }
-                else
-                {
-                    msg = "Password doesn't match.";
-                }
-            }
-            catch (Exception ex)
-            {
-                msg = "Due to technical erroe we are unable to change password.";
-            }
-            ViewBag.msg = msg;
-            return View();
-        }
-        public ActionResult Logout()
-        {
-            Session.Abandon();
-            Session.Clear();
-            return RedirectToAction("Login", "Home");
-        }
-        public ActionResult Test(string sub)
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            Tbl_Subject ts = db.Tbl_Subject.Find(sub);
-            if (ts.Status == "On")
-            {
-                List<Tbl_Question> q = db.Tbl_Question.Where(x => x.Subject == sub).ToList();
-                TempData["sub"] = sub;
-                return View(q);
-            }
-            else
-            {
-                ViewBag.msg = "No Exam Available.";
-            }
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Test(FormCollection fc)
-        {
-            if (IsValidUser() == false)
-            {
-                return RedirectToAction("Login", "Home");
-            }
-            int res = 0;
-            try
-            {
-                foreach (var q in fc.AllKeys)
-                {
-                    string id = q.Substring(q.IndexOf("_") + 1);
-                    int n = Convert.ToInt16(id);
-                    Tbl_Question tq = db.Tbl_Question.Find(n);
-                    string UserAns = fc[q];
-                    if (tq.Answer == UserAns)
-                    {
-                        res++;
-                    }
-                }
-                ViewBag.msg = "You have got " + res + " out of 20 marks.";
-                //Saving Result in Database
-                Tbl_Result tr=new Tbl_Result();
-                tr.Email_OF_Student = Session["std"].ToString();
-                tr.Marks_Obtained = res;
-                tr.Full_Marks = 20;
-                tr.Date_Of_Exam = DateTime.Now.ToString();
-                //Finding some details fro student data and saving it in result data table
-                StudentData sd = db.StudentDatas.Find(tr.Email_OF_Student);
-                tr.Course = sd.Course;
-                tr.Name = sd.Name;
-                tr.Subject = (string)TempData["sub"];
-                db.Tbl_Result.Add(tr);
-                db.SaveChanges();
-            }catch(Exception ex)
-            {
-                ViewBag.msg = "An error occured";
-            }
-
-            return View();
-        }
+        });
     }
-}*/
+});
+
+Student.get("/Study_Materials", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        DB.Colls_StudyMaterial.find(function (err, sa) {
+            res.render("./Student/Study_Material.ejs", { StudyMaterials: sa, session: req.user.username });
+        });
+    }
+});
+
+//Download
+Student.get("/Download", function (req, res) {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        filepath = "./Content/" + req.query.file;
+        res.download(filepath);
+    }
+});
+
+Student.get("/Give_FeedBack", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else
+        res.render("./Student/Give_FeedBack.ejs", { session: req.user.username });
+});
+
+Student.post("/Give_FeedBack", (req, res) => {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        var fd = DB.Colls_Feedback({
+            Student_Id: req.user.username,
+            Student_Name: req.body.Student_Name,
+            Feedback_Subject: req.body.Feedback_Subject,
+            Message: req.body.Message,
+        });
+        fd.save(function (err) {
+            if (err)
+                res.render("./Student/Give_FeedBack.ejs", { session: req.user.username, msg: "Failed to save." });
+            else
+                res.render("./Student/Give_FeedBack.ejs", { session: req.user.username, msg: "Saved Successfully." });
+        });
+    }
+});
+Student.get("/ChangePassword", function (req, res) {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        res.render("./Student/ChangePassword.ejs", { session: req.user.username });
+    }
+});
+
+Student.post("/ChangePassword", function (req, res) {
+    if (!req.isAuthenticated())
+        res.redirect("/Home/Login")
+    else {
+        DB.Colls_StdData.findByUsername(req.user.username, function (err, user) {
+            user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
+                if (err) {
+                    res.render("./Student/ChangePassword.ejs", { msg: "Old Password is incorrect.", session: req.user.username });
+                } else {
+                    res.render("./Student/ChangePassword.ejs", { msg: "Password changed successfully..", session: req.user.username });
+                }
+            });
+
+        });
+    }
+});
+
+
+Student.get("/logout", function (req, res) {
+    req.logout(function (err) {
+        if (err) { return next(err); }
+        res.redirect('/');
+    });
+});
+
+Student.get("/Test", function (req, res) {
+    if (req.isAuthenticated()) {
+        DB.Colls_Questions.find({ Subject: req.query.sub }, function (err, ques) {
+            return res.render("./Student/Test.ejs", { Questions: ques });
+        });
+
+    } else
+        res.redirect("/Home/Login");
+});
+
+Student.post("/Test", function (req, res) {
+    if (req.isAuthenticated()) {
+            Student.set("result",0);
+            for (const field in req.body) {  
+                var id = field.substring(field.indexOf("_") + 1);
+                DB.Colls_Questions.findOne({ _id: new ObjectId(id) }, function (err, QA) {
+                    var UserAns =`${req.body[field]}`;
+                    if (UserAns == QA.Answer) {
+                        var preresult=Student.get("result");
+                        Student.set("result",preresult+1);//result++
+                    }
+                });
+            }
+            //Saving Result in Database
+            DB.Colls_StdData.find({ Email: req.user.username }, function (err, std) {
+                var tr = DB.Colls_Result({
+                    Email_OF_Student: req.user.username,
+                    Marks_Obtained: Student.get("result"),
+                    Full_Marks: 20,
+                    Course: std.Course,
+                    Name: std.Name,
+                    Subject: req.query.sub
+                });
+                tr.save(function (err) {
+                    if (err)
+                        return res.render("./Student/Test", { msg: "An error occured" });
+                    else
+                        return res.render("./Student/Test", { msg: "You have got " + Student.get("result") + " out of 20 marks." });
+                })
+            });
+}else
+    res.redirect("/Home/Login");
+});
+module.exports = Student;
