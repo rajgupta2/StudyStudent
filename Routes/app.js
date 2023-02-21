@@ -62,9 +62,31 @@ app.use("/Student", StudentRoute);
 //Routes
 //Index
 app.get("/", (req, res) => {
-    res.render("./Home/index");
+    DB.Colls_Notification.find(function(err,nt){
+        res.render("./Home/index",{Notifications:nt});
+    });
 });
 
+app.post("/Home/Subscribe", (req, res) => {
+
+   DB.Colls_Subscribe.findOne({Email:req.body.SEmail},function(err,succ){
+      if(succ!=null)
+      return res.json({Status:"Error",Message:"You are already Subscribed."});
+      else
+      {
+        const sub=DB.Colls_Subscribe({
+            Name:req.body.SName,
+            Email:req.body.SEmail
+        });
+        sub.save(function(err){
+            if(!err){
+                return res.json({Status:"Success"});
+            }else
+             return res.json({Status:"Fail",Message:"Unable to subscribe."});
+           });
+      }     
+   });
+});
 //Registration Page
 app.get("/Home/Registration", (req, res) => {
     res.render("./Home/Registration");
