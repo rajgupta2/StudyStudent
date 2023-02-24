@@ -81,7 +81,27 @@ $(document).ready(function () {
         if (Password.length < 8) {
             result = false;
             $("#Password").after("<span class='err'>Password must be 8 characters long.</span>");
+        }else{
+          //Checking for strong password
+          var digit=false,special=false,small=false,upper=false;
+          for(var i=0;i<Password.length;i++)
+          {
+            var c=Password.charAt(i);
+            if(c>=0 && c<=9) //Assign true to digit  if c is an digit otherwise false
+             digit=true;
+            else if(c>='A' && c<='Z')//Assign true to upper if c is uppercase letter
+             upper=true;
+            else if(c>='a' && c<='z')//Assign true to small if c is lowercase letter
+             small=true;
+            else //Assign true to special if c is special charcter
+             special=true;
+          }
+          if(!(digit && upper && small && special)){ //if any conditions doesn't satisfy.
+            result=false;
+            $("#Password").after("<span class='err'>Password must contains digit,uppercase letter,lowercase letter and a special character.</span>");
+          } 
         }
+
         if (Password != ConfirmPassword) {
             result = false;
             $("#ConfirmPassword").after("<span class='err'>Confirm Password doesn't match.</span>");

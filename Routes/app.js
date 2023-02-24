@@ -5,7 +5,7 @@ const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
-const port = process.env.PORT || 7000;
+
 
 //Database File Module
 const DB = require("../Models/DB");
@@ -211,4 +211,4 @@ app.post("/Home/Login", (req, res) => {
     });
 });
 
-app.listen(port, () => console.log("server is running"));
+app.listen(process.env.PORT || 7000, () => console.log("server is running"));
