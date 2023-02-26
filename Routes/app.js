@@ -211,4 +211,4 @@ app.post("/Home/Login", (req, res) => {
     });
 });
 
-app.listen(process.env.PORT || 80, () => console.log("server is running"));
+app.listen(process.env.PORT || 7000, () => console.log("server is running"));
