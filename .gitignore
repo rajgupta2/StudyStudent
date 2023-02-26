@@ -10,3 +10,4 @@ config/
 Content/
 Models/
 .env
+.yml
