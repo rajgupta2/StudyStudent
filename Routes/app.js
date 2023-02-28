@@ -52,7 +52,7 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //Admin Zone
-const AdminRoute = require("./Admin.js");
+const AdminRoute = require("./admin.js");
 app.use("/Admin", AdminRoute);
 
 //Student Zone
@@ -211,4 +211,4 @@ app.post("/Home/Login", (req, res) => {
     });
 });
 
-app.listen(process.env.PORT || 7000, () => console.log("server is running"));
+app.listen(process.env.PORT || 80, () => console.log("server is running"));
