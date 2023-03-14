@@ -4,15 +4,15 @@ $(document).ready(function () {
     $("[type='radio']").removeClass("form-control mt-4");
     $("[type*='file']").removeClass("mt-4");
 
-
     //Change on the selecting of file tag
     $(".custom-file-input").change(function () {
         var filename = $(this).val().split("\\").pop();
         $(".custom-file-label").html(filename);
     });
-   
-    //validation started
-    $("#submit").click(function () {
+});
+
+function onSubmit(token) {
+      //validation started
         var result = true;
         var Name = $("#Name").val().trim();
         var EnrollMentNumber = $("#EnrollmentNumber").val().trim();
@@ -107,7 +107,8 @@ $(document).ready(function () {
             $("#ConfirmPassword").after("<span class='err'>Confirm Password doesn't match.</span>");
         }
         $(".err").addClass("text-danger");
+        if(result)
+         document.getElementById("registration-form").submit();
         return result;
-    });
-});
+}
 

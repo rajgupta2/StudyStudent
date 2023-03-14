@@ -1,7 +1,5 @@
 <script>
-    $(document).ready(function () {
-        $("input,textarea").addClass("form-control mt-4");
-        $("#submit").click(function () {
+   function onSubmit(token) {
             var result = true;
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
@@ -35,8 +33,12 @@
                 $("#Query").after("<span class='err'>Describe Query Briefly</span>");
             } 
             $(".err").addClass("text-danger");
+            if(result)
+               document.getElementById("contact-form").submit();
             return result;
-        });
+   }
+    $(document).ready(function () {
+        $("input,textarea").addClass("form-control mt-4");
     });
 </script>
 <div class="container mt-lg-5 mb-5">
@@ -47,16 +49,15 @@
     <div class="row  py-5">
         <div class="col-sm-5 mt-4 mr-5">
             <h2>Query</h2>
-            <form action="/Home/Contact" method="post">
+            <form id="contact-form" action="/Home/Contact"  method="post">
                 <input id="Name" name="Name" placeholder="Name" type="text" value="" />
                 <input id="Email" name="Email" placeholder="Email" type="email" value="" />
                 <input id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
                 <textarea cols="20" id="Query" name="Query" placeholder="Type your query here.." rows="2" style="resize:none">
-</textarea>
-<button class="g-recaptcha btn btn-success btn-block mt-4" 
-        data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
-        data-callback='onSubmit' 
-        data-action='submit'>Save</button>
+                </textarea>
+                <button class="g-recaptcha btn btn-success btn-block mt-4" 
+                        data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
+                        data-theme="dark"  data-callback="onSubmit" >Save</button>
             </form>
         </div>
         <div class="col-sm-5">
