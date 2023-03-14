@@ -6,7 +6,6 @@ node_modules/
 # ignore ALL .json files
 *.json
 
-config/
 Content/
 Models/
 .env
