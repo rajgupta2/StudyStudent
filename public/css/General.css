@@ -15,8 +15,13 @@ a {
 }
 #backtotop {
     position: fixed;
-    right: 20px;
-    bottom: 35px;
+    right: 10px;
+    bottom: 0px;
     border-radius: 50%;
-    z-index: 2;
+    z-index: 5000;
+}
+
+.grecaptcha-badge { 
+    bottom:35px !important; 
+    z-index: 4000;
 }

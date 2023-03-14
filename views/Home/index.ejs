@@ -1,8 +1,7 @@
 <script>
-    $(document).ready(function () {
-        $("input,textarea").addClass("form-control mt-4");
-        $("#submit").click(function () {
-            var result = true;
+    function onSubmit(token) {
+
+     var result = true;
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
             $(".err").remove();
@@ -23,7 +22,7 @@
             $.ajax({
            type:"POST",
            url:"/Home/Subscribe",
-           data:{SName:Name,SEmail:Email},
+           data:{SName:Name,SEmail:Email,RecaptchaToken:token},
            dataType:"json",
            success:function(obj){
                if(obj.Status=="Success")
@@ -32,7 +31,13 @@
                alert(obj.Message);
            }
         });
-        });
+     document.getElementById("demo-form").submit();
+    }
+    $(document).ready(function () {
+        $("input,textarea").addClass("form-control mt-4");
+       /* $("#submit").click(function () {
+          
+        });*/
 
     });
 </script>
@@ -69,7 +74,10 @@
             <h2 class="text-center text-success mt-4">Subscribe us to get updated</h2>
                 <input id="Name" name="Name" placeholder="Name" type="text" value="" />
                 <input id="Email" name="Email" placeholder="Email" type="email" value="" />              
-                <input type="submit" id="submit" value="Subscribe" class="btn btn-danger form-control-sm mb-2 mt-lg-5" />
+                <button  id="submit"  class="g-recaptcha btn btn-danger btn-block mb-2 mt-4"
+                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
+                data-callback='onSubmit' 
+                data-action='submit' >Subscribe</button>
         </div>
     </div>
         <!--About Us-->

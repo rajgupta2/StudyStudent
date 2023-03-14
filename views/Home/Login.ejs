@@ -44,7 +44,10 @@
             <form action="/Home/Login" method="post">
                 <input class="form-control mt-4" id="Email" name="Email" placeholder="Email" type="text" value="" />
                 <input class="form-control mt-4" id="Password" name="Password" placeholder="Password" type="password" />
-                <input type="submit" value="Login" class="btn btn-success btn-block my-4">
+                <button class="g-recaptcha btn btn-success btn-block my-4"
+                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
+                data-callback='onSubmit' 
+                data-action='submit'>Login</button>
             </form>
             <div class="row text-right">
                 <div class="col-sm-12">

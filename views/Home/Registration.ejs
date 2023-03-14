@@ -77,7 +77,10 @@
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <input type="submit" id="submit" class="btn btn-block btn-success" value="Save">
+                <button class="g-recaptcha btn btn-block btn-success mt-4" 
+        data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
+        data-callback='onSubmit' 
+        data-action='submit'>Save</button>
             </div>
             <div class="col-sm-6">
                 <input type="reset" value="Reset" class="btn btn-block btn-danger" />

@@ -5,7 +5,7 @@ const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 
 const app = express();
-
+const https=require("https");
 
 //Database File Module
 const DB = require("../Models/DB");
@@ -68,24 +68,32 @@ app.get("/", (req, res) => {
 });
 
 app.post("/Home/Subscribe", (req, res) => {
+    var RECAPTCHA_API_URL="https://www.google.com/recaptcha/api/siteverify?secret="+process.env.RECAPTCHA_SECRETKEY+"&response="+req.body.RecaptchaToken;
+    https.get(RECAPTCHA_API_URL,function(result){
+       var obj=JSON.parse(result);
+   
+   console.log(obj.object);
+        DB.Colls_Subscribe.findOne({Email:req.body.SEmail},function(err,succ){
+            if(succ!=null)
+            return res.json({Status:"Error",Message:"You are already Subscribed."});
+            else
+            {
+              const sub=DB.Colls_Subscribe({
+                  Name:req.body.SName,
+                  Email:req.body.SEmail
+              });
+              sub.save(function(err){
+                  if(!err){
+                      return res.json({Status:"Success"});
+                  }else
+                   return res.json({Status:"Fail",Message:"Unable to subscribe."});
+                 });
+            }     
+         });
+    });
+    
 
-   DB.Colls_Subscribe.findOne({Email:req.body.SEmail},function(err,succ){
-      if(succ!=null)
-      return res.json({Status:"Error",Message:"You are already Subscribed."});
-      else
-      {
-        const sub=DB.Colls_Subscribe({
-            Name:req.body.SName,
-            Email:req.body.SEmail
-        });
-        sub.save(function(err){
-            if(!err){
-                return res.json({Status:"Success"});
-            }else
-             return res.json({Status:"Fail",Message:"Unable to subscribe."});
-           });
-      }     
-   });
+  
 });
 //Registration Page
 app.get("/Home/Registration", (req, res) => {
@@ -211,4 +219,4 @@ app.post("/Home/Login", (req, res) => {
     });
 });
 
-app.listen(process.env.PORT || 80, () => console.log("server is running"));
+app.listen(process.env.PORT || 5000, () => console.log("server is running"));
