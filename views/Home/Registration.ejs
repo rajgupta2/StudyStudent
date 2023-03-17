@@ -8,7 +8,18 @@
     <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"><% if(locals.msg){ %>
         <%= msg%>
         <% } %></p>
-    <form action="/Home/Registration" id="registration-form" method="post"  class=" my-5 py-5 px-5" enctype="multipart/form-data">
+        
+    <form action="/Home/Registration" id="registration-form" method="post"  class=" mb-5 mt-4 py-5 px-5" enctype="multipart/form-data">
+        <div class="col-sm-3 border google-sign-box">
+            <a class="btn box-shadow" href="/Google/Login">
+                <div>
+                    <img width="20px" style="margin-top:4px; margin-right:8px" class="mb-2" alt="Google sign-in" 
+                        src="/Images/Google__G__Logo.svg.webp" />
+                       <text class="text-white google-sign">Sign up with Google</text> 
+                </div>
+             
+            </a>
+        </div>or
         <div class="row">
             <div class="col-sm-6">
                 <input id="EnrollmentNumber" name="EnrollmentNumber" placeholder="Enrollment Number " type="text" value="" />

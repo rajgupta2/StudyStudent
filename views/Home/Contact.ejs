@@ -53,8 +53,7 @@
                 <input id="Name" name="Name" placeholder="Name" type="text" value="" />
                 <input id="Email" name="Email" placeholder="Email" type="email" value="" />
                 <input id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
-                <textarea cols="20" id="Query" name="Query" placeholder="Type your query here.." rows="2" style="resize:none">
-                </textarea>
+                <textarea cols="20" id="Query" name="Query" placeholder="Type your query here.." rows="2" style="resize:none"></textarea>
                 <button class="g-recaptcha btn btn-success btn-block mt-4" 
                         data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
                         data-theme="dark"  data-callback="onSubmit" >Save</button>

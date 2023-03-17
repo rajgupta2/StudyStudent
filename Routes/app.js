@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require("express");
 const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
-
 const app = express();
 
 //Database File Module
@@ -20,9 +19,7 @@ app.use(express.static(path.resolve("./public/")));
 //Password Encryption,Session Management and Authentication
 const session = require("express-session");
 const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
 const LocalStrategy = require("passport-local").Strategy;
-const crypto = require("crypto");
 const verifyRecaptcha=require("../config/CAPTCHACODE.js");
 
 app.use(session({
@@ -51,16 +48,19 @@ app.set("layout", "./Layout/General");
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 //Admin Zone
 const AdminRoute = require("./admin.js");
 app.use("/Admin", AdminRoute);
 
 //Student Zone
 const StudentRoute = require("./Student.js");
-const { json } = require('express');
 app.use("/Student", StudentRoute);
 
-//Routes
+//Google Sign in code
+const Google_Sign=require("../config/GOOGLESIGN.js");
+app.use("/Google",Google_Sign);
+
 //Index
 app.get("/", (req, res) => {
     DB.Colls_Notification.find(function(err,nt){

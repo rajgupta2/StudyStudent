@@ -29,7 +29,7 @@ Student.get("/Greetings", (req, res) => {
         res.redirect("/Home/Login");
     else {
         DB.Colls_Subject.find({ Status: "On" }, function (err, sub) {
-            res.render("./Student/Greetings.ejs", { session: req.user.username, Test: sub });
+            res.render("./Student/Greetings.ejs", { User_Email: (req.user.username || req.user.Email), Test: sub });
         });
     }
 });
@@ -38,7 +38,7 @@ Student.get("/Submit_Assignment", (req, res) => {
     if (!req.isAuthenticated())
         res.redirect("/Home/Login");
     else {
-        res.render("./Student/Submit_Assignment.ejs", { session: req.user.username });
+        res.render("./Student/Submit_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email) });
     }
 });
 
@@ -64,14 +64,14 @@ Student.post("/Submit_Assignment", (req, res) => {
                                     Assignment: SubAss,
                                 });
                                 sa.save(() => {
-                                    res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Saved Successfully." });
+                                    res.render("./Student/Submit_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "Saved Successfully." });
                                 });
                             });
                         } else
-                            res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Failed to save." });
+                            res.render("./Student/Submit_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "Failed to save." });
                     });
                 } else
-                    res.render("./Student/Submit_Assignment.ejs", { session: req.user.username, msg: "Error(read):Failed to save." });
+                    res.render("./Student/Submit_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "Error(read):Failed to save." });
             });
             //Deleting file from temporary location
             fs.unlink(oldPath, function (err) {
@@ -88,13 +88,13 @@ Student.get("/View_Assignment", (req, res) => {
     else {
         DB.Colls_GiveAssignment.find(function (err, GAssignment) {
             if (err)
-                res.render("./Student/View_Assignment.ejs", { session: req.user.username, msg: "An error occured." });
+                res.render("./Student/View_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "An error occured." });
             else {
                 DB.Colls_SubmitAssignment.find({ Student_Email: req.user.username }, function (err, SAssignment) {
                     if (err)
-                        res.render("./Student/View_Assignment.ejs", { session: req.user.username, msg: "An error occured." });
+                        res.render("./Student/View_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "An error occured." });
                     else
-                        res.render("./Student/View_Assignment.ejs", { session: req.user.username, Assignment: GAssignment, SubmittedAssignment: SAssignment });
+                        res.render("./Student/View_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), Assignment: GAssignment, SubmittedAssignment: SAssignment });
                 });
             }
         });
@@ -106,7 +106,7 @@ Student.get("/Study_Materials", (req, res) => {
         res.redirect("/Home/Login")
     else {
         DB.Colls_StudyMaterial.find(function (err, sa) {
-            res.render("./Student/Study_Material.ejs", { StudyMaterials: sa, session: req.user.username });
+            res.render("./Student/Study_Material.ejs", { StudyMaterials: sa,  User_Email: (req.user.username || req.user.Email) });
         });
     }
 });
@@ -125,7 +125,7 @@ Student.get("/Give_FeedBack", (req, res) => {
     if (!req.isAuthenticated())
         res.redirect("/Home/Login")
     else
-        res.render("./Student/Give_FeedBack.ejs", { session: req.user.username });
+        res.render("./Student/Give_FeedBack.ejs", {  User_Email: (req.user.username || req.user.Email) });
 });
 
 Student.post("/Give_FeedBack", (req, res) => {
@@ -140,9 +140,9 @@ Student.post("/Give_FeedBack", (req, res) => {
         });
         fd.save(function (err) {
             if (err)
-                res.render("./Student/Give_FeedBack.ejs", { session: req.user.username, msg: "Failed to save." });
+                res.render("./Student/Give_FeedBack.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "Failed to save." });
             else
-                res.render("./Student/Give_FeedBack.ejs", { session: req.user.username, msg: "Saved Successfully." });
+                res.render("./Student/Give_FeedBack.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "Saved Successfully." });
         });
     }
 });
@@ -150,7 +150,7 @@ Student.get("/ChangePassword", function (req, res) {
     if (!req.isAuthenticated())
         res.redirect("/Home/Login")
     else {
-        res.render("./Student/ChangePassword.ejs", { session: req.user.username });
+        res.render("./Student/ChangePassword.ejs", {  User_Email: (req.user.username || req.user.Email) });
     }
 });
 
@@ -161,9 +161,9 @@ Student.post("/ChangePassword", function (req, res) {
         DB.Colls_StdData.findByUsername(req.user.username, function (err, user) {
             user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
                 if (err) {
-                    res.render("./Student/ChangePassword.ejs", { msg: "Old Password is incorrect.", session: req.user.username });
+                    res.render("./Student/ChangePassword.ejs", { msg: "Old Password is incorrect.",  User_Email: (req.user.username || req.user.Email) });
                 } else {
-                    res.render("./Student/ChangePassword.ejs", { msg: "Password changed successfully..", session: req.user.username });
+                    res.render("./Student/ChangePassword.ejs", { msg: "Password changed successfully..",  User_Email: (req.user.username || req.user.Email) });
                 }
             });
 

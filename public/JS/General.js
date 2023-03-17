@@ -48,12 +48,14 @@ $(document).ready(function () {
             $(".change").addClass("bi bi-toggle-off");
             $(".change").removeClass("bi bi-toggle-on");
             $(".navbar-brand").removeClass("text-white");
-
+            $(".google-sign").removeClass("text-white");
+            //$(".google-sign-box").addClass("dark");
         } else {
             $("body").addClass("dark");
             $(".change").removeClass("bi bi-toggle-off");
             $(".change").addClass("bi bi-toggle-on");
             $(".navbar-brand").addClass("text-white");
+            $(".google-sign").addClass("text-white");
         }
     });
     //backtotop

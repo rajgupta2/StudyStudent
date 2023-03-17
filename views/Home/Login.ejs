@@ -35,14 +35,24 @@
         <% } %></p>
     <div class="row mt-5 py-5 " id="welcome">
 
-        <div class="col-sm-6">
+        <div class="col-sm-6 mt-lg-5 pt-lg-5">
             <center>
                 <h1>Welcome back</h1>
                 <h4>Explore new things!</h4>
+                
             </center>
-
+          
         </div>
         <div class="col-sm-5">
+            <div class="col-sm-8 border google-sign-box mt-4">
+                <a class="btn box-shadow" href="/Google/Login">
+                    <div>
+                        <img width="20px" style="margin-top:4px; margin-right:8px" class="mb-2" alt="Google sign-in" 
+                            src="/Images/Google__G__Logo.svg.webp" />
+                           <text class="text-white google-sign">Sign in with Google</text> 
+                    </div>           
+                </a>
+            </div>or
             <form action="/Home/Login" method="post" id="login-form">
                 <input class="form-control mt-4" id="Email" name="Email" placeholder="Email" type="text" value="" />
                 <input class="form-control mt-4" id="Password" name="Password" placeholder="Password" type="password" />

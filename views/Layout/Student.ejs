@@ -125,8 +125,8 @@
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown"
                                href="#Settings">Settings</a>
                             <div class="dropdown-menu" id="Settings">
-                                <b class="nav-link"><%if(locals.session){%> 
-                                    <%= session%>
+                                <b class="nav-link"><%if(locals.User_Email){%> 
+                                    <%= User_Email%>
                                     <%}%>
                                 </b>
                                 <a class="nav-link" href="/Student/ChangePassword">Change Password</a>
