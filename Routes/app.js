@@ -21,6 +21,7 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const verifyRecaptcha=require("../config/CAPTCHACODE.js");
+const Email=require("../config/Email.js");
 
 app.use(session({
     secret: process.env.SS_SECRET,
@@ -71,23 +72,36 @@ app.get("/", (req, res) => {
 app.post("/Home/Subscribe", (req, res) => {
       verifyRecaptcha(req.body.RecaptchaToken,(ans)=>{
          if(ans){
-            DB.Colls_Subscribe.findOne({Email:req.body.SEmail},function(err,succ){
-                if(succ!=null)
-                return res.json({Status:"Error",Message:"You are already Subscribed."});
-                else
-                {
-                  const sub=DB.Colls_Subscribe({
-                      Name:req.body.SName,
-                      Email:req.body.SEmail
-                  });
-                  sub.save(function(err){
-                      if(!err){
-                          return res.json({Status:"Success"});
-                      }else
-                       return res.json({Status:"Fail",Message:"Unable to subscribe."});
+            const HasSent={
+                Email:req.body.SEmail,
+                Student_Name:req.body.SName,
+                Code:req.body.Code
+            }
+            Email.confirmEmail(HasSent,(err,val,message)=>{
+                   if(err)
+                     return res.json({Status:"Fail",Message:"Error occured."});
+                   if(val)
+                   { 
+                     DB.Colls_Subscribe.findOne({Email:req.body.SEmail},function(err,succ){
+                        if(succ)
+                          return res.json({Status:"Error",Message:"You are already Subscribed."});
+                        else
+                        {
+                          const sub=DB.Colls_Subscribe({
+                              Name:req.body.SName,
+                              Email:req.body.SEmail
+                          });
+                          sub.save(function(err){
+                              if(!err){
+                                  return res.json({Status:"Success"});
+                              }else
+                               return res.json({Status:"Fail",Message:"Unable to subscribe."});
+                             });
+                        }     
                      });
-                }     
-             });
+                   }else
+                      return res.json({Status:"Fail",Message:message});
+            });
           }else{
             return res.json({Status:"Fail",Message:"Recaptcha couldn't verify."});
           }
@@ -116,22 +130,31 @@ app.get("/Home/Login", (req, res) => {
 
 //Contact Post
 app.post("/Home/Contact", function (req, res) {
-    verifyRecaptcha(req.body['g-recaptcha-response'],(ans)=>{
-        if(ans){
-            const Query = new DB.Colls_Query({
-                Name: req.body.Name,
-                Email: req.body.Email,
-                Contact: req.body.Contact,
-                Query: req.body.Query
+    verifyRecaptcha(req.body['g-recaptcha-response'],(result)=>{
+        if(result){
+            var HasSent={Email:req.body.Email,Student_Name:req.body.Name,Code:req.body.Code}
+            Email.confirmEmail(HasSent,(err,val,message)=>{
+                if(err)
+                  res.render("./Home/Contact", { msg: "An error occured." });
+                if(val){
+                    const Query = new DB.Colls_Query({
+                        Name: req.body.Name,
+                        Email: req.body.Email,
+                        Contact: req.body.Contact,
+                        Query: req.body.Query
+                    });
+                    Query.save(function (err) {
+                        var ans = "";
+                        if (err)
+                            ans = "Sorry unable to save query.";
+                        else
+                            ans = "Your query saved successfully,we response you soon.";
+                        res.render("./Home/Contact", { msg: ans });
+                    });
+                }else
+                res.render("./Home/Contact", { msg: message });  
             });
-            Query.save(function (err) {
-                var ans = "";
-                if (err)
-                    ans = "Sorry unable to save query.";
-                else
-                    ans = "Your query saved successfully,we response you soon.";
-                res.render("./Home/Contact", { msg: ans });
-            });
+            
         }else
            res.render("./Home/Contact", { msg: "Captcha couldn't verify." });
     });
@@ -144,53 +167,62 @@ app.post("/Home/Registration", function (req, res) {
     form.parse(req, function (err, fields, file) {
         verifyRecaptcha(fields['g-recaptcha-response'],(ans)=>{
            if(ans){
-            DB.Colls_StdData.find({ Email: fields.Email }, function (err, std) {
-                if (std.length <= 0) {
-                    if (err)
-                        msg = "Oops! error occured.";
-                    else {
-                        var oldPath = file.ProfilePicture.filepath;
-                        var StudentProfileImage = file.ProfilePicture.newFilename + path.extname(file.ProfilePicture.originalFilename);
-                        var newpath = "./Content/StudentProfileImage/" + StudentProfileImage;
-                        fs.readFile(oldPath, function (err, data) {
-                            fs.writeFile(newpath, data, function (err) {
-                                if (err)
-                                    msg = "Oops! error occured in saving the profile picture.";
-                                else {
-                                    const stdData = new DB.Colls_StdData({
-                                        username: fields.Email,
-                                        Email: fields.Email,
-                                        EnrollmentNumber: fields.EnrollmentNumber,
-                                        Name: fields.Name,
-                                        Gender: fields.Gender,
-                                        College: fields.College,
-                                        Course: fields.Course,
-                                        Year: fields.Year,
-                                        Contact: fields.Contact,
-                                        Address: fields.Address,
-                                        ProfilePicture: StudentProfileImage
-                                    });
-                                    
-                                    DB.Colls_StdData.register(stdData, fields.Password, function (err, user) {
-                                        if (err) {
-                                            res.render("./Home/Registration", { msg: "Sorry! Due to some technicle issue we are unable to registerd you." + err });
-                                        } else {
-                                            res.render("./Home/Login", { msg: "You are successfully registered.Please continue to login." });
+            //VerifyEmail
+            Email.confirmEmail({Email:fields.Email,Student_Name:fields.Name,Code:fields.Code},(err,val,message)=>{
+                if(err)
+                  res.render("./Home/Registration", { msg:"An error occured."});
+                if(val){
+                    DB.Colls_StdData.find({ Email: fields.Email }, function (err, std) {
+                        if (std.length <= 0) {
+                            if (err)
+                                msg = "Oops! error occured.";
+                            else {
+                                var oldPath = file.ProfilePicture.filepath;
+                                var StudentProfileImage = file.ProfilePicture.newFilename + path.extname(file.ProfilePicture.originalFilename);
+                                var newpath = "./Content/StudentProfileImage/" + StudentProfileImage;
+                                fs.readFile(oldPath, function (err, data) {
+                                    fs.writeFile(newpath, data, function (err) {
+                                        if (err)
+                                            msg = "Oops! error occured in saving the profile picture.";
+                                        else {
+                                            const stdData = new DB.Colls_StdData({
+                                                username: fields.Email,
+                                                Email: fields.Email,
+                                                EnrollmentNumber: fields.EnrollmentNumber,
+                                                Name: fields.Name,
+                                                Gender: fields.Gender,
+                                                College: fields.College,
+                                                Course: fields.Course,
+                                                Year: fields.Year,
+                                                Contact: fields.Contact,
+                                                Address: fields.Address,
+                                                ProfilePicture: StudentProfileImage
+                                            });
+                                            
+                                            DB.Colls_StdData.register(stdData, fields.Password, function (err, user) {
+                                                if (err) {
+                                                    res.render("./Home/Registration", { msg: "Sorry! Due to some technicle issue we are unable to registerd you." + err });
+                                                } else {
+                                                    res.render("./Home/Login", { msg: "You are successfully registered.Please continue to login." });
+                                                }
+                                            });
                                         }
                                     });
-                                }
-                            });
-                        });
-                        //Deleting file from temporary location
-                        fs.unlink(oldPath, function (err) {
-                            if (err)
-                                console.log(err);
-                            msg = "Oops! error occured in deleting the temporary file.";
-                        });
-                    }
-                } else
-                    res.render("./Home/Registration", { msg: "Email Already registered. Please Login" });
+                                });
+                                //Deleting file from temporary location
+                                fs.unlink(oldPath, function (err) {
+                                    if (err)
+                                       // console.log(err);
+                                    msg = "Oops! error occured in deleting the temporary file.";
+                                });
+                            }
+                        } else
+                            res.render("./Home/Registration", { msg: "Email Already registered. Please Login" });
+                    });
+                }else
+                  res.render("./Home/Registration", { msg:message});
             });
+           
            }else
              res.render("./Home/Registration", { msg: "Captcha couldn't verify." });
         });
@@ -230,6 +262,21 @@ app.post("/Home/Login", (req, res) => {
         });
        }else
        res.render("./Home/Login.ejs", { msg: "Captcaha couldn't verify."});
+    });
+});
+
+//Registration Page
+app.post("/SendCode", (req, res) => {
+    var Send={
+        to:req.body.SEmail,
+        Name:req.body.SName,
+        subject:"Email Verification"
+    }
+    Email.SendEmailForVerification(Send,(err,info)=>{
+        if(!err)
+         res.json({Success:true});
+        else
+         res.json({Success:false});
     });
 });
 

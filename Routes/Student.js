@@ -56,9 +56,9 @@ Student.post("/Submit_Assignment", (req, res) => {
                 if (!err) {
                     fs.writeFile(newpath, data, function (err) {
                         if (!err) {
-                            DB.Colls_StdData.find({ Email: req.user.username }, function (err, student) {
+                            DB.Colls_StdData.find({ Email: req.user.username || req.user.Email }, function (err, student) {
                                 var sa = new DB.Colls_SubmitAssignment({
-                                    Student_Email: req.user.username,
+                                    Student_Email: req.user.username || req.user.Email,
                                     Student_Name: student.Name,
                                     Subject: fields.Subject,
                                     Assignment: SubAss,
@@ -90,7 +90,7 @@ Student.get("/View_Assignment", (req, res) => {
             if (err)
                 res.render("./Student/View_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "An error occured." });
             else {
-                DB.Colls_SubmitAssignment.find({ Student_Email: req.user.username }, function (err, SAssignment) {
+                DB.Colls_SubmitAssignment.find({ Student_Email: req.user.username || req.user.Email}, function (err, SAssignment) {
                     if (err)
                         res.render("./Student/View_Assignment.ejs", {  User_Email: (req.user.username || req.user.Email), msg: "An error occured." });
                     else
@@ -158,7 +158,7 @@ Student.post("/ChangePassword", function (req, res) {
     if (!req.isAuthenticated())
         res.redirect("/Home/Login")
     else {
-        DB.Colls_StdData.findByUsername(req.user.username, function (err, user) {
+        DB.Colls_StdData.findByUsername(req.user.username || req.user.Email, function (err, user) {
             user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
                 if (err) {
                     res.render("./Student/ChangePassword.ejs", { msg: "Old Password is incorrect.",  User_Email: (req.user.username || req.user.Email) });
@@ -203,9 +203,9 @@ Student.post("/Test", function (req, res) {
                 });
             }
             //Saving Result in Database
-            DB.Colls_StdData.find({ Email: req.user.username }, function (err, std) {
+            DB.Colls_StdData.find({ Email: req.user.username || req.user.Email }, function (err, std) {
                 var tr = DB.Colls_Result({
-                    Email_OF_Student: req.user.username,
+                    Email_OF_Student: req.user.username|| req.user.Email,
                     Marks_Obtained: Student.get("result"),
                     Full_Marks: 20,
                     Course: std.Course,

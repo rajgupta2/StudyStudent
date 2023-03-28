@@ -1,6 +1,6 @@
 <script>
-   function onSubmit(token) {
-            var result = true;
+    function checkvalidation(){
+        var result = true;
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
             var Contact = $("#Contact").val().trim();
@@ -27,18 +27,42 @@
             //validation for Query
             if (Query1.length ==0) {
                 result = false;
-                $("#Query").after("<span class='err'>Enter Query</span>");
+                $("#Query").after("<span class='err'>Enter Query<br></span>");
             } else if (Query1.length< 10) {
                 result = false;
-                $("#Query").after("<span class='err'>Describe Query Briefly</span>");
+                $("#Query").after("<span class='err'>Describe Query Briefly<br></span>");
             } 
             $(".err").addClass("text-danger");
+            return result;
+    }
+    function onSubmit(token) {
+            var result=checkvalidation();
             if(result)
                document.getElementById("contact-form").submit();
-            return result;
    }
     $(document).ready(function () {
         $("input,textarea").addClass("form-control mt-4");
+        $("#SendCode").click(function(){
+            var res=checkvalidation();
+            if(res){
+              var Name = $("#Name").val().trim();
+              var Email = $("#Email").val().trim();
+              $.ajax({
+               type:"POST",
+               url:"/SendCode",
+               data:{SName:Name,SEmail:Email},
+               dataType:"json",
+               success:function(obj){
+                 if(obj.Success){
+                  $("#SendCode").addClass("d-none");
+                  $("#Code").attr("type","text");
+                  $(".Save").removeClass("d-none");
+                 }else
+                  alert("Due to some error,we are unable to sent code.");
+           }
+           });
+        }
+        });
     });
 </script>
 <div class="container mt-lg-5 mb-5">
@@ -54,7 +78,9 @@
                 <input id="Email" name="Email" placeholder="Email" type="email" value="" />
                 <input id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
                 <textarea cols="20" id="Query" name="Query" placeholder="Type your query here.." rows="2" style="resize:none"></textarea>
-                <button class="g-recaptcha btn btn-success btn-block mt-4" 
+                <button  type="button" class="btn  btn-success mt-3 mb-2" id="SendCode"> Verify Email</button>
+                <input id="Code" name="Code" placeholder="Code Sent to your email" type="hidden" value="" />
+                <button class="g-recaptcha btn btn-success btn-block mt-4 Save d-none" 
                         data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
                         data-theme="dark"  data-callback="onSubmit" >Save</button>
             </form>

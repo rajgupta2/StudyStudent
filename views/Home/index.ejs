@@ -1,6 +1,6 @@
 <script>
-    function onSubmit(token) {
-     var result = true;
+    function checkvalidation(){
+            var result = true;
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
             $(".err").remove();
@@ -8,20 +8,28 @@
             //validation for name
             if (Name.length == 0) {
                 $("#Name").after("<span class='err'>Enter your name..</span>");
-                return  false;
+                result= false;
             } else if (Name.length < 2) {
                 $("#Name").after("<span class='err'>Enter a valid name..</span>");
-                return  false;
+                result= false;
             }
             //validation for Email
             if (Email.length == 0) {
                 $("#Email").after("<span class='err'>Enter a valid Email</span>");
-                return  false;
+                result=false;
             } 
+            return result;
+    }
+    function onSubmit(token) {
+       var res=checkvalidation();
+        if(res){
+            var Name = $("#Name").val().trim();
+            var Email = $("#Email").val().trim();
+            var code=$("#Code").val().trim();
             $.ajax({
            type:"POST",
            url:"/Home/Subscribe",
-           data:{SName:Name,SEmail:Email,RecaptchaToken:token},
+           data:{SName:Name,SEmail:Email,RecaptchaToken:token,Code:code},
            dataType:"json",
            success:function(obj){
                if(obj.Status=="Success")
@@ -30,9 +38,31 @@
                alert(obj.Message);
            }
         });
+        }
     }
     $(document).ready(function () {
-        $("input,textarea").addClass("form-control mt-4");
+        $("input,textarea").addClass("form-control mt-3");
+        $("#SendCode").click(function(){
+            var res=checkvalidation();
+            if(res){
+              var Name = $("#Name").val().trim();
+              var Email = $("#Email").val().trim();
+              $.ajax({
+               type:"POST",
+               url:"/SendCode",
+               data:{SName:Name,SEmail:Email},
+               dataType:"json",
+               success:function(obj){
+                 if(obj.Success){
+                  $("#SendCode").addClass("d-none");
+                  $("#Code").attr("type","text");
+                  $(".Subscribe_Btn").removeClass("d-none");
+                 }else
+                  alert("Due to some error,we are unable to sent code.");
+           }
+           });
+        }
+        });
     });
 </script>
 <div class="container-fluid">
@@ -67,11 +97,13 @@
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5" id="aboutus">
             <h2 class="text-center text-success mt-4">Subscribe us to get updated</h2>
                 <input id="Name" name="Name" placeholder="Name" type="text" value="" />
-                <input id="Email" name="Email" placeholder="Email" type="email" value="" />              
-                <button  id="submit"  class="g-recaptcha btn btn-danger btn-block mb-2 mt-4"
+                <input id="Email" name="Email" placeholder="Email" type="email" value="" /> 
+                <button  type="button" class="btn btn-success mt-3 mb-2" id="SendCode"> Verify Email</button>
+                <input id="Code" name="Code" placeholder="Code Sent to your email" type="hidden" value="" />              
+                <button  class="g-recaptcha btn btn-danger btn-block mb-2 mt-4 d-none Subscribe_Btn"
                 data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
                 data-callback='onSubmit'  data-theme="dark"
-                data-action='submit' >Subscribe</button>
+                 >Subscribe</button>
         </div>
     </div>
         <!--About Us-->

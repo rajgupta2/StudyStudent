@@ -76,13 +76,17 @@
             </div>
         </div><br />
         <div class="row">
-            <div class="col-sm-12">
-                If you registered,you are agreed terms and conditions of StudyStudent .
+            <div class="col-sm-6">
+                If you registered,you agree terms and conditions of StudyStudent .
+            </div>
+            <div class="col-sm-6">
+                <input id="Code" name="Code" placeholder="Code Sent to your email" type="hidden" value="" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <button class="g-recaptcha btn btn-success btn-block mt-4" 
+                <button  type="button" class="btn btn-block btn-warning mt-4 mb-2" id="SendCode"> Verify Email</button>
+                <button class="g-recaptcha btn btn-success btn-block mt-4 d-none Registration" 
                 data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
                 data-theme="dark"  data-callback="onSubmit">Save</button>
             </div>

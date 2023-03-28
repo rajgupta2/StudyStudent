@@ -1,5 +1,4 @@
 const express = require("express");
-const ejs = require("ejs");
 const expressLayouts = require('express-ejs-layouts');
 //Database File Module
 const DB = require("../Models/DB");
@@ -8,9 +7,8 @@ const DB = require("../Models/DB");
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
-const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
-
+const Email=require("../config/Email.js");
 const Admin = express();
 
 //Static Files
@@ -85,6 +83,35 @@ Admin.get("/ShowEnquiry", function (req, res) {
         DB.Colls_Query.find(function (err, q) {
             res.render("./Admin/ShowEnquiry.ejs", { DBqueries: q });
         });
+    } else
+        res.redirect("/Home/Login");
+});
+
+//Send_Email
+Admin.get("/Send_Email", function (req, res) {
+    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+        res.render("./Admin/Send_Email.ejs");
+    } else
+        res.redirect("/Home/Login");
+});
+
+Admin.post("/Send_Email", function (req, res) {
+    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+        const Send={
+            to: req.body.SendTo,
+            subject: req.body.Subject,
+            html: req.body.Message,
+        }
+        Email.SendMail(Send,(err,info)=>{
+            if(err){
+             //console.log(err);
+             res.render("./Admin/Send_Email.ejs",{msg:"Sorry! Unable to send Email."});
+            }else{
+                //console.log(info);
+                res.render("./Admin/Send_Email.ejs",{msg:"Email sent successfully."});
+            }
+
+        });   
     } else
         res.redirect("/Home/Login");
 });
@@ -220,12 +247,16 @@ Admin.post("/News_Update", function (req, res) {
 
 //Download
 Admin.get("/Download", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.isAuthenticated()) {
         if (req.query.file != undefined) {
             filepath = "./Content/" + req.query.file;
             res.download(filepath);
         } else {
-            DB.Colls_SubmitAssignment.find(function (std) {
+            DB.Colls_SubmitAssignment.find(function (err,std) {
+                if(err)
+                {
+                    //console.log(err);
+                }else
                 res.render("./Admin/Download.ejs", { Assignment: std });
             });
         }
@@ -365,17 +396,43 @@ Admin.get("/DeleteResult", function (req, res) {
 //AnswerQuery
 Admin.get("/AnswerQuery", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        var sa = DB.Colls_Query.find();
-        res.render("./Admin/AnswerQuery.ejs");
+         DB.Colls_Query.findOne({_id:new ObjectId(req.query.pk)},(err,query)=>{
+           if(err){
+               //console.log(err);
+           }else
+             res.render("./Admin/AnswerQuery.ejs",{AnswerOf:query});
+         });
     }else {
         res.redirect("/Home/Login");
     }
 });
 
+//AnswerQuery
+Admin.post("/AnswerQuery", function (req, res) {
+    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+        const Send={
+            to: req.body.SendTo,
+            subject: req.body.Subject,
+            html: "<h2>Query: "+req.body.Query+"</h2><h2>Answer: "+req.body.Answer+"</h2>",
+        }
+        Email.SendMail(Send,(err,info)=>{
+            if(err){ //console.log(err);
+                res.render("./Admin/AnswerQuery.ejs",{msg:"Sorry! Unable to send Answer."});
+            }else{ //console.log(info);
+                res.render("./Admin/AnswerQuery.ejs",{msg:"Answer sent successfully."});
+            }
+        });   
+    }else {
+        res.redirect("/Home/Login");
+    }
+});
+
+
+
 //Block get
 Admin.get("/Block", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StdData.updateOne({ Email: req.query.pk }, { Status: "Blocked" }, function (err) {
+        DB.Colls_StdData.updateOne({ Answer: req.query.pk }, { Status: "Blocked" }, function (err) {
             res.redirect("/Admin/Student_Management");
         });
     }else {
@@ -457,7 +514,6 @@ Admin.get("/RemoveQuestion", function (req, res) {
     }
 });
 
-
 Admin.get("/DeleteAssignment", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
     
@@ -469,7 +525,6 @@ Admin.get("/DeleteAssignment", function (req, res) {
 
     }
 });
-
 
 Admin.get("/ChangePassword", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
