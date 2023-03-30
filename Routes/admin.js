@@ -560,4 +560,19 @@ Admin.get("/logout", function (req, res) {
     });
 });
 
+//Download
+Admin.get("/Get_Subscribers", function (req, res) {
+    if (req.isAuthenticated()) {
+            DB.Colls_Subscribe.find(function (err,std) {
+                if(err)
+                {
+                res.render("./Admin/Get_Subscribers.ejs", { msg:"An error occured."});
+                }else
+                res.render("./Admin/Get_Subscribers.ejs", {Subscribers: std });
+            });
+    } else {
+        res.redirect("/Home/Login");
+    }
+});
+
 module.exports = Admin;

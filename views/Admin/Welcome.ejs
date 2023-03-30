@@ -2,6 +2,7 @@
 <script>
     $(document).ready(function () {
         $("#dash>a").addClass("py-5 my-2");
+        $(".subscribers").removeClass("py-5 my-2");
     });
 </script>
 <center>
@@ -23,6 +24,9 @@
             <i class="bi bi-emoji-smile h1"></i><div class="h5">Assignment Management</div>
         </a>
         <a class="col-sm-3" href="/Admin/ResultManagement"><i class="bi bi-emoji-wink-fill h1"></i><div class="h5">Result Management</div></a>
+        <a class="col-sm-3 subscribers pb-5" href="/Admin/Get_Subscribers">
+            <i class="bi bi-emoji-smile h1"></i><div class="h5">Subscribers</div>
+        </a>
     </div>
 </center>
 
