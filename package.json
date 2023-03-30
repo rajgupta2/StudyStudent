@@ -1,0 +1,28 @@
+{
+    "name": "studystudent",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./Routes/app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node ./Routes/app.js"
+    },
+    "author": "Raj Gupta",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "ejs": "^3.1.9",
+        "express": "^4.18.2",
+        "express-ejs-layouts": "^2.5.1",
+        "express-session": "^1.17.3",
+        "formidable": "^2.1.1",
+        "fs": "^0.0.1-security",
+        "mongodb": "^5.1.0",
+        "mongoose": "^7.0.3",
+        "nodemailer": "^6.9.1",
+        "passport": "^0.6.0",
+        "passport-google-oauth20": "^2.0.0",
+        "passport-local": "^1.0.0",
+        "path": "^0.12.7"
+    }
+}
