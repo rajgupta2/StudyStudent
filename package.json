@@ -19,7 +19,7 @@
         "formidable": "^2.1.1",
         "fs": "^0.0.1-security",
         "mongodb": "^5.1.0",
-        "mongoose": "^7.0.3",
+        "mongoose": "^7.4.2",
         "nodemailer": "^6.9.1",
         "passport": "^0.6.0",
         "passport-google-oauth20": "^2.0.0",
