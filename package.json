@@ -5,7 +5,7 @@
     "main": "./Routes/app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node ./Routes/app.js"
+        "start": "node ./Routes/app.js -p 5000"
     },
     "author": "Raj Gupta",
     "license": "ISC",
