@@ -57,12 +57,11 @@ Admin.post("/Give_Assignment", function (req, res) {
                             Description: fields.Description,
                             Attachment: AssignmentAttachments
                         });
-                        ass.save(function (err, succ) {
-                            if (err)
-                                msg = "Sorry! Due to some technicle issue we are unable to upload assignment.";
-                            else
+                        ass.save().then(function (succ) {
                                 msg = "Saved assignment successfully.";
                             res.render("./Admin/Give_Assignment.ejs", { upmsg: msg });
+                        }).catch((err)=>{
+                            res.render("./Admin/Give_Assignment.ejs", { upmsg: "Sorry! Due to some technicle issue we are unable to upload assignment."});
                         });
                     }
                 });
@@ -80,9 +79,11 @@ Admin.post("/Give_Assignment", function (req, res) {
 //Show Enquiry
 Admin.get("/ShowEnquiry", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Query.find(function (err, q) {
+        DB.Colls_Query.find().then(function (err, q) {
             res.render("./Admin/ShowEnquiry.ejs", { DBqueries: q });
-        });
+    }).catch((err)=>{
+        res.render("./Admin/ShowEnquiry.ejs", { msg: err.message });
+    });
     } else
         res.redirect("/Home/Login");
 });
@@ -119,13 +120,12 @@ Admin.post("/Send_Email", function (req, res) {
 //Delete Enquiry
 Admin.get("/DeleteNotification", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Notification.deleteOne({ _id: new ObjectId(req.query.pk) }, function (err) {
-            if (err) {
+        DB.Colls_Notification.deleteOne({ _id: new ObjectId(req.query.pk) }).catch( function (err) {
                 res.redirect("/Admin/News_Update?msg=Error Occured in deletion");
-            } else {
+            
+            }).then(()=>{
                 res.redirect("/Admin/News_Update?msg=Successfully Deleted.");
-            }
-        });
+            });
     } else {
         res.redirect("/Home/Login");
     }
@@ -135,8 +135,10 @@ Admin.get("/DeleteNotification", function (req, res) {
 //Student_Management
 Admin.get("/Student_Management", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StdData.find(function (err, sm) {
+        DB.Colls_StdData.find().then( function (err, sm) {
             res.render("./Admin/Student_Management.ejs", { StdData: sm });
+        }).catch( function (err) {
+            res.render("./Admin/Student_Management.ejs", { msg: err.message });
         });
     } else {
         res.redirect("/Home/Login");
@@ -147,7 +149,7 @@ Admin.get("/Student_Management", function (req, res) {
 //News_Update
 Admin.get("/News_Update", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Notification.find(function (err, succ) {
+        DB.Colls_Notification.find().then(function (succ) {
             res.render("./Admin/News_Update.ejs", { Notification: succ, addmsg: req.query.msg });
         });
     } else {
@@ -158,7 +160,7 @@ Admin.get("/News_Update", function (req, res) {
 //Feedback
 Admin.get("/View_Feedback", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Feedback.find(function (err, succ) {
+        DB.Colls_Feedback.find().then(function (succ) {
             res.render("./Admin/View_Feedback.ejs", { Feedbacks: succ });
         });
     } else {
@@ -169,7 +171,7 @@ Admin.get("/View_Feedback", function (req, res) {
 //Subject_Management
 Admin.get("/Subject_Management", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Subject.find(function (err, sub) {
+        DB.Colls_Subject.find().then(function ( sub) {
             res.render("./Admin/Subject_Management.ejs", { Subjects: sub, addmsg: Admin.get("addsub") });
             Admin.set("addsub", "");
         });
@@ -181,7 +183,7 @@ Admin.get("/Subject_Management", function (req, res) {
 //Subject_Management post
 Admin.post("/Subject_Management", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Subject.find({ Subject: req.body.searchSubject }, function (err, sub) {
+        DB.Colls_Subject.find({ Subject: req.body.searchSubject }).then(function ( sub) {
             if (sub.length > 0)
                 res.render("./Admin/Subject_Management.ejs", { Subjects: sub });
             else
@@ -197,12 +199,12 @@ Admin.post("/AddSubject", function (req, res) {
         var sub = new DB.Colls_Subject({
             Subject: req.body.Subject
         });
-        sub.save(function (err) {
-            if (err)
-                Admin.set("addsub", "Failed to save");
-            else
-                Admin.set("addsub", "Saved succesfully.");
+        sub.save().then(()=>{
+            Admin.set("addsub", "Saved succesfully.");
             res.redirect("/Admin/Subject_Management");
+        }).catch(function (err) {
+                Admin.set("addsub", "Failed to save");
+                res.redirect("/Admin/Subject_Management");             
         });
     } else
         res.redirect("/Home/Login");
@@ -214,12 +216,11 @@ Admin.get("/RemoveSubject", function (req, res) {
         //REMOVE ALL QUESTIONS RELATED THIS SUBJECT
         DB.Colls_Questions.deleteMany({ Subject: req.query.sub });
         //Removing Subject      
-        DB.Colls_Subject.deleteOne({ Subject: req.query.sub }, function (err, sub) {
-            if (err) {
-                Admin.set("addsub", "Failed to remove");
-            } else {
-                Admin.set("addsub", "Subject removed successfully");
-            }
+        DB.Colls_Subject.deleteOne({ Subject: req.query.sub }).then(function ( sub) {
+            Admin.set("addsub", "Subject removed successfully");
+            res.redirect("/Admin/Subject_Management");;
+        }).catch((err)=>{
+            Admin.set("addsub", "Failed to remove beacuse "+err.message);
             res.redirect("/Admin/Subject_Management");;
         });
     } else
@@ -233,10 +234,9 @@ Admin.post("/News_Update", function (req, res) {
         var nt = new DB.Colls_Notification({
             Notification_Msg: req.body.Notification_Msg
         });
-        nt.save(function (err) {
-            if (err)
-                res.redirect("/Admin/News_Update?msg=Failed to save news update.");
-            else
+        nt.save().then(()=>{
+            res.redirect("/Admin/News_Update?msg=Failed to save news update.");
+        }).catch(function (err) {
                 res.redirect("/Admin/News_Update?msg=Notification saved successfully.");
         });
 
@@ -252,7 +252,7 @@ Admin.get("/Download", function (req, res) {
             filepath = "./Content/" + req.query.file;
             res.download(filepath);
         } else {
-            DB.Colls_SubmitAssignment.find(function (err,std) {
+            DB.Colls_SubmitAssignment.find().then(function (err,std) {
                 if(err)
                 {
                     //console.log(err);
@@ -268,7 +268,7 @@ Admin.get("/Download", function (req, res) {
 //StudyMaterial
 Admin.get("/StudyMaterial", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StudyMaterial.find(function (err, sa) {
+        DB.Colls_StudyMaterial.find().then(function  (sa) {
             res.render("./Admin/StudyMaterial.ejs", { StudyMaterials: sa, msg: req.query.msg });
         });
     } else {
@@ -293,7 +293,7 @@ Admin.post("/StudyMaterial", function (req, res) {
                                 StudyMaterial: StdMAt,
                                 Description: fields.Description
                             });
-                            sm.save(() => {
+                            sm.save().then(() => {
                                 res.redirect("/Admin/StudyMaterial?msg=Saved Successfully.");
                             });
                         } else
@@ -317,10 +317,8 @@ Admin.post("/StudyMaterial", function (req, res) {
 //StudyMaterial Delete
 Admin.get("/DeleteStudy", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk), function (err, std) {
-            if (err)
-                res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");
-            else {
+        DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk)).then( function (std) {
+           
                 //Removing Study Material file
                 var filepath = path.resolve("./Content/StudyMaterials/" + std.StudyMaterial);
                 fs.unlink(filepath, function (err) {
@@ -328,7 +326,9 @@ Admin.get("/DeleteStudy", function (req, res) {
                         msg = "Unable to remove file.";//For erroer case,console.log(err);
                     res.redirect("/Admin/StudyMaterial?msg='Removed Suceessfully.'");
                 });
-            }
+            
+        }).catch( function (err) {
+            res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");
         });
     } else {
         res.redirect("/Home/Login");
@@ -363,7 +363,8 @@ Admin.get("/ChangeExamMode", function (req, res) {
 //Assignment_Management
 Admin.get("/Assignment_Management", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_GiveAssignment.find(function (err, sa) {
+            if (err)
+        DB.Colls_GiveAssignment.find().then(function (err, sa) {
             res.render("./Admin/Assignment_Management.ejs", { ASSIGNMENTS: sa, msg: req.query.msg });
         });
     } else {
@@ -374,7 +375,7 @@ Admin.get("/Assignment_Management", function (req, res) {
 //Result_Management
 Admin.get("/ResultManagement", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Result.find(function (err, sa) {
+        DB.Colls_Result.find().then(function (err, sa) {
             res.render("./Admin/ResultManagement.ejs", { Results: sa });
         });
     }else {
@@ -384,7 +385,9 @@ Admin.get("/ResultManagement", function (req, res) {
 
 Admin.get("/DeleteResult", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_Result.deleteOne({ _id: req.query.pk }, function (err) {
+        DB.Colls_Result.deleteOne({ _id: req.query.pk }).then( function (err) {
+            res.redirect("/Admin/ResultManagement");
+        }).catch(() => {
             res.redirect("/Admin/ResultManagement");
         });
     }else {
@@ -396,10 +399,7 @@ Admin.get("/DeleteResult", function (req, res) {
 //AnswerQuery
 Admin.get("/AnswerQuery", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-         DB.Colls_Query.findOne({_id:new ObjectId(req.query.pk)},(err,query)=>{
-           if(err){
-               //console.log(err);
-           }else
+         DB.Colls_Query.findOne({_id:new ObjectId(req.query.pk)}).then((query)=>{
              res.render("./Admin/AnswerQuery.ejs",{AnswerOf:query});
          });
     }else {
@@ -455,7 +455,7 @@ Admin.get("/Unblock", function (req, res) {
 //Delete Student 
 Admin.get("/DeleteStudent", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StdData.deleteOne({ Email: req.query.pk }, function (err) {
+        DB.Colls_StdData.deleteOne({ Email: req.query.pk }).then( ()=> {
             res.redirect("/Admin/Student_Management");
         });
     }else {
@@ -469,7 +469,7 @@ Admin.get("/ManageQuestion", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
         if (req.query.sub != undefined)
         Admin.set("Subject", req.query.sub);
-    DB.Colls_Questions.find({ Subject: Admin.get("Subject") }, function (err, ques) {
+    DB.Colls_Questions.find({ Subject: Admin.get("Subject") }).then( function (err, ques) {
         res.render("./Admin/ManageQuestion.ejs", { Questions: ques, msg: req.query.msg });
     });
     }else {
@@ -488,10 +488,9 @@ Admin.post("/AddQuestion", function (req, res) {
             Option4: req.body.Option4,
             Answer: req.body.Answer
         });
-        q.save(function (err) {
-            if (err)
-                res.redirect("/Admin/ManageQuestion?msg=Unable to saved.");
-            else
+        q.save().then(()=>{
+            res.redirect("/Admin/ManageQuestion?msg=Unable to saved.");
+        }).catch(function (err) {
                 res.redirect("/Admin/ManageQuestion?msg=Saved successfully.");
         }); 
     }else{
@@ -502,11 +501,10 @@ Admin.post("/AddQuestion", function (req, res) {
 Admin.get("/RemoveQuestion", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
     
-        DB.Colls_Questions.deleteOne({ _id: new ObjectId(req.query.pk) }, function (err) {
-            if (err)
-                res.redirect("/Admin/ManageQuestion?msg=Unable to Delete.");
-            else
+        DB.Colls_Questions.deleteOne({ _id: new ObjectId(req.query.pk) }).then(()=> {
                 res.redirect("/Admin/ManageQuestion?msg=Deleted Successfully.");
+        }).catch((err)=>{
+            res.redirect("/Admin/ManageQuestion?msg=Unable to Delete.");
         });
     }else {
         res.redirect("/Home/Login")
@@ -517,7 +515,7 @@ Admin.get("/RemoveQuestion", function (req, res) {
 Admin.get("/DeleteAssignment", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
     
-        DB.Colls_GiveAssignment.deleteOne({ _id: new ObjectId(req.query.pk) }, function (err, data) {
+        DB.Colls_GiveAssignment.deleteOne({ _id: new ObjectId(req.query.pk) }).then( ()=> {
             res.redirect("/Admin/Assignment_Management?msg=Deleted Successfully.");
         });
     }else {
@@ -536,7 +534,7 @@ Admin.get("/ChangePassword", function (req, res) {
 
 Admin.post("/ChangePassword", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-        DB.Colls_StdData.findByUsername(req.user.username, function (err, user) {
+        DB.Colls_StdData.findByUsername(req.user.username).then( function (err, user) {
             user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
                 if (err) {
                     res.render("./Admin/ChangePassword.ejs", { msg: "Old Password is incorrect." });
@@ -563,12 +561,10 @@ Admin.get("/logout", function (req, res) {
 //Download
 Admin.get("/Get_Subscribers", function (req, res) {
     if (req.isAuthenticated()) {
-            DB.Colls_Subscribe.find(function (err,std) {
-                if(err)
-                {
-                res.render("./Admin/Get_Subscribers.ejs", { msg:"An error occured."});
-                }else
+            DB.Colls_Subscribe.find(function (std) {
                 res.render("./Admin/Get_Subscribers.ejs", {Subscribers: std });
+            }).catch(function (err) {
+                res.render("./Admin/Get_Subscribers.ejs", { msg:"An error occured."});
             });
     } else {
         res.redirect("/Home/Login");

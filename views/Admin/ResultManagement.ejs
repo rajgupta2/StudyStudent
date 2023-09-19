@@ -20,7 +20,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% Results.forEach(function(e){ %>
+                    <% 
+                    if(Result!=undefined)
+                    Results.forEach(function(e){ %>
                             <tr>
                                 <td><%=e.Name (e.Email_OF_Student) %>td>
                                 <td><%=e.Course%></td>

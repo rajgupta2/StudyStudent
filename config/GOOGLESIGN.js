@@ -21,15 +21,15 @@ passport.use(new GoogleStrategy({
       Name: profile.displayName,
       ProfilePicture: filename,
     });
-    DB.Colls_StdData.findOne({ googleId: profile.id }, function (err, user) {
+    DB.Colls_StdData.findOne({ googleId: profile.id }).then( function (user) {
       if (!user) {
         //Downloading user's Profile Pic.
         DownloadImage(Photo_URL);
-        newuser.save(function (err) {
-          if (err) {/*console.log(err);*/ }
+        newuser.save().then(()=>{
+          return cb(null,newuser);
         });
-        return cb(err, newuser);
       }
+    }).catch((err)=>{
       return cb(err, user);
     });
   }

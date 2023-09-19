@@ -37,7 +37,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                   <%Questions.forEach(function(e){
+                   <%
+                   if(Question!=undefined)
+                   Questions.forEach(function(e){
                     var x=1; %>
                     <tr>
                         <td><%x%></td>

@@ -21,8 +21,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                        <% ASSIGNMENTS.forEach(function(e){ %>
-                            <tr>
+                        <% 
+                        if(!ASSIGNMENTS)
+                          ASSIGNMENTS.forEach(function(e){ %>
+                             <tr>
                                 <td><%=e.Title%></td>
                                 <td><%=e.Description%></td>
                                 <td><%=e.Date%></td>

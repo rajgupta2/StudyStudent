@@ -37,7 +37,9 @@
     </div>
     <div class="row">
 
-        <%Subjects.forEach(function(t){%>
+        <%
+        if(Subject!=undefined)
+        Subjects.forEach(function(t){%>
             <div class="card mx-3 my-3 px-0 mh-100">
                 <div class="card-body py-5">
                     <h3 class="text-center text-dark"><%=t.Subject%></h3>

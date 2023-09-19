@@ -90,9 +90,14 @@
     <div class="row">
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5">
             <h2 class="text-center text-success">Information Panel</h2>
-            <%Notifications.forEach(function(e){ %>
-                <marquee scroll-down ><%=  e.Notification_DT%><%=e.Notification_Msg %></marquee>
-            <% });%>
+            <%
+            if(Notifications){
+              Notifications.forEach(function(e){ %>
+                <marquee scroll-down >
+                    <%=  e.Notification_DT%><%=e.Notification_Msg %>
+                </marquee>
+             <% });
+            }   %>
         </div>
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5" id="aboutus">
             <h2 class="text-center text-success mt-4">Subscribe us to get updated</h2>

@@ -64,8 +64,12 @@ app.use("/Google",Google_Sign);
 
 //Index
 app.get("/", (req, res) => {
-    DB.Colls_Notification.find(function(err,nt){
+    DB.Colls_Notification.find().then((nt)=>{
         res.render("./Home/index",{Notifications:nt});
+    }).catch((err) => {
+        //console.log(err);
+        console.log("called error");
+        res.render("./Home/index",{Notifications:null});
     });
 });
 
@@ -91,11 +95,10 @@ app.post("/Home/Subscribe", (req, res) => {
                               Name:req.body.SName,
                               Email:req.body.SEmail
                           });
-                          sub.save(function(err){
-                              if(!err){
+                          sub.save().then(()=>{
+                            return res.json({Status:"Fail",Message:"Unable to subscribe."});
+                          }).catch(function(err){
                                   return res.json({Status:"Success"});
-                              }else
-                               return res.json({Status:"Fail",Message:"Unable to subscribe."});
                              });
                         }     
                      });
@@ -143,12 +146,12 @@ app.post("/Home/Contact", function (req, res) {
                         Contact: req.body.Contact,
                         Query: req.body.Query
                     });
-                    Query.save(function (err) {
-                        var ans = "";
-                        if (err)
-                            ans = "Sorry unable to save query.";
-                        else
-                            ans = "Your query saved successfully,we response you soon.";
+                    Query.save().then(()=>{
+                        var ans = "Your query saved successfully,we response you soon.";
+                        res.render("./Home/Contact", { msg: ans });
+                    }).catch(function (err) {
+                        
+                        var ans = "Sorry unable to save query.";
                         res.render("./Home/Contact", { msg: ans });
                     });
                 }else

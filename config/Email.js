@@ -34,18 +34,17 @@ const GenerateToken=function(Send,cb){
     if(err)
        cb(err);
     else{
-      DB.Colls_Verify_Email.deleteMany({Email :Send.to,Student_Name:Send.Name},(err)=>{
-         if(err)
+      DB.Colls_Verify_Email.deleteMany({Email :Send.to,Student_Name:Send.Name}).catch((err)=>{
           return cb(err);
+      }).then(()=>{
         const code=DB.Colls_Verify_Email({
             Email :Send.to,
             Student_Name :Send.Name,
             Code : hash
            });
-           code.save(function(err){
-             if(err)
+           code.save().catch(function(err){
               return cb(err);
-             else
+            }).then(()=>{ 
               return cb(err,token);
            });
       });
@@ -93,9 +92,7 @@ const confirmEmail=function(HasSent,cb){
         });
        }else{
         return cb(err,false,"Email can't verify.");
-       }
-         
-       
+       }     
   });
 }
 module.exports={SendMail,SendEmailForVerification,confirmEmail};

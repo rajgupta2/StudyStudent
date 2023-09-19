@@ -11,7 +11,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                       <% Subscribers.forEach(function(e){ %>
+                       <% 
+                       if(Subscribers!=undefined)
+                       Subscribers.forEach(function(e){ %>
                         <tr>
                         <td><%= e.Name%></td>
                         <td><%= e.Email%></td>

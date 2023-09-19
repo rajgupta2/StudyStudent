@@ -18,7 +18,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                 <% StdData.forEach(function(e){  %>
+                 <% 
+                 if(StdData!=undefined)
+                 StdData.forEach(function(e){  %>
                         <tr>
                             <td><%= e.EnrollmentNumber %></td>
                             <td><%= e.Name %></td>

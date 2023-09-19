@@ -15,7 +15,9 @@
                 </thead>
                 <tbody>
                     
-                       <% DBqueries.forEach(function(e){ %>
+                       <% 
+                       if(DBqueries!=undefined)
+                       DBqueries.forEach(function(e){ %>
                         <tr>
                         <td><%= e.Name%></td>
                         <td><%= e.Email%></td>
