@@ -252,12 +252,10 @@ Admin.get("/Download", function (req, res) {
             filepath = "./Content/" + req.query.file;
             res.download(filepath);
         } else {
-            DB.Colls_SubmitAssignment.find().then(function (err,std) {
-                if(err)
-                {
-                    //console.log(err);
-                }else
+            DB.Colls_SubmitAssignment.find().then(function(std) {
                 res.render("./Admin/Download.ejs", { Assignment: std });
+            }).catch((err)=>{
+                res.render("./Admin/Download.ejs");
             });
         }
     } else {
@@ -363,8 +361,7 @@ Admin.get("/ChangeExamMode", function (req, res) {
 //Assignment_Management
 Admin.get("/Assignment_Management", function (req, res) {
     if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
-            if (err)
-        DB.Colls_GiveAssignment.find().then(function (err, sa) {
+        DB.Colls_GiveAssignment.find().then(function (sa) {
             res.render("./Admin/Assignment_Management.ejs", { ASSIGNMENTS: sa, msg: req.query.msg });
         });
     } else {
@@ -561,7 +558,7 @@ Admin.get("/logout", function (req, res) {
 //Download
 Admin.get("/Get_Subscribers", function (req, res) {
     if (req.isAuthenticated()) {
-            DB.Colls_Subscribe.find(function (std) {
+            DB.Colls_Subscribe.find().then(function (std) {
                 res.render("./Admin/Get_Subscribers.ejs", {Subscribers: std });
             }).catch(function (err) {
                 res.render("./Admin/Get_Subscribers.ejs", { msg:"An error occured."});
