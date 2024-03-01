@@ -68,7 +68,6 @@ app.get("/", (req, res) => {
         res.render("./Home/index",{Notifications:nt});
     }).catch((err) => {
         //console.log(err);
-        console.log("called error");
         res.render("./Home/index",{Notifications:null});
     });
 });
@@ -251,11 +250,15 @@ app.post("/Home/Login", (req, res) => {
                    else
                    {
                       if (req.body.Email == "StudyStudent@gmail.com")
-                         res.redirect("/Admin/Welcome");
+                      {
+                        req.session.admin=req.body.Email;
+                        res.redirect("/Admin/Welcome");
+                      }
                       else {
                          if (req.user.Status != "Active") {
                           res.render("./Home/Login.ejs", { msg: "Your account is blocked by admin.You can't log-in." });
                          } else{
+                           req.session.student=req.body.Email;
                            res.redirect("/Student/Greetings");
                          }
                        }

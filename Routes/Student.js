@@ -25,7 +25,7 @@ Student.use(express.urlencoded({ extended: true }));
 
 //Routes
 Student.get("/Greetings", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login");
     else {
         DB.Colls_Subject.find({ Status: "On" }).then(function (sub) {
@@ -38,7 +38,7 @@ Student.get("/Greetings", (req, res) => {
 });
 
 Student.get("/Submit_Assignment", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login");
     else {
         res.render("./Student/Submit_Assignment.ejs", { User_Email: (req.user.username || req.user.Email) });
@@ -46,7 +46,7 @@ Student.get("/Submit_Assignment", (req, res) => {
 });
 
 Student.post("/Submit_Assignment", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login");
     else {
         var msg = "";
@@ -86,7 +86,7 @@ Student.post("/Submit_Assignment", (req, res) => {
 });
 
 Student.get("/View_Assignment", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         DB.Colls_GiveAssignment.find().then(function (GAssignment) {
@@ -102,7 +102,7 @@ Student.get("/View_Assignment", (req, res) => {
 });
 
 Student.get("/Study_Materials", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         DB.Colls_StudyMaterial.find().then(function (sa) {
@@ -116,7 +116,7 @@ Student.get("/Study_Materials", (req, res) => {
 
 //Download
 Student.get("/Download", function (req, res) {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         filepath = "./Content/" + req.query.file;
@@ -125,14 +125,14 @@ Student.get("/Download", function (req, res) {
 });
 
 Student.get("/Give_FeedBack", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else
         res.render("./Student/Give_FeedBack.ejs", { User_Email: (req.user.username || req.user.Email) });
 });
 
 Student.post("/Give_FeedBack", (req, res) => {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         var fd = DB.Colls_Feedback({
@@ -149,7 +149,7 @@ Student.post("/Give_FeedBack", (req, res) => {
     }
 });
 Student.get("/ChangePassword", function (req, res) {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         res.render("./Student/ChangePassword.ejs", { User_Email: (req.user.username || req.user.Email) });
@@ -157,7 +157,7 @@ Student.get("/ChangePassword", function (req, res) {
 });
 
 Student.post("/ChangePassword", function (req, res) {
-    if (!req.isAuthenticated())
+    if (!req.session.student) 
         res.redirect("/Home/Login")
     else {
         DB.Colls_StdData.findByUsername(req.user.username || req.user.Email).then(function (err, user) {
@@ -175,6 +175,7 @@ Student.post("/ChangePassword", function (req, res) {
 
 
 Student.get("/logout", function (req, res) {
+    req.session.destroy();
     req.logout(function (err) {
         if (err) { return next(err); }
         res.redirect('/');
@@ -182,7 +183,8 @@ Student.get("/logout", function (req, res) {
 });
 
 Student.get("/Test", function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.session.student) 
+    {
         DB.Colls_Questions.find({ Subject: req.query.sub }).then( function (ques) {
             return res.render("./Student/Test.ejs", { Questions: ques });
         }).catch( function (err) {
@@ -193,7 +195,7 @@ Student.get("/Test", function (req, res) {
 });
 
 Student.post("/Test", function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.session.student) {
         Student.set("result", 0);
         for (const field in req.body) {
             var id = field.substring(field.indexOf("_") + 1);

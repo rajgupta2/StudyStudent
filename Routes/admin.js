@@ -23,7 +23,7 @@ Admin.use(express.urlencoded({ extended: true }));
 
 //Welcome
 Admin.get("/Welcome", (req, res) => {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com")
+    if (req.session.admin)
         res.render("./Admin/Welcome.ejs");
     else
         res.redirect("/Home/Login");
@@ -31,7 +31,7 @@ Admin.get("/Welcome", (req, res) => {
 
 //Upload_Assignment
 Admin.get("/Give_Assignment", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com")
+    if (req.session.admin)
         res.render("./Admin/Give_Assignment.ejs");
     else
         res.redirect("/Home/Login");
@@ -39,7 +39,7 @@ Admin.get("/Give_Assignment", function (req, res) {
 
 //Upload_Assignment post
 Admin.post("/Give_Assignment", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var msg = "";
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, file) {
@@ -78,7 +78,7 @@ Admin.post("/Give_Assignment", function (req, res) {
 
 //Show Enquiry
 Admin.get("/ShowEnquiry", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Query.find().then(function (err, q) {
             res.render("./Admin/ShowEnquiry.ejs", { DBqueries: q });
     }).catch((err)=>{
@@ -90,14 +90,14 @@ Admin.get("/ShowEnquiry", function (req, res) {
 
 //Send_Email
 Admin.get("/Send_Email", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         res.render("./Admin/Send_Email.ejs");
     } else
         res.redirect("/Home/Login");
 });
 
 Admin.post("/Send_Email", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         const Send={
             to: req.body.SendTo,
             subject: req.body.Subject,
@@ -119,7 +119,7 @@ Admin.post("/Send_Email", function (req, res) {
 
 //Delete Enquiry
 Admin.get("/DeleteNotification", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Notification.deleteOne({ _id: new ObjectId(req.query.pk) }).catch( function (err) {
                 res.redirect("/Admin/News_Update?msg=Error Occured in deletion");
             
@@ -134,7 +134,7 @@ Admin.get("/DeleteNotification", function (req, res) {
 
 //Student_Management
 Admin.get("/Student_Management", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StdData.find().then( function (err, sm) {
             res.render("./Admin/Student_Management.ejs", { StdData: sm });
         }).catch( function (err) {
@@ -148,7 +148,7 @@ Admin.get("/Student_Management", function (req, res) {
 
 //News_Update
 Admin.get("/News_Update", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Notification.find().then(function (succ) {
             res.render("./Admin/News_Update.ejs", { Notification: succ, addmsg: req.query.msg });
         });
@@ -159,7 +159,7 @@ Admin.get("/News_Update", function (req, res) {
 
 //Feedback
 Admin.get("/View_Feedback", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Feedback.find().then(function (succ) {
             res.render("./Admin/View_Feedback.ejs", { Feedbacks: succ });
         });
@@ -170,7 +170,7 @@ Admin.get("/View_Feedback", function (req, res) {
 
 //Subject_Management
 Admin.get("/Subject_Management", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Subject.find().then(function ( sub) {
             res.render("./Admin/Subject_Management.ejs", { Subjects: sub, addmsg: Admin.get("addsub") });
             Admin.set("addsub", "");
@@ -182,7 +182,7 @@ Admin.get("/Subject_Management", function (req, res) {
 
 //Subject_Management post
 Admin.post("/Subject_Management", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Subject.find({ Subject: req.body.searchSubject }).then(function ( sub) {
             if (sub.length > 0)
                 res.render("./Admin/Subject_Management.ejs", { Subjects: sub });
@@ -195,7 +195,7 @@ Admin.post("/Subject_Management", function (req, res) {
 
 //ADD Subject post
 Admin.post("/AddSubject", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var sub = new DB.Colls_Subject({
             Subject: req.body.Subject
         });
@@ -212,7 +212,7 @@ Admin.post("/AddSubject", function (req, res) {
 
 //Remove Subject get
 Admin.get("/RemoveSubject", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         //REMOVE ALL QUESTIONS RELATED THIS SUBJECT
         DB.Colls_Questions.deleteMany({ Subject: req.query.sub });
         //Removing Subject      
@@ -230,7 +230,7 @@ Admin.get("/RemoveSubject", function (req, res) {
 
 //News_Update post
 Admin.post("/News_Update", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var nt = new DB.Colls_Notification({
             Notification_Msg: req.body.Notification_Msg
         });
@@ -247,7 +247,7 @@ Admin.post("/News_Update", function (req, res) {
 
 //Download
 Admin.get("/Download", function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.session.admin) {
         if (req.query.file != undefined) {
             filepath = "./Content/" + req.query.file;
             res.download(filepath);
@@ -265,7 +265,7 @@ Admin.get("/Download", function (req, res) {
 
 //StudyMaterial
 Admin.get("/StudyMaterial", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StudyMaterial.find().then(function  (sa) {
             res.render("./Admin/StudyMaterial.ejs", { StudyMaterials: sa, msg: req.query.msg });
         });
@@ -275,7 +275,7 @@ Admin.get("/StudyMaterial", function (req, res) {
 });
 
 Admin.post("/StudyMaterial", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var msg = "";
         var form = new formidable.IncomingForm();
         form.parse(req, function (err, fields, file) {
@@ -314,7 +314,7 @@ Admin.post("/StudyMaterial", function (req, res) {
 
 //StudyMaterial Delete
 Admin.get("/DeleteStudy", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk)).then( function (std) {
            
                 //Removing Study Material file
@@ -335,7 +335,7 @@ Admin.get("/DeleteStudy", function (req, res) {
 
 //Download file
 Admin.get("/Download", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var filepath = "./Content/" + req.query.file;
         res.download(filepath);
     } else {
@@ -345,7 +345,7 @@ Admin.get("/Download", function (req, res) {
 
 //Change Exam Mode
 Admin.get("/ChangeExamMode", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Subject.updateOne({ _id: new ObjectId(req.query.id) }, { Status: req.query.mode }, function (err, st) {
             if (err)
                 res.redirect("/Admin/Subject_Management");
@@ -360,7 +360,7 @@ Admin.get("/ChangeExamMode", function (req, res) {
 
 //Assignment_Management
 Admin.get("/Assignment_Management", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_GiveAssignment.find().then(function (sa) {
             res.render("./Admin/Assignment_Management.ejs", { ASSIGNMENTS: sa, msg: req.query.msg });
         });
@@ -371,7 +371,7 @@ Admin.get("/Assignment_Management", function (req, res) {
 
 //Result_Management
 Admin.get("/ResultManagement", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Result.find().then(function (err, sa) {
             res.render("./Admin/ResultManagement.ejs", { Results: sa });
         });
@@ -381,7 +381,7 @@ Admin.get("/ResultManagement", function (req, res) {
 });
 
 Admin.get("/DeleteResult", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_Result.deleteOne({ _id: req.query.pk }).then( function (err) {
             res.redirect("/Admin/ResultManagement");
         }).catch(() => {
@@ -395,7 +395,7 @@ Admin.get("/DeleteResult", function (req, res) {
 
 //AnswerQuery
 Admin.get("/AnswerQuery", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
          DB.Colls_Query.findOne({_id:new ObjectId(req.query.pk)}).then((query)=>{
              res.render("./Admin/AnswerQuery.ejs",{AnswerOf:query});
          });
@@ -406,7 +406,7 @@ Admin.get("/AnswerQuery", function (req, res) {
 
 //AnswerQuery
 Admin.post("/AnswerQuery", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         const Send={
             to: req.body.SendTo,
             subject: req.body.Subject,
@@ -428,7 +428,7 @@ Admin.post("/AnswerQuery", function (req, res) {
 
 //Block get
 Admin.get("/Block", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StdData.updateOne({ Answer: req.query.pk }, { Status: "Blocked" }, function (err) {
             res.redirect("/Admin/Student_Management");
         });
@@ -439,7 +439,7 @@ Admin.get("/Block", function (req, res) {
 
 //Unblock get
 Admin.get("/Unblock", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StdData.updateOne({ Email: req.query.pk }, { Status: "Active" }, function (err) {
             res.redirect("/Admin/Student_Management");
         });
@@ -451,7 +451,7 @@ Admin.get("/Unblock", function (req, res) {
 
 //Delete Student 
 Admin.get("/DeleteStudent", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StdData.deleteOne({ Email: req.query.pk }).then( ()=> {
             res.redirect("/Admin/Student_Management");
         });
@@ -463,7 +463,7 @@ Admin.get("/DeleteStudent", function (req, res) {
 
 //Manage Question
 Admin.get("/ManageQuestion", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         if (req.query.sub != undefined)
         Admin.set("Subject", req.query.sub);
     DB.Colls_Questions.find({ Subject: Admin.get("Subject") }).then( function (err, ques) {
@@ -475,7 +475,7 @@ Admin.get("/ManageQuestion", function (req, res) {
 });
 
 Admin.post("/AddQuestion", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         var q = new DB.Colls_Questions({
             Subject: Admin.get("Subject"),
             Question: req.body.Question,
@@ -496,7 +496,7 @@ Admin.post("/AddQuestion", function (req, res) {
 });
 
 Admin.get("/RemoveQuestion", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
     
         DB.Colls_Questions.deleteOne({ _id: new ObjectId(req.query.pk) }).then(()=> {
                 res.redirect("/Admin/ManageQuestion?msg=Deleted Successfully.");
@@ -510,7 +510,7 @@ Admin.get("/RemoveQuestion", function (req, res) {
 });
 
 Admin.get("/DeleteAssignment", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
     
         DB.Colls_GiveAssignment.deleteOne({ _id: new ObjectId(req.query.pk) }).then( ()=> {
             res.redirect("/Admin/Assignment_Management?msg=Deleted Successfully.");
@@ -522,7 +522,7 @@ Admin.get("/DeleteAssignment", function (req, res) {
 });
 
 Admin.get("/ChangePassword", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         res.render("./Admin/ChangePassword.ejs");
     }    else {
         res.redirect("/Home/Login")
@@ -530,7 +530,7 @@ Admin.get("/ChangePassword", function (req, res) {
 });
 
 Admin.post("/ChangePassword", function (req, res) {
-    if (req.isAuthenticated() && req.user.username == "StudyStudent@gmail.com") {
+    if (req.session.admin) {
         DB.Colls_StdData.findByUsername(req.user.username).then( function (err, user) {
             user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
                 if (err) {
@@ -549,6 +549,7 @@ Admin.post("/ChangePassword", function (req, res) {
 });
 
 Admin.get("/logout", function (req, res) {
+    req.session.destroy();
     req.logout(function (err) {
         if (err) { return next(err); }
         res.redirect('/');
@@ -557,7 +558,7 @@ Admin.get("/logout", function (req, res) {
 
 //Download
 Admin.get("/Get_Subscribers", function (req, res) {
-    if (req.isAuthenticated()) {
+    if (req.session.admin) {
             DB.Colls_Subscribe.find().then(function (std) {
                 res.render("./Admin/Get_Subscribers.ejs", {Subscribers: std });
             }).catch(function (err) {
