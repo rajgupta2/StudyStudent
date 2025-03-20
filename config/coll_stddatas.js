@@ -1,7 +1,7 @@
 const mongoose =require("mongoose");
 const app = require("express")();
 mongoose.set('strictQuery', true);
-const connectionurl="mongodb+srv://process.env.ATLAS_USERNAME:"+process.env.ATLASPASSWORD+"@studystudent-cluster-1.jloyk.mongodb.net/?retryWrites=true&w=majority&appName=StudyStudent-Cluster-1/StudyStudent";
+const connectionurl=`mongodb+srv://${process.env.ATLAS_USERNAME}:${process.env.ATLASPASSWORD}@studystudent-cluster-1.jloyk.mongodb.net/?retryWrites=true&w=majority&appName=StudyStudent-Cluster-1/StudyStudent`;
 //const connectionurl="mongodb://127.0.0.1:27017/StudyStudent";
 mongoose.connect(connectionurl).then((status)=>{
     console.log("mongodb connected successfully");
