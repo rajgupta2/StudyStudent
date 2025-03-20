@@ -32,7 +32,7 @@
 
 ## 🛠️ Technology Stack
 - **Frontend:** jQuery, JavaScript, Ajax, HTML, CSS
-- **Backend:** Node.js, Express.js
+- **Backend:** Node.js, Express.js, EJS
 - **Database:** MongoDB, Mongoose, Mongo Atlas
 - **Authentication:** Postman, Google Sign-In
 - **Security & Integrations:** Google reCAPTCHA API, Email functionality
