@@ -24,14 +24,16 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const verifyRecaptcha = require("../config/CAPTCHACODE.js");
 const Email = require("../config/Email.js");
+const MemoryStore = require('memorystore')(session)
 
-app.set('trust proxy', 1);
 app.use(cookieParser(process.env.SS_SECRET));
 app.use(session({
     cookie: {
-        secure: true,
-        maxAge: 60000
+        maxAge: 86400000
     },
+    store: new MemoryStore({
+        checkPeriod: 86400000 // prune expired entries every 24h
+    }),
     secret: process.env.SS_SECRET,
     resave: false,
     saveUninitialized: false
