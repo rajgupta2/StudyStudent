@@ -8,6 +8,7 @@ const app = express();
 //Database File Module
 const DB = require("../Models/DB");
 
+
 //Used for File Uploading 
 const formidable = require("formidable");
 const fs = require("fs");
@@ -18,11 +19,13 @@ app.use(express.static(path.resolve("./public/")));
 
 //Password Encryption,Session Management and Authentication
 const session = require("express-session");
+const cookieParser = require('cookie-parser');
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const verifyRecaptcha=require("../config/CAPTCHACODE.js");
 const Email=require("../config/Email.js");
 
+app.use(cookieParser(process.env.SS_SECRET));
 app.use(session({
     secret: process.env.SS_SECRET,
     resave: false,
@@ -57,6 +60,10 @@ app.use("/Admin", AdminRoute);
 //Student Zone
 const StudentRoute = require("./Student.js");
 app.use("/Student", StudentRoute);
+
+const APIRoute = require("../config/coll_stddatas.js");
+app.use("/API", APIRoute);
+
 
 //Google Sign in code
 const Google_Sign=require("../config/GOOGLESIGN.js");
