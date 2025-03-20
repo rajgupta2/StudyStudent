@@ -1,175 +1,188 @@
 <script>
-    function checkvalidation(){
-            var result = true;
-            var Name = $("#Name").val().trim();
-            var Email = $("#Email").val().trim();
-            $(".err").remove();
-            $(".err").addClass("text-danger");
-            //validation for name
-            if (Name.length == 0) {
-                $("#Name").after("<span class='err'>Enter your name..</span>");
-                result= false;
-            } else if (Name.length < 2) {
-                $("#Name").after("<span class='err'>Enter a valid name..</span>");
-                result= false;
-            }
-            //validation for Email
-            if (Email.length == 0) {
-                $("#Email").after("<span class='err'>Enter a valid Email</span>");
-                result=false;
-            } 
-            return result;
+    function checkvalidation() {
+        var result = true;
+        var Name = $("#Name").val().trim();
+        var Email = $("#Email").val().trim();
+        $(".err").remove();
+        $(".err").addClass("text-danger");
+        //validation for name
+        if (Name.length == 0) {
+            $("#Name").after("<span class='err'>Enter your name..</span>");
+            result = false;
+        } else if (Name.length < 2) {
+            $("#Name").after("<span class='err'>Enter a valid name..</span>");
+            result = false;
+        }
+        //validation for Email
+        if (Email.length == 0) {
+            $("#Email").after("<span class='err'>Enter a valid Email</span>");
+            result = false;
+        }
+        return result;
     }
     function onSubmit(token) {
-       var res=checkvalidation();
-        if(res){
+        var res = checkvalidation();
+        if (res) {
             var Name = $("#Name").val().trim();
             var Email = $("#Email").val().trim();
-            var code=$("#Code").val().trim();
+            var code = $("#Code").val().trim();
             $.ajax({
-           type:"POST",
-           url:"/Home/Subscribe",
-           data:{SName:Name,SEmail:Email,RecaptchaToken:token,Code:code},
-           dataType:"json",
-           success:function(obj){
-               if(obj.Status=="Success")
-                 alert("Subscribed Successfully.");
-               else
-               alert(obj.Message);
-           }
-        });
+                type: "POST",
+                url: "/Home/Subscribe",
+                data: { SName: Name, SEmail: Email, RecaptchaToken: token, Code: code },
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Status == "Success")
+                        alert("Subscribed Successfully.");
+                    else
+                        alert(obj.Message);
+                }
+            });
         }
     }
     $(document).ready(function () {
         $("input,textarea").addClass("form-control mt-3");
-        $("#SendCode").click(function(){
-            var res=checkvalidation();
-            if(res){
-              var Name = $("#Name").val().trim();
-              var Email = $("#Email").val().trim();
-              $.ajax({
-               type:"POST",
-               url:"/SendCode",
-               data:{SName:Name,SEmail:Email},
-               dataType:"json",
-               success:function(obj){
-                 if(obj.Success){
-                  $("#SendCode").addClass("d-none");
-                  $("#Code").attr("type","text");
-                  $(".Subscribe_Btn").removeClass("d-none");
-                 }else
-                  alert("Due to some error,we are unable to sent code.");
-           }
-           });
-        }
+        $("#SendCode").click(function () {
+            var res = checkvalidation();
+            if (res) {
+                var Name = $("#Name").val().trim();
+                var Email = $("#Email").val().trim();
+                $.ajax({
+                    type: "POST",
+                    url: "/SendCode",
+                    data: { SName: Name, SEmail: Email },
+                    dataType: "json",
+                    success: function (obj) {
+                        if (obj.Success) {
+                            $("#SendCode").addClass("d-none");
+                            $("#Code").attr("type", "text");
+                            $(".Subscribe_Btn").removeClass("d-none");
+                        } else
+                            alert("Due to some error,we are unable to sent code.");
+                    }
+                });
+            }
         });
     });
 </script>
-<div class="container-fluid">
-    <!--Slider-->
-    <div id="carouselExampleSlidesOnly" class="my-5 carousel slide carousel-fade " data-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active" data-interval="2000">
-                <img src="/Images/img2.jpg" class="d-block h-25 w-100" />
-            </div>
-            <div class="carousel-item" data-interval="2000">
-                <img src="/Images/img3.jpg" class="d-block h-25 w-100" />
-            </div>
-            <div class="carousel-item" data-interval="2000">
-                <img src="/Images/img4.jpg" class="d-block h-25 w-100" />
-            </div>
-            <div class="carousel-item" data-interval="2000">
-                <img src="/Images/img5.jpg" class="d-block h-25 w-100" />
-            </div>
-            <div class="carousel-item" data-interval="2000">
-                <img src="/Images/img1.jpg" class="d-block h-25 w-100" />
-            </div>
+<!--Slider-->
+<div id="carouselExampleSlidesOnly" class="my-5 carousel slide carousel-fade "
+    data-ride="carousel">
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-interval="2000">
+            <img src="/Images/img2.jpg" class="d-block h-25 w-100" />
+        </div>
+        <div class="carousel-item" data-interval="2000">
+            <img src="/Images/img3.jpg" class="d-block h-25 w-100" />
+        </div>
+        <div class="carousel-item" data-interval="2000">
+            <img src="/Images/img4.jpg" class="d-block h-25 w-100" />
+        </div>
+        <div class="carousel-item" data-interval="2000">
+            <img src="/Images/img5.jpg" class="d-block h-25 w-100" />
+        </div>
+        <div class="carousel-item" data-interval="2000">
+            <img src="/Images/img1.jpg" class="d-block h-25 w-100" />
         </div>
     </div>
-    <!--Slider Ended-->
+</div>
+<!--Slider Ended-->
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5">
             <h2 class="text-center text-success">Information Panel</h2>
-            <%
-            if(Notifications){
-              Notifications.forEach(function(e){ %>
-                <marquee scroll-down >
-                    <%=  e.Notification_DT%><%=e.Notification_Msg %>
+            <% if(Notifications){ Notifications.forEach(function(e){ %>
+                <marquee scroll-down>
+                    <%= e.Notification_DT%>
+                        <%=e.Notification_Msg %>
                 </marquee>
-             <% });
-            }   %>
+                <% }); } %>
         </div>
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5" id="aboutus">
-            <h2 class="text-center text-success mt-4">Subscribe us to get updated</h2>
-                <input id="Name" name="Name" placeholder="Name" type="text" value="" />
-                <input id="Email" name="Email" placeholder="Email" type="email" value="" /> 
-                <button  type="button" class="btn btn-success mt-3 mb-2" id="SendCode"> Verify Email</button>
-                <input id="Code" name="Code" placeholder="Code Sent to your email" type="hidden" value="" />              
-                <button  class="g-recaptcha btn btn-danger btn-block mb-2 mt-4 d-none Subscribe_Btn"
-                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>" 
-                data-callback='onSubmit'  data-theme="dark"
-                 >Subscribe</button>
+            <h2 class="text-center text-success mt-4">Subscribe us to get
+                updated</h2>
+            <input id="Name" name="Name" placeholder="Name" type="text"
+                value="" />
+            <input id="Email" name="Email" placeholder="Email" type="email"
+                value="" />
+            <button type="button" class="btn btn-success mt-3 mb-2"
+                id="SendCode"> Verify Email</button>
+            <input id="Code" name="Code" placeholder="Code Sent to your email"
+                type="hidden" value="" />
+            <button
+                class="g-recaptcha btn btn-danger btn-block mb-2 mt-4 d-none Subscribe_Btn"
+                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
+                data-callback='onSubmit' data-theme="dark">Subscribe</button>
         </div>
     </div>
-        <!--About Us-->
-        <div class="row" >
-            <img src="/Images/aboutus.jpg" alt="About Us"  class="col-sm-5 border mx-lg-5 mb-5" >               
-            <div class="col-sm-5 border mx-lg-5 mb-5">
-                <h2 class="text-center text-success mt-4 ">About Us</h2>
-                <p style="font-size:x-large;">StudyStudent is designed for the purposes of learning.
+    <!--About Us-->
+    <div class="row">
+        <img src="/Images/aboutus.jpg" alt="About Us"
+            class="col-sm-5 border mx-lg-5 mb-5">
+        <div class="col-sm-5 border mx-lg-5 mb-5">
+            <h2 class="text-center text-success mt-4 ">About Us</h2>
+            <p style="font-size:x-large;">StudyStudent is designed for the
+                purposes of learning.
                 Here,you will get updated with modern's technologies and tools.
                 You will get the tutorial/article related technologies.<br>
-                Subcribes us to get the tutorial as soon as it updated on webpage. 
-               </p>
-            </div>
+                Subcribes us to get the tutorial as soon as it updated on
+                webpage.
+            </p>
         </div>
-    <!--footer Started-->
-    <footer class="bg-dark text-white">
-        <section class="text-center p-3 bg-dark border-bottom">
-            <span>Get connected with us on social networks:</span>
-            <br />
-            <a href="https://www.facebook.com" target="_blank" class="p-2"><i class="bi bi-facebook" style="color:#347dc0;"></i></a>
-            <a href="https://www.twitter.com" target="_blank" class="p-2"><i class="bi bi-twitter" style="color:#1156aa;"></i></a>
-            <a href="https://www.google.com" target="_blank" class="p-2"><i class="bi bi-google" style="color:#1bbb34;"></i></a>
-            <a href="https://www.instagram.com" target="_blank" class="p-2"> <i class="bi bi-instagram" style="color:#dd3427;"></i></a>
-            <a href="https://www.linkedin.com" class="p-2"><i class="bi bi-linkedin" style="color:#347dc0;"></i></a>
-            <a href="https://www.github.com" class="p-2"><i class="bi bi-github" style="color:#789b95;"></i></a>
-        </section>
-        <div class="row  pl-4 pr-0 mr-0">
-            <div class="col-sm-3 my-4">
-                <!-- Content -->
-                   <h4> <a href="/">StudyStudent Private Ltd.</a> </h4>
-                
-                <p >
-                    We are located at Karwi (Chitrakoot), UP, 
-                    India<br>
-                    Post Office:Karwi Chitrakoot.
-                </p>
-            </div>
-            <div class="col-sm-3 text-white  my-4 ">
-                <h6 class="text-uppercase ">Useful Links</h6>
-                <hr class="bg-white" />
-                <a href="/">Home</a><br />
-                <a href="#aboutus">About us</a><br />
-                <a href="/Home/Login">Login</a><br />
-                <a href="/Home/Contact">Help</a><br />
-            </div>
-            <div class="col-sm-3  my-4">
-                <h6 class="text-uppercase">Important Links</h6>
-                <hr class="bg-white" />
-                <a href="/Home/Contact">Contact Page</a><br />
-                <a href="/Home/Login">Sign In</a><br />
-                <a href="/Home/Registration">Sign Up</a>
-            </div>
-            <div class="col-sm-3 my-4" id="contact">
-                <h6 class="text-uppercase">Contact</h6>
-                <hr class="bg-white" />
-                <h6><i class="bi bi-house me-3"></i> Chitrakoot,Uttar Pradesh  </h5>
-                <h6> <a href="mailto:rajgupta.ckt22@gmail.com"><i class="bi bi-envelope me-3"></i> StudyStudent@gmail.com</a> </h5>
-                <h6>Raj Gupta  </h5>
-            </div>
-        </div>
-
-    </footer>
+    </div>
 </div>
+<!--footer Started-->
+<footer class="bg-dark text-white">
+    <section class="text-center p-3 bg-dark border-bottom">
+        <span>Get connected with us on social networks:</span>
+        <br />
+        <a href="https://www.facebook.com" target="_blank" class="p-2"><i
+                class="bi bi-facebook" style="color:#347dc0;"></i></a>
+        <a href="https://www.twitter.com" target="_blank" class="p-2"><i
+                class="bi bi-twitter" style="color:#1156aa;"></i></a>
+        <a href="https://www.google.com" target="_blank" class="p-2"><i
+                class="bi bi-google" style="color:#1bbb34;"></i></a>
+        <a href="https://www.instagram.com" target="_blank" class="p-2"> <i
+                class="bi bi-instagram" style="color:#dd3427;"></i></a>
+        <a href="https://www.linkedin.com" class="p-2"><i class="bi bi-linkedin"
+                style="color:#347dc0;"></i></a>
+        <a href="https://www.github.com" class="p-2"><i class="bi bi-github"
+                style="color:#789b95;"></i></a>
+    </section>
+    <div class="row  pl-4 pr-0 mr-0">
+        <div class="col-sm-3 my-4">
+            <!-- Content -->
+            <h4> <a href="/">StudyStudent Private Ltd.</a> </h4>
 
+            <p>
+                We are located at Karwi (Chitrakoot), UP,
+                India<br>
+                Post Office:Karwi Chitrakoot.
+            </p>
+        </div>
+        <div class="col-sm-3 text-white  my-4 ">
+            <h6 class="text-uppercase ">Useful Links</h6>
+            <hr class="bg-white" />
+            <a href="/">Home</a><br />
+            <a href="#aboutus">About us</a><br />
+            <a href="/Home/Login">Login</a><br />
+            <a href="/Home/Contact">Help</a><br />
+        </div>
+        <div class="col-sm-3  my-4">
+            <h6 class="text-uppercase">Important Links</h6>
+            <hr class="bg-white" />
+            <a href="/Home/Contact">Contact Page</a><br />
+            <a href="/Home/Login">Sign In</a><br />
+            <a href="/Home/Registration">Sign Up</a>
+        </div>
+        <div class="col-sm-3 my-4" id="contact">
+            <h6 class="text-uppercase">Contact</h6>
+            <hr class="bg-white" />
+            <h6><i class="bi bi-house me-3"></i> Chitrakoot,Uttar Pradesh </h5>
+                <h6> <a href="mailto:rajgupta.ckt22@gmail.com"><i
+                            class="bi bi-envelope me-3"></i>
+                        StudyStudent@gmail.com</a> </h5>
+                    <h6>Raj Gupta </h5>
+        </div>
+    </div>
+</footer>
