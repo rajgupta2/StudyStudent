@@ -16,7 +16,7 @@ Admin.use(express.static(path.resolve("./public/")));
 
 // Set Templating Engine and Layout 
 Admin.use(expressLayouts);
-Admin.set("layout", "./Layout/Admin");
+Admin.set("layout", "./Layout/admin");
 Admin.set("view engine", "ejs");
 Admin.use(express.json());
 Admin.use(express.urlencoded({ extended: true }));
