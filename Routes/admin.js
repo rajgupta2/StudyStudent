@@ -3,7 +3,7 @@ const expressLayouts = require('express-ejs-layouts');
 //Database File Module
 const DB = require("../Models/DB");
 
-//Used for File Uploading 
+//Used for File Uploading
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
@@ -14,9 +14,9 @@ const Admin = express();
 //Static Files
 Admin.use(express.static(path.resolve("./public/")));
 
-// Set Templating Engine and Layout 
+// Set Templating Engine and Layout
 Admin.use(expressLayouts);
-Admin.set("layout", "./Layout/Admin");
+Admin.set("layout", "./Layout/admin");
 Admin.set("view engine", "ejs");
 Admin.use(express.json());
 Admin.use(express.urlencoded({ extended: true }));
@@ -112,7 +112,7 @@ Admin.post("/Send_Email", function (req, res) {
                 res.render("./Admin/Send_Email.ejs",{msg:"Email sent successfully."});
             }
 
-        });   
+        });
     } else
         res.redirect("/Home/Login");
 });
@@ -122,7 +122,7 @@ Admin.get("/DeleteNotification", function (req, res) {
     if (req.session.admin) {
         DB.Colls_Notification.deleteOne({ _id: new ObjectId(req.query.pk) }).catch( function (err) {
                 res.redirect("/Admin/News_Update?msg=Error Occured in deletion");
-            
+
             }).then(()=>{
                 res.redirect("/Admin/News_Update?msg=Successfully Deleted.");
             });
@@ -204,7 +204,7 @@ Admin.post("/AddSubject", function (req, res) {
             res.redirect("/Admin/Subject_Management");
         }).catch(function (err) {
                 Admin.set("addsub", "Failed to save");
-                res.redirect("/Admin/Subject_Management");             
+                res.redirect("/Admin/Subject_Management");
         });
     } else
         res.redirect("/Home/Login");
@@ -215,7 +215,7 @@ Admin.get("/RemoveSubject", function (req, res) {
     if (req.session.admin) {
         //REMOVE ALL QUESTIONS RELATED THIS SUBJECT
         DB.Colls_Questions.deleteMany({ Subject: req.query.sub });
-        //Removing Subject      
+        //Removing Subject
         DB.Colls_Subject.deleteOne({ Subject: req.query.sub }).then(function ( sub) {
             Admin.set("addsub", "Subject removed successfully");
             res.redirect("/Admin/Subject_Management");;
@@ -316,7 +316,7 @@ Admin.post("/StudyMaterial", function (req, res) {
 Admin.get("/DeleteStudy", function (req, res) {
     if (req.session.admin) {
         DB.Colls_StudyMaterial.findByIdAndDelete(new ObjectId(req.query.pk)).then( function (std) {
-           
+
                 //Removing Study Material file
                 var filepath = path.resolve("./Content/StudyMaterials/" + std.StudyMaterial);
                 fs.unlink(filepath, function (err) {
@@ -324,7 +324,7 @@ Admin.get("/DeleteStudy", function (req, res) {
                         msg = "Unable to remove file.";//For erroer case,console.log(err);
                     res.redirect("/Admin/StudyMaterial?msg='Removed Suceessfully.'");
                 });
-            
+
         }).catch( function (err) {
             res.redirect("/Admin/StudyMaterial?msg='Unable to Removed.'");
         });
@@ -418,7 +418,7 @@ Admin.post("/AnswerQuery", function (req, res) {
             }else{ //console.log(info);
                 res.render("./Admin/AnswerQuery.ejs",{msg:"Answer sent successfully."});
             }
-        });   
+        });
     }else {
         res.redirect("/Home/Login");
     }
@@ -449,7 +449,7 @@ Admin.get("/Unblock", function (req, res) {
     }
 });
 
-//Delete Student 
+//Delete Student
 Admin.get("/DeleteStudent", function (req, res) {
     if (req.session.admin) {
         DB.Colls_StdData.deleteOne({ Email: req.query.pk }).then( ()=> {
@@ -489,7 +489,7 @@ Admin.post("/AddQuestion", function (req, res) {
             res.redirect("/Admin/ManageQuestion?msg=Unable to saved.");
         }).catch(function (err) {
                 res.redirect("/Admin/ManageQuestion?msg=Saved successfully.");
-        }); 
+        });
     }else{
         res.redirect("/Home/Login")
     }
@@ -497,7 +497,7 @@ Admin.post("/AddQuestion", function (req, res) {
 
 Admin.get("/RemoveQuestion", function (req, res) {
     if (req.session.admin) {
-    
+
         DB.Colls_Questions.deleteOne({ _id: new ObjectId(req.query.pk) }).then(()=> {
                 res.redirect("/Admin/ManageQuestion?msg=Deleted Successfully.");
         }).catch((err)=>{
@@ -511,7 +511,7 @@ Admin.get("/RemoveQuestion", function (req, res) {
 
 Admin.get("/DeleteAssignment", function (req, res) {
     if (req.session.admin) {
-    
+
         DB.Colls_GiveAssignment.deleteOne({ _id: new ObjectId(req.query.pk) }).then( ()=> {
             res.redirect("/Admin/Assignment_Management?msg=Deleted Successfully.");
         });
@@ -544,7 +544,7 @@ Admin.post("/ChangePassword", function (req, res) {
     }else {
         res.redirect("/Home/Login");
 
-       
+
     }
 });
 

@@ -50,37 +50,30 @@
                     $(".navbar").removeClass("alert-dark");
                 }
 
-                if ($(".navbar").hasClass("alert-dark"))
-                    $(".navbar-brand").removeClass("text-white");
-                else
-                    $(".navbar-brand").addClass("text-white");
+                // if ($(".navbar").hasClass("alert-dark"))
+                //     $(".navbar-brand").removeClass("text-white");
+                // else
+                //     $(".navbar-brand").addClass("text-white");
 
-                if ($(".mode>i").hasClass("bi-toggle-off")) {
-                    $(".navbar-brand").removeClass("text-white");
-                }
+                // if ($(".mode>i").hasClass("bi-toggle-off")) {
+                //     $(".navbar-brand").removeClass("text-white");
+                // }
             });
-            $(".navbar-toggler-icon").click(function () {
-                $(".navbar").addClass("alert-dark");
-                $(".navbar-brand").removeClass("text-white");
+            // $(".navbar-toggler-icon").click(function () {
+            //     $(".navbar").addClass("alert-dark");
+            //     $(".navbar-brand").removeClass("text-white");
 
-            });
+            // });
             $(".change").click(function () {
                 if ($("body").hasClass("dark")) {
                     $("body").removeClass("dark");
                     $(".change").addClass("bi bi-toggle-off");
                     $(".change").removeClass("bi bi-toggle-on");
-                    $(".navbar-brand").removeClass("text-white");
-
                 } else {
                     $("body").addClass("dark");
                     $(".change").removeClass("bi bi-toggle-off");
                     $(".change").addClass("bi bi-toggle-on");
-                    $(".navbar-brand").addClass("text-white");
                 }
-                if ($(".mode>i").hasClass("bi-toggle-off")) {
-                    $("td").removeClass("text-white");
-                } else
-                    $("td").addClass("text-white");
             });
             //backtotop
             $("#backtotop").click(function () {
@@ -121,7 +114,7 @@
     </style>
 </head>
 
-<body class="dark">
+<body>
     <!--back to top btn-->
     <a id="backtotop" class="bg-info btn" style="display:none;"><i
             class="bi bi-arrow-up"></i></a>
@@ -129,7 +122,7 @@
         <div
             class="row navbar navbar-expand-lg navbar-light py-0 fixed-top pl-lg-5">
             <div class="col-sm-3">
-                <a class="navbar-brand text-white ml-lg-5 pl-lg-5"
+                <a class="navbar-brand ml-lg-5 pl-lg-5"
                     href="/">StudyStudent</a>
                 <button class="navbar-toggler float-right border-0"
                     type="button" data-toggle="collapse"

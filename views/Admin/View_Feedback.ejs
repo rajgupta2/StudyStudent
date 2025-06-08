@@ -11,12 +11,12 @@
                         <th>Subject</th>
                         <th>Message</th>
                         <th>Date</th>
-                  
+
                     </tr>
                 </thead>
                 <tbody>
-                   <% 
-                   if(Feedbacks!=undefined)
+                   <%
+                   if(Feedbacks!==undefined)
                    Feedbacks.forEach(function(e){%>
                         <tr>
                             <td><%=e.Student_Name%></td>
@@ -25,7 +25,7 @@
                             <td><%=e.Message%></td>
                             <td><%=e.Feedback_DT%></td>
                         </tr>
-                    <%});%>                
+                    <%});%>
                 </tbody>
             </table>
         </div>

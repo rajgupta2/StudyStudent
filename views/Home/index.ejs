@@ -2,24 +2,39 @@
     function checkvalidation() {
         var result = true;
         var Name = $("#Name").val().trim();
-        var Email = $("#Email").val().trim();
-        $(".err").remove();
+        var Email = $("#Email").val().toLowerCase().trim();
+
+        $(".err").remove(); // Remove previous error messages
         $(".err").addClass("text-danger");
-        //validation for name
-        if (Name.length == 0) {
-            $("#Name").after("<span class='err'>Enter your name..</span>");
+
+        // Validation for Name (2 to 20 characters, alphabets and spaces allowed)
+        if (Name.length === 0) {
+            $("#Name").after("<span class='err'>Enter your name.</span>");
             result = false;
-        } else if (Name.length < 2) {
-            $("#Name").after("<span class='err'>Enter a valid name..</span>");
+        } else if (Name.length < 2 || Name.length > 20) {
+            $("#Name").after("<span class='err'>Name must be between 2 and 20 characters.</span>");
+            result = false;
+        } else if (!/^[a-zA-Z\s]+$/.test(Name)) {
+            $("#Name").after("<span class='err'>Name should only contain letters and spaces.</span>");
             result = false;
         }
-        //validation for Email
-        if (Email.length == 0) {
-            $("#Email").after("<span class='err'>Enter a valid Email</span>");
+
+        // Validation for Email using regular expression
+        if (Email.length === 0) {
+            $("#Email").after("<span class='err'>Enter your email address.</span>");
             result = false;
+        } else {
+            // Simple and reliable email regex
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!emailPattern.test(Email)) {
+                $("#Email").after("<span class='err'>Enter a valid email address.</span><br/>");
+                result = false;
+            }
         }
+        $(".err").addClass("text-danger");
         return result;
     }
+
     function onSubmit(token) {
         var res = checkvalidation();
         if (res) {
@@ -101,9 +116,9 @@
         <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5" id="aboutus">
             <h2 class="text-center text-success mt-4">Subscribe us to get
                 updated</h2>
-            <input id="Name" name="Name" placeholder="Name" type="text"
+            <input id="Name" name="Name" placeholder="Name" type="text" onchange="checkvalidation()"
                 value="" />
-            <input id="Email" name="Email" placeholder="Email" type="email"
+            <input id="Email" name="Email" placeholder="Email" type="email" onchange="checkvalidation()"
                 value="" />
             <button type="button" class="btn btn-success mt-3 mb-2"
                 id="SendCode"> Verify Email</button>

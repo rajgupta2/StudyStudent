@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $("input textarea").change(checkValidation);
     //Adding Form-control class to all input,textarea tags
     $("input,textarea").addClass("form-control mt-4");
     $("[type='radio']").removeClass("form-control mt-4");
@@ -9,36 +10,36 @@ $(document).ready(function () {
         var filename = $(this).val().split("\\").pop();
         $(".custom-file-label").html(filename);
     });
-    
+
     //Send Code
-    $("#SendCode").click(function(){
+    $("#SendCode").click(function () {
         $("#SendCode").addClass("d-none");
-        $("#Code").attr("type","text");
+        $("#Code").attr("type", "text");
         $(".Registration").removeClass("d-none");
-        var res=checkValidation();
-        if(res){
-          var Name = $("#Name").val().trim();
-          var Email = $("#Email").val().trim();
-          $.ajax({
-           type:"POST",
-           url:"/SendCode",
-           data:{SName:Name,SEmail:Email},
-           dataType:"json",
-           success:function(obj){
-             if(obj.Success){
-              $("#SendCode").addClass("d-none");
-              $("#Code").attr("type","text");
-              $(".Registration").removeClass("d-none");
-             }else
-              alert("Due to some error,we are unable to sent code.");
-             }
-           });
-         }
+        var res = checkValidation();
+        if (res) {
+            var Name = $("#Name").val().trim();
+            var Email = $("#Email").val().trim();
+            $.ajax({
+                type: "POST",
+                url: "/SendCode",
+                data: { SName: Name, SEmail: Email },
+                dataType: "json",
+                success: function (obj) {
+                    if (obj.Success) {
+                        $("#SendCode").addClass("d-none");
+                        $("#Code").attr("type", "text");
+                        $(".Registration").removeClass("d-none");
+                    } else
+                        alert("Due to some error,we are unable to sent code.");
+                }
+            });
+        }
     });
 });
 function checkValidation() {
-    //validation started
     var result = true;
+
     var Name = $("#Name").val().trim();
     var EnrollMentNumber = $("#EnrollmentNumber").val().trim();
     var Email = $("#Email").val().trim();
@@ -50,92 +51,121 @@ function checkValidation() {
     var ProfilePicture = $("#ProfilePicture").val().trim();
     var Password = $("#Password").val().trim();
     var ConfirmPassword = $("#ConfirmPassword").val().trim();
-    $(".err").remove();
-    //validation for name
-    if (Name.length == 0) {
+
+    $(".err").remove(); // clear previous error messages
+
+    // === Name ===
+    const nameReg=/^[a-zA-Z\s]+$/;
+    if (Name.length === 0) {
+        $("#Name").after("<span class='err text-danger'>Enter your name.</span>");
         result = false;
-        $("#Name").after("<span class='err'>Enter your name..</span>");
-    } else if (Name.length < 2) {
+    } else if (Name.length < 2 || Name.length > 22) {
+        $("#Name").after("<span class='err text-danger'>Name must be between 2 to 22 characters.</span>");
         result = false;
-        $("#Name").after("<span class='err'>Enter a valid name..</span>");
-    }
-    //validation for enrollment number
-    if (EnrollMentNumber.length < 2) {
-        result = false;
-        $("#EnrollmentNumber").after("<span class='err'>Enter a valid Enrollment number..</span>");
-    }
-    //validation for Email
-    if (Email.length == 0) {
-        result = false;
-        $("#Email").after("<span class='err'>Enter a valid Email</span>");
-    }
-    //validation for phone number
-    if (Contact.length != 10) {
-        $("#Contact").after("<span class='err'>Enter valid mobile number.</span>");
-        result = false;
-    }
-    //validation for college
-    if (College.length < 4) {
-        result = false;
-        $("#College").after("<span class='err'>Please Enter Valid College Name</span>");
-    }
-    //validation for Year
-    if (Year.length == 0) {
-        result = false;
-        $("#Year").after("<span class='err'>Please Enter Year Of Course</span>")
-    }
-    //validation for Address
-    if (Address.length < 6) {
-        result = false;
-        $("#Address").after("<span class='err'>Please Enter a valid Addresss..");
-    }
-    //validation for course
-    if (Course.length < 2) {
-        result = false;
-        $("#Course").after("<span class='err'>Please Enter a valid Course..</span>");
-    }
-    //validation for Profile Picture
-    var ExtensionOfProfilePicture = ProfilePicture.split(".").pop().toUpperCase();
-    var AllowedExtension = ["JPG", "PNG", "JPEG", "JFIF"];
-    //if profilepictureextension doesn't match with valid Extension
-    if (!(AllowedExtension.indexOf(ExtensionOfProfilePicture) >= 0)) {
-        $("#ProfilePicture").after("<span class='err'>Please Choose a valid Profile Picture.</span>");
-        result = false;
-    }
-    //Validation for Password
-    if (Password.length < 8) {
-        result = false;
-        $("#Password").after("<span class='err'>Password must be 8 characters long.</span>");
-    } else {
-        //Checking for strong password
-        var digit = false, special = false, small = false, upper = false;
-        for (var i = 0; i < Password.length; i++) {
-            var c = Password.charAt(i);
-            if (c >= 0 && c <= 9) //Assign true to digit  if c is an digit otherwise false
-                digit = true;
-            else if (c >= 'A' && c <= 'Z')//Assign true to upper if c is uppercase letter
-                upper = true;
-            else if (c >= 'a' && c <= 'z')//Assign true to small if c is lowercase letter
-                small = true;
-            else //Assign true to special if c is special charcter
-                special = true;
-        }
-        if (!(digit && upper && small && special)) { //if any conditions doesn't satisfy.
+    }else if (!nameReg.test(Name)) {
+            $("#Name").after("<span class='err text-danger'>Name can only contain letters and spaces.</span>");
             result = false;
-            $("#Password").after("<span class='err'>Password must contains digit,uppercase letter,lowercase letter and a special character.</span>");
+    }
+
+    // === Enrollment Number ===
+    if (EnrollMentNumber.length < 2 || EnrollMentNumber.length > 12) {
+        $("#EnrollmentNumber").after("<span class='err text-danger'>Enrollment number must be 2 to 12 characters.</span>");
+        result = false;
+    }
+
+    // === Email ===
+    if (Email.length === 0) {
+        $("#Email").after("<span class='err text-danger'>Enter your email.</span>");
+        result = false;
+    } else if (Email.length > 30) {
+        $("#Email").after("<span class='err text-danger'>Email must not exceed 30 characters.</span>");
+        result = false;
+    } else {
+        var emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+        if (!emailPattern.test(Email)) {
+            $("#Email").after("<span class='err text-danger'>Enter a valid email format.</span>");
+            result = false;
         }
     }
-    if (Password != ConfirmPassword) {
+
+    // === Contact ===
+    const phonePattern = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+    if (!phonePattern.test(Contact)) {
+        $("#Contact").after("<span class='err text-danger'>Enter a valid 10-digit mobile number.</span>");
         result = false;
-        $("#ConfirmPassword").after("<span class='err'>Confirm Password doesn't match.</span>");
     }
-    $(".err").addClass("text-danger");
+
+    // === College ===
+    if (College.length < 4 || College.length > 35) {
+        $("#College").after("<span class='err text-danger'>College name must be 4 to 35 characters.</span>");
+        result = false;
+    }
+
+    // === Year ===
+    if (!/^\d{4}$/.test(Year)) {
+        $("#Year").after("<span class='err text-danger'>Enter a valid 4-digit year.</span>");
+        result = false;
+    }
+
+    // === Address ===
+    if (Address.length < 6 || Address.length > 30) {
+        $("#Address").after("<span class='err text-danger'>Address must be 6 to 30 characters.</span>");
+        result = false;
+    }
+
+    // === Course ===
+    if (Course.length < 2 || Course.length > 35) {
+        $("#Course").after("<span class='err text-danger'>Course name must be 2 to 35 characters.</span>");
+        result = false;
+    }
+
+    // === Profile Picture ===
+    // === Profile Picture Validation ===
+    var AllowedExtension = ["JPG", "PNG", "JPEG", "JFIF"];
+    if(ProfilePicture.length==0){
+            $("#ProfilePicture").after("<span class='err text-danger'>Photo is not uploaded.</span>");
+            result = false;
+    }else if (ProfilePicture.length > 0) {
+        var ExtensionOfProfilePicture = ProfilePicture.split(".").pop().toUpperCase();
+
+        if (AllowedExtension.indexOf(ExtensionOfProfilePicture) === -1) {
+            $("#ProfilePicture").after("<span class='err text-danger'>Only JPG, PNG, JPEG, or JFIF files are allowed.</span>");
+            result = false;
+        } else if ($("#ProfilePicture")[0].files.length > 0) {
+            var fileSize = $("#ProfilePicture")[0].files[0].size;
+            if (fileSize > 2 * 1024 * 1024) {
+                $("#ProfilePicture").after("<span class='err text-danger'>File size must be less than 2MB.</span>");
+                result = false;
+            }
+        }
+    }
+    // === Password ===
+    if (Password.length !== 8) {
+        $("#Password").after("<span class='err text-danger'>Password must be exactly 8 characters.</span>");
+        result = false;
+    } else {
+        var hasUpper = /[A-Z]/.test(Password);
+        var hasLower = /[a-z]/.test(Password);
+        var hasDigit = /[0-9]/.test(Password);
+        var hasSpecial = /[\W_]/.test(Password);
+        if (!(hasUpper && hasLower && hasDigit && hasSpecial)) {
+            $("#Password").after("<span class='err text-danger'>Password must contain uppercase, lowercase, digit, and special character.</span>");
+            result = false;
+        }
+    }
+
+    // === Confirm Password ===
+    if (Password !== ConfirmPassword) {
+        $("#ConfirmPassword").after("<span class='err text-danger'>Passwords do not match.</span>");
+        result = false;
+    }
+
     return result;
 }
 
 function onSubmit(token) {
-    var result=checkValidation();
+    var result = checkValidation();
     if (result)
-     document.getElementById("registration-form").submit();
+        document.getElementById("registration-form").submit();
 }
 

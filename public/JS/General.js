@@ -27,39 +27,30 @@ $(document).ready(function () {
             $("#backtotop").hide();
             $(".navbar").removeClass("alert-dark");
         }
-
-        if ($(".navbar").hasClass("alert-dark"))
-            $(".navbar-brand").removeClass("text-white");
-        else 
-            $(".navbar-brand").addClass("text-white");
-
-        if ($(".mode>i").hasClass("bi-toggle-off")) {
-            $(".navbar-brand").removeClass("text-white");
-        }  
     });
-    $(".navbar-toggler-icon").click(function () {
-        $(".navbar").addClass("alert-dark");
+$(".navbar-toggler-icon").click(function () {
+    $(".navbar").addClass("alert-dark");
+    $(".navbar-brand").removeClass("text-white");
+
+});
+$(".change").click(function () {
+    if ($("body").hasClass("dark")) {
+        $("body").removeClass("dark");
+        $(".change").addClass("bi bi-toggle-off");
+        $(".change").removeClass("bi bi-toggle-on");
         $(".navbar-brand").removeClass("text-white");
-
-    });
-    $(".change").click(function () {
-        if ($("body").hasClass("dark")){
-            $("body").removeClass("dark");
-            $(".change").addClass("bi bi-toggle-off");
-            $(".change").removeClass("bi bi-toggle-on");
-            $(".navbar-brand").removeClass("text-white");
-            $(".google-sign").removeClass("text-white");
-            //$(".google-sign-box").addClass("dark");
-        } else {
-            $("body").addClass("dark");
-            $(".change").removeClass("bi bi-toggle-off");
-            $(".change").addClass("bi bi-toggle-on");
-            $(".navbar-brand").addClass("text-white");
-            $(".google-sign").addClass("text-white");
-        }
-    });
-    //backtotop
-    $("#backtotop").click(function () {
-        $("html,body").animate({ scrollTop: 0 }, '1500');
-    });
+        $(".google-sign").removeClass("text-white");
+        //$(".google-sign-box").addClass("dark");
+    } else {
+        $("body").addClass("dark");
+        $(".change").removeClass("bi bi-toggle-off");
+        $(".change").addClass("bi bi-toggle-on");
+        $(".navbar-brand").addClass("text-white");
+        $(".google-sign").addClass("text-white");
+    }
+});
+//backtotop
+$("#backtotop").click(function () {
+    $("html,body").animate({ scrollTop: 0 }, '1500');
+});
 });

@@ -6,7 +6,8 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "nodemon ./Routes/app.js -p 5000",
-        "dev": "nodemon ./Routes/app.js -p 5000"
+        "dev": "nodemon ./Routes/app.js -p 5000",
+        "sonar-scanner": "sonar-scanner"
     },
     "author": "Raj Gupta",
     "license": "ISC",
@@ -22,7 +23,7 @@
         "fs": "^0.0.1-security",
         "memorystore": "^1.6.7",
         "mongodb": "^6.15.0",
-        "mongoose": "^8.12.1",
+        "mongoose": "^6.13.8",
         "nodemailer": "^6.10.0",
         "nodemon": "^3.1.9",
         "passport": "^0.6.0",
@@ -30,6 +31,7 @@
         "passport-local": "^1.0.0",
         "passport-local-mongoose": "^7.1.2",
         "path": "^0.12.7",
-        "pm2": "^6.0.5"
+        "pm2": "^6.0.5",
+        "sonar-scanner": "^3.1.0"
     }
 }

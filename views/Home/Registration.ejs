@@ -1,99 +1,121 @@
 <script src="/JS/validation.js"></script>
-<style>
-    form {
-        box-shadow: 4px 4px 12px blue;
-    }
-</style>
-<div class="container my-5">
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;"><% if(locals.msg){ %>
-        <%= msg%>
-        <% } %></p>
-        
-    <form action="/Home/Registration" id="registration-form" method="post"  class=" mb-5 mt-4 py-5 px-5" enctype="multipart/form-data">
-        <div class="col-sm-3 border google-sign-box">
+<div class="container my-5 pt-3">
+    <h3 class="text-center text-success">Welcome to the Registration Page</h3>
+    <p id="presponse" class="alert alert-dark text-center h4 d-none">
+        <% if(locals.msg){ %>
+            <%= msg%>
+                <% } %>
+    </p>
+    <form action="/Home/Registration" id="registration-form" method="post"
+        class=" mb-5 px-5 pt-2" enctype="multipart/form-data">
+        <div class="col-sm-4 border google-sign-box">
             <a class="btn box-shadow" href="/Google/Login">
                 <div>
-                    <img width="20px" style="margin-top:4px; margin-right:8px" class="mb-2" alt="Google sign-in" 
+                    <img width="20px" style="margin-top:4px; margin-right:8px"
+                        class="mb-2" alt="Google sign-in"
                         src="/Images/Google__G__Logo.svg.webp" />
-                       <text class="text-white google-sign">Sign up with Google</text> 
+                    <text class="google-sign">Sign up with
+                        Google</text>
                 </div>
-             
+
             </a>
         </div>or
         <div class="row">
             <div class="col-sm-6">
-                <input id="EnrollmentNumber" name="EnrollmentNumber" placeholder="Enrollment Number " type="text" value="" />
+                <input id="EnrollmentNumber" name="EnrollmentNumber"
+                    placeholder="Enrollment Number " type="text" value="" />
             </div>
             <div class="col-sm-6">
-                <input id="Name" name="Name" placeholder="Name" type="text" value="" />
+                <input id="Name" name="Name" placeholder="Name" type="text"
+                    value="" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
                 <div class="form-control mt-4 ">
-                    <input checked="true" id="Gen" name="Gender" type="radio" value="Male" />Male
-                    <input id="Gender" name="Gender" type="radio" value="Female" />Female
+                    <input checked="true" id="Gen" name="Gender" type="radio"
+                        value="Male" />Male
+                    <input id="Gender" name="Gender" type="radio"
+                        value="Female" />Female
                 </div>
             </div>
             <div class="col-sm-6">
-                <input id="College" name="College" placeholder="College Name" type="text" value="" />
+                <input id="College" name="College" placeholder="College Name"
+                    type="text" value="" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <input id="Course" name="Course" placeholder="Course" type="text" value="" />
+                <input id="Course" name="Course" placeholder="Course"
+                    type="text" value="" />
             </div>
             <div class="col-sm-6">
-                <input data-val="true" data-val-number="The field Year must be a number." id="Year" name="Year" placeholder="Year" type="number" value="" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6">
-                <input id="Email" name="Email" placeholder="Email" type="email" value="" />
-            </div>
-            <div class="col-sm-6">
-                <input data-val="true" data-val-number="The field Contact must be a number."  id="Contact" name="Contact" placeholder="Phone" type="number" value="" />
+                <input data-val="true"
+                    data-val-number="The field Year must be a number." id="Year"
+                    name="Year" placeholder="Year" type="number" value="" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <textarea cols="20" id="Address" name="Address" placeholder="Address..." rows="2" style="resize:none;">
+                <input id="Email" name="Email" placeholder="Email" type="email"
+                    value="" />
+            </div>
+            <div class="col-sm-6">
+                <input data-val="true"
+                    data-val-number="The field Contact must be a number."
+                    id="Contact" name="Contact" placeholder="Phone"
+                    type="number" value="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <textarea cols="20" id="Address" name="Address"
+                    placeholder="Address..." rows="2" style="resize:none;">
 </textarea>
             </div>
             <div class="col-sm-6 mt-4">
                 <div class="custom-file">
                     <label class="custom-file-label">Profile Picture</label>
-                    <input type="file" class="custom-file-input" id="ProfilePicture" name="ProfilePicture" />
+                    <input type="file" class="custom-file-input"
+                        id="ProfilePicture" name="ProfilePicture" />
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <input id="Password" name="Password" placeholder="Password" type="password" value="" />
+                <input id="Password" name="Password" placeholder="Password"
+                    type="password" value="" />
             </div>
             <div class="col-sm-6">
-                <input id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm Password" type="password" value="" />
+                <input id="ConfirmPassword" name="ConfirmPassword"
+                    placeholder="Confirm Password" type="password" value="" />
             </div>
         </div><br />
         <div class="row">
             <div class="col-sm-6">
-                If you registered,you agree terms and conditions of StudyStudent .
+                If you registered,you agree terms and conditions of StudyStudent
+                .
             </div>
             <div class="col-sm-6">
-                <input id="Code" name="Code" placeholder="Code Sent to your email" type="hidden" value="" />
+                <input id="Code" name="Code"
+                    placeholder="Code Sent to your email" type="hidden"
+                    value="" />
             </div>
         </div>
         <div class="row">
             <div class="col-sm-6">
-                <button  type="button" class="btn btn-block btn-warning mt-4 mb-2" id="SendCode"> Verify Email</button>
-                <button class="g-recaptcha btn btn-success btn-block mt-4 d-none Registration" 
-                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
-                data-theme="dark"  data-callback="onSubmit">Save</button>
+                <button type="button"
+                    class="btn btn-block btn-warning mt-4 mb-2" id="SendCode">
+                    Verify Email</button>
+                <button
+                    class="g-recaptcha btn btn-success btn-block mt-4 d-none Registration"
+                    data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
+                    data-theme="dark" data-callback="onSubmit">Save</button>
             </div>
             <div class="col-sm-6">
-                <input type="reset" value="Reset" class="btn btn-block btn-danger" />
+                <input type="reset" value="Reset"
+                    class="btn btn-block btn-danger" />
             </div>
         </div>
     </form>
 </div>
-

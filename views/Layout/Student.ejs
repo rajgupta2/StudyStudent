@@ -67,58 +67,35 @@
                     $("#backtotop").hide();
                     $(".navbar").removeClass("alert-dark");
                 }
-
-                if ($(".navbar").hasClass("alert-dark"))
-                    $(".navbar-brand").removeClass("text-white");
-                else
-                    $(".navbar-brand").addClass("text-white");
-
-                if ($(".mode>i").hasClass("bi-toggle-off")) {
-                    $(".navbar-brand").removeClass("text-white");
-                }
             });
             $(".navbar-toggler-icon").click(function () {
                 $(".navbar").addClass("alert-dark");
-                $(".navbar-brand").removeClass("text-white");
-
             });
             $(".change").click(function () {
                 if ($("body").hasClass("dark")) {
                     $("body").removeClass("dark");
                     $(".change").addClass("bi bi-toggle-off");
                     $(".change").removeClass("bi bi-toggle-on");
-                    $(".navbar-brand").removeClass("text-white");
-
                 } else {
                     $("body").addClass("dark");
                     $(".change").removeClass("bi bi-toggle-off");
                     $(".change").addClass("bi bi-toggle-on");
-                    $(".navbar-brand").addClass("text-white");
-                }
-                if ($(".mode>i").hasClass("bi-toggle-off")) {
-                    $("td").removeClass("text-white");
-                } else {
-                    $("td").addClass("text-white");
                 }
             });
             //backtotop
             $("#backtotop").click(function () {
                 $("html,body").animate({ scrollTop: 0 }, '1500');
             });
-            if ($(".mode>i").hasClass("bi-toggle-off")) {
-                $("td").removeClass("text-white");
-            } else
-                $("td").addClass("text-white");
         });
     </script>
 </head>
-    <body class="dark">
+    <body>
         <!--back to top btn-->
         <a id="backtotop" class="bg-info btn" style="display:none;"><i class="bi bi-arrow-up"></i></a>
         <div class="container">
             <div class="row navbar navbar-expand-lg navbar-light py-0 fixed-top">
                 <div class="col-sm-2 pl-lg-5 ml-lg-5">
-                    <a class="navbar-brand text-white" href="/">StudyStudent</a>
+                    <a class="navbar-brand" href="/">StudyStudent</a>
                     <button class="navbar-toggler float-right border-0" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -143,10 +120,10 @@
                             </div>
 
                         </div>
-                        <div class="mode pl-3">
+                        <!-- <div class="mode pl-3">
                             Dark mode:
                             <i class="bi bi-toggle-on change"></i>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

@@ -4,7 +4,7 @@ const expressLayouts = require('express-ejs-layouts');
 //Database File Module
 const DB = require("../Models/DB");
 
-//Used for File Uploading 
+//Used for File Uploading
 const formidable = require("formidable");
 const fs = require("fs");
 const path = require("path");
@@ -16,7 +16,7 @@ const Student = express();
 //Static Files
 Student.use(express.static(path.resolve("./public/")));
 
-// Set Templating Engine and Layout 
+// Set Templating Engine and Layout
 Student.use(expressLayouts);
 Student.set("layout", "./Layout/Student");
 Student.set("view engine", "ejs");
@@ -25,7 +25,7 @@ Student.use(express.urlencoded({ extended: true }));
 
 //Routes
 Student.get("/Greetings", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login");
     else {
         DB.Colls_Subject.find({ Status: "On" }).then(function (sub) {
@@ -38,7 +38,7 @@ Student.get("/Greetings", (req, res) => {
 });
 
 Student.get("/Submit_Assignment", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login");
     else {
         res.render("./Student/Submit_Assignment.ejs", { User_Email: (req.user.username || req.user.Email) });
@@ -46,7 +46,7 @@ Student.get("/Submit_Assignment", (req, res) => {
 });
 
 Student.post("/Submit_Assignment", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login");
     else {
         var msg = "";
@@ -86,7 +86,7 @@ Student.post("/Submit_Assignment", (req, res) => {
 });
 
 Student.get("/View_Assignment", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         DB.Colls_GiveAssignment.find().then(function (GAssignment) {
@@ -102,7 +102,7 @@ Student.get("/View_Assignment", (req, res) => {
 });
 
 Student.get("/Study_Materials", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         DB.Colls_StudyMaterial.find().then(function (sa) {
@@ -116,7 +116,7 @@ Student.get("/Study_Materials", (req, res) => {
 
 //Download
 Student.get("/Download", function (req, res) {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         filepath = "./Content/" + req.query.file;
@@ -125,14 +125,14 @@ Student.get("/Download", function (req, res) {
 });
 
 Student.get("/Give_FeedBack", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else
         res.render("./Student/Give_FeedBack.ejs", { User_Email: (req.user.username || req.user.Email) });
 });
 
 Student.post("/Give_FeedBack", (req, res) => {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         var fd = DB.Colls_Feedback({
@@ -149,7 +149,7 @@ Student.post("/Give_FeedBack", (req, res) => {
     }
 });
 Student.get("/ChangePassword", function (req, res) {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         res.render("./Student/ChangePassword.ejs", { User_Email: (req.user.username || req.user.Email) });
@@ -157,7 +157,7 @@ Student.get("/ChangePassword", function (req, res) {
 });
 
 Student.post("/ChangePassword", function (req, res) {
-    if (!req.session.student) 
+    if (!req.session.student)
         res.redirect("/Home/Login")
     else {
         DB.Colls_StdData.findByUsername(req.user.username || req.user.Email).then(function (err, user) {
@@ -183,7 +183,7 @@ Student.get("/logout", function (req, res) {
 });
 
 Student.get("/Test", function (req, res) {
-    if (req.session.student) 
+    if (req.session.student)
     {
         DB.Colls_Questions.find({ Subject: req.query.sub }).then( function (ques) {
             return res.render("./Student/Test.ejs", { Questions: ques });
@@ -220,7 +220,7 @@ Student.post("/Test", function (req, res) {
                 Subject: req.query.sub
             });
             tr.save().then( function(){
-                        return res.render("./Student/Test", { msg: "You have got " + Student.get("result") + " out of 20 marks." });                
+                        return res.render("./Student/Test", { msg: "You have got " + Student.get("result") + " out of 20 marks." });
             }).catch( function (err) {
                         return res.render("./Student/Test", { msg: "An error occured"+err.message });
             });
