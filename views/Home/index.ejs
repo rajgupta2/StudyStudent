@@ -1,85 +1,5 @@
 <script>
-    function checkvalidation() {
-        var result = true;
-        var Name = $("#Name").val().trim();
-        var Email = $("#Email").val().toLowerCase().trim();
-
-        $(".err").remove(); // Remove previous error messages
-        $(".err").addClass("text-danger");
-
-        // Validation for Name (2 to 20 characters, alphabets and spaces allowed)
-        if (Name.length === 0) {
-            $("#Name").after("<span class='err'>Enter your name.</span>");
-            result = false;
-        } else if (Name.length < 2 || Name.length > 20) {
-            $("#Name").after("<span class='err'>Name must be between 2 and 20 characters.</span>");
-            result = false;
-        } else if (!/^[a-zA-Z\s]+$/.test(Name)) {
-            $("#Name").after("<span class='err'>Name should only contain letters and spaces.</span>");
-            result = false;
-        }
-
-        // Validation for Email using regular expression
-        if (Email.length === 0) {
-            $("#Email").after("<span class='err'>Enter your email address.</span>");
-            result = false;
-        } else {
-            // Simple and reliable email regex
-            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-            if (!emailPattern.test(Email)) {
-                $("#Email").after("<span class='err'>Enter a valid email address.</span><br/>");
-                result = false;
-            }
-        }
-        $(".err").addClass("text-danger");
-        return result;
-    }
-
-    function onSubmit(token) {
-        var res = checkvalidation();
-        if (res) {
-            var Name = $("#Name").val().trim();
-            var Email = $("#Email").val().trim();
-            var code = $("#Code").val().trim();
-            $.ajax({
-                type: "POST",
-                url: "/Home/Subscribe",
-                data: { SName: Name, SEmail: Email, RecaptchaToken: token, Code: code },
-                dataType: "json",
-                success: function (obj) {
-                    if (obj.Status == "Success")
-                        alert("Subscribed Successfully.");
-                    else
-                        alert(obj.Message);
-                }
-            });
-        }
-    }
-    $(document).ready(function () {
-        $("input,textarea").addClass("form-control mt-3");
-        $("#SendCode").click(function () {
-            var res = checkvalidation();
-            if (res) {
-                var Name = $("#Name").val().trim();
-                var Email = $("#Email").val().trim();
-                $.ajax({
-                    type: "POST",
-                    url: "/SendCode",
-                    data: { SName: Name, SEmail: Email },
-                    dataType: "json",
-                    success: function (obj) {
-                        if (obj.Success) {
-                            $("#SendCode").addClass("d-none");
-                            $("#Code").attr("type", "text");
-                            $(".Subscribe_Btn").removeClass("d-none");
-                        } else
-                            alert("Due to some error,we are unable to sent code.");
-                    }
-                });
-            }
-        });
-
-
+    $(document).ready(() => {
         $(".learn-more").click(function (e) {
             e.preventDefault();
             $("html, body").animate({
@@ -87,7 +7,6 @@
             }, 800); // time in ms
         });
     });
-
 </script>
 <style>
     .hero {
@@ -108,12 +27,10 @@
 </style>
 <!-- Hero Section -->
 <marquee onmouseover="stop()" onmouseout="start()">
-    <% if(Notifications){
-        Notifications.forEach(function(e){ %>
-                    <%=e.Notification_Msg %>
-                    <%= e.Notification_DT%>&emsp;&emsp;&emsp;&emsp;
-        <% });
-    } %>
+    <% if(Notifications){ Notifications.forEach(function(e){ %>
+        <%=e.Notification_Msg %>
+            <%= e.Notification_DT%>&emsp;&emsp;&emsp;&emsp;
+                <% }); } %>
 </marquee>
 <section class="hero text-center">
     <div class="container">
@@ -188,7 +105,8 @@
 </section>
 
 <!-- CTA -->
-<section class="text-center  py-5 bg-primary text-white" style="min-height: 375px;">
+<section class="text-center  py-5 bg-primary text-white"
+    style="min-height: 375px;">
     <div class="my-5 py-5">
         <h2 class="mb-3">Start your academic journey today!</h2>
         <a href="/Home/Registration" class="btn btn-light btn-lg mr-2">Join

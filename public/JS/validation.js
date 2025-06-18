@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $("input textarea").change(checkValidation);
+    $("input textarea").change(RegistrationFormValidation);
     //Adding Form-control class to all input,textarea tags
     $("input,textarea").addClass("form-control mt-4");
     $("[type='radio']").removeClass("form-control mt-4");
@@ -12,10 +12,10 @@ $(document).ready(function () {
     });
 
     //Send Code
-    $("#SendCode").click(function () {
-        var res = checkValidation();
+    $("#RegistrationCode").click(function () {
+        var res = RegistrationFormValidation();
         if (res) {
-            $("#SendCode").addClass("d-none");
+            $("#RegistrationCode").addClass("d-none");
             $("#Code").attr("type", "text");
             $(".Registration").removeClass("d-none");
             var Name = $("#Name").val().trim();
@@ -27,7 +27,7 @@ $(document).ready(function () {
                 dataType: "json",
                 success: function (obj) {
                     if (obj.Success) {
-                        $("#SendCode").addClass("d-none");
+                        $("#RegistrationCode").addClass("d-none");
                         $("#Code").attr("type", "text");
                         $(".Registration").removeClass("d-none");
                     } else
@@ -37,7 +37,7 @@ $(document).ready(function () {
         }
     });
 });
-function checkValidation() {
+function RegistrationFormValidation() {
     var result = true;
 
     var Name = $("#Name").val().trim();
@@ -163,8 +163,8 @@ function checkValidation() {
     return result;
 }
 
-function onSubmit(token) {
-    var result = checkValidation();
+function RegistrationSubmit(token) {
+    var result = RegistrationFormValidation();
     if (result)
         document.getElementById("registration-form").submit();
 }

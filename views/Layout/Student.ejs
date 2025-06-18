@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-
 <html>
+
 <head>
     <title>StudyStudent Student</title>
-    <meta name="google-site-verification" content="yzKzqfw5GQmHiQsUA-7-muwelVCLG5XCVKK3o2Ii3nI" />
-    <meta name="description" content="StudyStudent is a web-based learning platform for students to access study materials, submit assignments, and take tests. Built with MERN stack, featuring MongoDB Atlas, Google Sign-In, and more.">
-    <meta name="keywords" content="studystudent,study student, online learning, coding tutorials, student assignments, MERN stack, ReactJS, Node.js, MongoDB, Express.js, web development, study materials">
+    <meta name="google-site-verification"
+        content="yzKzqfw5GQmHiQsUA-7-muwelVCLG5XCVKK3o2Ii3nI" />
+    <meta name="description"
+        content="StudyStudent is a web-based learning platform for students to access study materials, submit assignments, and take tests. Built with MERN stack, featuring MongoDB Atlas, Google Sign-In, and more.">
+    <meta name="keywords"
+        content="studystudent,study student, online learning, coding tutorials, student assignments, MERN stack, ReactJS, Node.js, MongoDB, Express.js, web development, study materials">
     <meta name="author" content="Raj Gupta">
     <meta property="og:title" content="StudyStudent - Online Learning Platform">
-    <meta property="og:description" content="Access study materials, submit assignments, and learn modern technologies. Built with MongoDB Atlas, React, Node.js.">
+    <meta property="og:description"
+        content="Access study materials, submit assignments, and learn modern technologies. Built with MongoDB Atlas, React, Node.js.">
     <meta property="og:image" content="YOUR_IMAGE_LINK_HERE">
     <meta property="og:url" content="https://studystudent.onrender.com">
     <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +20,12 @@
     <script src="/JS/jquery-3.6.0.min.js"></script>
     <script src="/JS/bootstrap.bundle.min.js"></script>
     <script src="/JS/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+    <!--Google Recaptcha API-->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link href="/css/bootstrap-grid.min.css" rel="stylesheet" />
     <link href="/css/bootstrap.min.css" rel="stylesheet" />
     <style>
@@ -31,24 +40,32 @@
         a {
             text-decoration: none !important;
         }
-        #backtotop {
-            position: fixed;
-            right: 20px;
-            bottom: 35px;
-            border-radius: 50%;
-            z-index: 2;
-        }
+
         .dark {
             background-color: #222;
             color: #e6e6e6;
+        }
+
+        #backtotop {
+            position: fixed;
+            right: 20px;
+            bottom: 50px;
+            border-radius: 50%;
+            z-index: 5000;
+        }
+
+        .grecaptcha-badge {
+            bottom: 35px !important;
+            z-index: 4000;
         }
     </style>
     <script>
         $(document).ready(function () {
             //Adding Some Effect On messeging from server-side
-            if ($("#presponse").text().length > 0)
+            if ($("#presponse").text().trim().length > 0) {
                 $("#presponse").fadeToggle(1500).delay(2000).fadeToggle(1000);
-            //for adding hover effect on navbar
+                $("input,textarea").text("");
+            }
             var fg = $("[href*='#']");
             $(fg).hover(function () {
                 $(this).next().stop(2500).fadeToggle();
@@ -68,78 +85,84 @@
                     $(".navbar").removeClass("alert-dark");
                 }
             });
-            $(".navbar-toggler-icon").click(function () {
-                $(".navbar").addClass("alert-dark");
-            });
-            $(".change").click(function () {
-                if ($("body").hasClass("dark")) {
-                    $("body").removeClass("dark");
-                    $(".change").addClass("bi bi-toggle-off");
-                    $(".change").removeClass("bi bi-toggle-on");
-                } else {
-                    $("body").addClass("dark");
-                    $(".change").removeClass("bi bi-toggle-off");
-                    $(".change").addClass("bi bi-toggle-on");
-                }
-            });
-            //backtotop
-            $("#backtotop").click(function () {
-                $("html,body").animate({ scrollTop: 0 }, '1500');
-            });
         });
     </script>
 </head>
-    <body>
-        <!--back to top btn-->
-        <a id="backtotop" class="bg-info btn" style="display:none;"><i class="bi bi-arrow-up"></i></a>
-        <div class="container">
-            <div class="row navbar navbar-expand-lg navbar-light py-0 fixed-top">
-                <div class="col-sm-2 pl-lg-5 ml-lg-5">
-                    <a class="navbar-brand" href="/">StudyStudent</a>
-                    <button class="navbar-toggler float-right border-0" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                </div>
-                <div class="col-sm-10">
-                    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-                        <a class="nav-link" href="/Student/Greetings">Home</a>
-                        <a class="nav-link" href="/Student/Submit_Assignment">Submit Assignment</a>
-                        <a class="nav-link" href="/Student/View_Assignment">View Assignment</a>
-                        <a class="nav-link" href="/Student/Study_Materials">Study Materials</a>
-                        <a class="nav-link" href="/Student/Give_FeedBack">Feedback</a>
-                        <div class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown"
-                               href="#Settings">Settings</a>
-                            <div class="dropdown-menu" id="Settings">
-                                <b class="nav-link"><%if(locals.User_Email){%>
-                                    <%= User_Email%>
-                                    <%}%>
-                                </b>
-                                <a class="nav-link" href="/Student/ChangePassword">Change Password</a>
-                                <a class="nav-link" href="/Student/Logout">LogOut</a>
-                            </div>
 
-                        </div>
-                        <!-- <div class="mode pl-3">
-                            Dark mode:
-                            <i class="bi bi-toggle-on change"></i>
-                        </div> -->
+<body>
+    <!--back to top btn-->
+    <a id="backtotop" class="bg-info btn" style="display:none;"><i
+            class="bi bi-arrow-up"></i></a>
+
+    <!--TOP Header-->
+    <div class="navbar navbar-expand-lg navbar-light py-0 fixed-top pl-xl-5">
+        <a class="navbar-brand" href="/">StudyStudent</a>
+        <button class="navbar-toggler float-right" type="button"
+            data-toggle="collapse" data-target="#navbarContent"
+            aria-controls="navbarContent" id="navBtn">
+            <span class="navbar-toggler-icon" id="togglerIcon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <div class="px-xl-4 mx-lg-4">
+                <span>Follow us:</span>
+                <a href="https://www.facebook.com" target="_blank"
+                    class="p-2"><i class="bi bi-facebook"
+                        style="color:#347dc0;"></i></a>
+                <a href="https://www.twitter.com" target="_blank" class="p-2"><i
+                        class="bi bi-twitter" style="color:#1156aa;"></i></a>
+                <a href="https://www.google.com" target="_blank" class="p-2"><i
+                        class="bi bi-google" style="color:#1bbb34;"></i></a>
+                <a href="https://www.instagram.com" target="_blank" class="p-2">
+                    <i class="bi bi-instagram" style="color:#dd3427;"></i></a>
+                <a href="https://www.linkedin.com" class="p-2"><i
+                        class="bi bi-linkedin" style="color:#347dc0;"></i></a>
+            </div>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0 mx-xl-5">
+                <li class="nav-item">
+                    <a class="nav-link" href="/Student/Greetings">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Student/Submit_Assignment">Submit
+                        Assignment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Student/View_Assignment">View
+                        Assignment</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/Student/Study_Materials">Study
+                        Materials</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"
+                        href="/Student/Give_FeedBack">Feedback</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown"
+                        href="#Profile">Profile</a>
+                    <div class="dropdown-menu" id="Profile">
+                        <b class="nav-link">
+                            <%if(locals.User_Email){%>
+                                <%= User_Email%>
+                                    <%}%>
+                        </b>
+                        <a class="nav-link"
+                            href="/Student/ChangePassword">Change
+                            Password</a>
+                        <a class="nav-link" href="/Student/Logout">LogOut</a>
                     </div>
-                </div>
-            </div>
-            <!--Mainbody-->
-            <div class="mt-4 pt-2">
-                <%- body %>
-            </div>
-            <!--Footer Bottom-->
-            <div class="row pl-4 mr-0 bg-dark text-white fixed-bottom" id="bottomFooter">
-                <div class="col-sm-6">
-                    © 2021 Copyright:All rights are reserved by<a href="/"> StudyStudent.com</a>
-                </div>
-                <div class="col-sm-4">
-                    Developed By<a href="/"> Student</a> Team
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
-    </body>
+    </div>
+    <!--Top Header Ending-->
+
+    <main class="my-5 mx-lg-5">
+        <%- body %>
+    </main>
+
+    <!--Footer Added-->
+    <%- include('../Shared/Footer.ejs') %>
+</body>
+
 </html>
