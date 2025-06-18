@@ -10,9 +10,9 @@
         });
     });
     function onSubmit(token) {
-        var Email = $("#Email").val().trim();
+        var Email = $("#Email").val().toLowerCase().trim();
         var Password = $("#Password").val().trim();
-        var status = true;
+        var result = true;
         $(".err").remove();
 
         // === Email ===
@@ -29,33 +29,38 @@
                 result = false;
             }
         }
-         // === Password ===
-    if (Password.length !== 8) {
-        $("#Password").after("<span class='err text-danger'>Password must be exactly 8 characters.</span>");
-        result = false;
-    } else {
-        var hasUpper = /[A-Z]/.test(Password);
-        var hasLower = /[a-z]/.test(Password);
-        var hasDigit = /[0-9]/.test(Password);
-        var hasSpecial = /[\W_]/.test(Password);
-        if (!(hasUpper && hasLower && hasDigit && hasSpecial)) {
-            $("#Password").after("<span class='err text-danger'>Password must contain uppercase, lowercase, digit, and special character.</span>");
+        // === Password ===
+        if (Password.length !== 8) {
+            $("#Password").after("<span class='err text-danger'>Password must be exactly 8 characters.</span>");
             result = false;
+        } else {
+            var hasUpper = /[A-Z]/.test(Password);
+            var hasLower = /[a-z]/.test(Password);
+            var hasDigit = /[0-9]/.test(Password);
+            var hasSpecial = /[\W_]/.test(Password);
+            if (!(hasUpper && hasLower && hasDigit && hasSpecial)) {
+                $("#Password").after("<span class='err text-danger'>Password must contain uppercase, lowercase, digit, and special character.</span>");
+                result = false;
+            }
         }
-    }
         $(".err").addClass("text-warning");
-        if (status)
+        if (result)
             document.getElementById("login-form").submit();
-        return status;
+        return result;
     }
 </script>
 <div class="container my-5 pt-5">
     <h1 class="text-success text-center">Login Page </h1>
-    <p id="presponse" class="alert alert-dark text-center h4 d-none">
-        <% if(locals.msg){ %>
+    <% if(locals.msg){ %>
+        <div class="alert alert-info alert-dismissible fade show"
+            role="alert">
             <%= msg%>
-                <% } %>
-    </p>
+                <button type="button" class="close" data-dismiss="alert"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+    <% } %>
     <div class="row mt-5 py-5 " id="welcome">
 
         <div class="col-sm-6 mt-lg-5 pt-lg-5">

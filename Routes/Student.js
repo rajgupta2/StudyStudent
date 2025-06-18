@@ -10,6 +10,13 @@ const fs = require("fs");
 const path = require("path");
 const mongoose = require("mongoose");
 const ObjectId = require("mongodb").ObjectId;
+// const passport = require("passport");
+// const LocalStrategy = require("passport-local").Strategy;
+// passport.use(new LocalStrategy({ usernameField: 'Email', passwordField: 'Password' },
+//     DB.Colls_StdData.authenticate()
+// ));
+// passport.serializeUser(DB.Colls_StdData.serializeUser());
+// passport.deserializeUser(DB.Colls_StdData.deserializeUser());
 
 const Student = express();
 
@@ -168,7 +175,7 @@ Student.post("/ChangePassword", function (req, res) {
             });
 
         }).catch(function (err) {
-        res.redirect("/Home/Login")
+            res.redirect("/Home/Login");
         });
     }
 });

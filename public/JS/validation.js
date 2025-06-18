@@ -13,13 +13,13 @@ $(document).ready(function () {
 
     //Send Code
     $("#SendCode").click(function () {
-        $("#SendCode").addClass("d-none");
-        $("#Code").attr("type", "text");
-        $(".Registration").removeClass("d-none");
         var res = checkValidation();
         if (res) {
+            $("#SendCode").addClass("d-none");
+            $("#Code").attr("type", "text");
+            $(".Registration").removeClass("d-none");
             var Name = $("#Name").val().trim();
-            var Email = $("#Email").val().trim();
+            var Email = $("#Email").val().toLowerCase().trim();
             $.ajax({
                 type: "POST",
                 url: "/SendCode",
@@ -55,16 +55,16 @@ function checkValidation() {
     $(".err").remove(); // clear previous error messages
 
     // === Name ===
-    const nameReg=/^[a-zA-Z\s]+$/;
+    const nameReg = /^[a-zA-Z\s]+$/;
     if (Name.length === 0) {
         $("#Name").after("<span class='err text-danger'>Enter your name.</span>");
         result = false;
     } else if (Name.length < 2 || Name.length > 22) {
         $("#Name").after("<span class='err text-danger'>Name must be between 2 to 22 characters.</span>");
         result = false;
-    }else if (!nameReg.test(Name)) {
-            $("#Name").after("<span class='err text-danger'>Name can only contain letters and spaces.</span>");
-            result = false;
+    } else if (!nameReg.test(Name)) {
+        $("#Name").after("<span class='err text-danger'>Name can only contain letters and spaces.</span>");
+        result = false;
     }
 
     // === Enrollment Number ===
@@ -122,10 +122,10 @@ function checkValidation() {
     // === Profile Picture ===
     // === Profile Picture Validation ===
     var AllowedExtension = ["JPG", "PNG", "JPEG", "JFIF"];
-    if(ProfilePicture.length==0){
-            $("#ProfilePicture").after("<span class='err text-danger'>Photo is not uploaded.</span>");
-            result = false;
-    }else if (ProfilePicture.length > 0) {
+    if (ProfilePicture.length == 0) {
+        $("#ProfilePicture").after("<span class='err text-danger'>Photo is not uploaded.</span>");
+        result = false;
+    } else if (ProfilePicture.length > 0) {
         var ExtensionOfProfilePicture = ProfilePicture.split(".").pop().toUpperCase();
 
         if (AllowedExtension.indexOf(ExtensionOfProfilePicture) === -1) {

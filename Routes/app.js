@@ -20,13 +20,10 @@ app.use(express.static(path.resolve("./public/")));
 //Password Encryption,Session Management and Authentication
 const session = require("express-session");
 const cookieParser = require('cookie-parser');
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 const verifyRecaptcha = require("../config/CAPTCHACODE.js");
 const Email = require("../config/Email.js");
-const MemoryStore = require('memorystore')(session)
-
 app.use(cookieParser(process.env.SS_SECRET));
+const MemoryStore = require('memorystore')(session)
 app.use(session({
     cookie: {
         maxAge: 86400000
@@ -38,20 +35,16 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+const passport = require("passport");
+const LocalStrategy = require("passport-local").Strategy;
 app.use(passport.initialize());
 app.use(passport.session());
-
 passport.use(new LocalStrategy({ usernameField: 'Email', passwordField: 'Password' },
     DB.Colls_StdData.authenticate()
 ));
-
-// use static serialize and deserialize of model for passport session support
-passport.serializeUser(function (user, cb) {
-    cb(null, user);
-});
-passport.deserializeUser(function (user, cb) {
-    cb(null, user);
-});
+passport.serializeUser(DB.Colls_StdData.serializeUser());
+passport.deserializeUser(DB.Colls_StdData.deserializeUser());
 
 // Set Templating Engine and Layout
 app.use(expressLayouts);
@@ -127,6 +120,10 @@ app.get("/Home/Registration", (req, res) => {
     res.render("./Home/Registration");
 });
 
+//Registration Page
+app.get("/Home/About-us", (req, res) => {
+    res.render("./Home/About-us");
+});
 //Tutorial Page
 app.get("/Home/Tutorial", (req, res) => {
     res.render("./Home/Tutorial");
@@ -144,6 +141,7 @@ app.get("/Home/Login", (req, res) => {
 
 //Contact Post
 app.post("/Home/Contact", function (req, res) {
+    req.body.Email = req.body.Email.toLowerCase();
     verifyRecaptcha(req.body['g-recaptcha-response'], (result) => {
         if (result) {
             var HasSent = { Email: req.body.Email, Student_Name: req.body.Name, Code: req.body.Code }
@@ -176,6 +174,7 @@ app.post("/Home/Contact", function (req, res) {
 
 //Registration Post
 app.post("/Home/Registration", function (req, res) {
+    req.body.Email = req.body.Email.toLowerCase();
     var msg = "";
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, file) {
@@ -245,33 +244,35 @@ app.post("/Home/Registration", function (req, res) {
 
 //Login Post
 app.post("/Home/Login", (req, res) => {
+    req.body.Email = req.body.Email.toLowerCase();
     verifyRecaptcha(req.body['g-recaptcha-response'], (ans) => {
         if (ans) {
             const user = new DB.Colls_StdData({
                 username: req.body.Email,
                 Password: req.body.Password
             });
-            req.login(user, function (err) {
-                if (err) {
-                    res.render("./Home/Login.ejs", { msg: "An error occured." });
+            const authenticate = DB.Colls_StdData.authenticate();
+            authenticate(req.body.Email, req.body.Password, function (err, result) {
+                // If correct, returns the user object.
+                // If incorrect, returns false.
+                if (err || result == false)
+                    return res.render("./Home/Login.ejs", { msg: "Invalid email or password." });
+                if (result.Email == "studystudent@gmail.com") {
+                    req.login(result, function (err) {
+                        if (err) {
+                            return res.render("./Home/Login.ejs", { msg: "Login failed. Please try again." });
+                        }
+                        return res.redirect("/Admin/Welcome");
+                    });
                 } else {
-                    const authenticate = DB.Colls_StdData.authenticate();
-                    authenticate(req.body.Email, req.body.Password, function (err, result) {
-                        if (result == false)
-                            res.render("./Home/Login.ejs", { msg: "Invalid email or password." });
-                        else {
-                            if (req.body.Email == "StudyStudent@gmail.com") {
-                                req.session.admin = req.body.Email;
-                                res.redirect("/Admin/Welcome");
-                            }
-                            else {
-                                if (req.user.Status != "Active") {
-                                    res.render("./Home/Login.ejs", { msg: "Your account is blocked by admin.You can't log-in." });
-                                } else {
-                                    req.session.student = req.body.Email;
-                                    res.redirect("/Student/Greetings");
-                                }
-                            }
+                    if (result.Status != "Active") {
+                        return res.render("./Home/Login.ejs", { msg: "Your account is blocked by admin.You can't log-in." });
+                    }
+                    req.login(result, function (err) {
+                        if (err) {
+                            return res.render("./Home/Login.ejs", { msg: "Login failed. Please try again." });
+                        } else {
+                            res.redirect("/Student/Greetings");
                         }
                     });
                 }
@@ -279,6 +280,7 @@ app.post("/Home/Login", (req, res) => {
         } else
             res.render("./Home/Login.ejs", { msg: "Captcaha couldn't verify." });
     });
+
 });
 
 //Registration Page

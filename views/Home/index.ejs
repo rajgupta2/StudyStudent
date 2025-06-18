@@ -78,126 +78,122 @@
                 });
             }
         });
-    });
-</script>
-<!--Slider-->
-<div id="carouselExampleSlidesOnly" class="my-5 carousel slide carousel-fade "
-    data-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active" data-interval="2000">
-            <img src="/Images/img2.jpg" class="d-block h-25 w-100" />
-        </div>
-        <div class="carousel-item" data-interval="2000">
-            <img src="/Images/img3.jpg" class="d-block h-25 w-100" />
-        </div>
-        <div class="carousel-item" data-interval="2000">
-            <img src="/Images/img4.jpg" class="d-block h-25 w-100" />
-        </div>
-        <div class="carousel-item" data-interval="2000">
-            <img src="/Images/img5.jpg" class="d-block h-25 w-100" />
-        </div>
-        <div class="carousel-item" data-interval="2000">
-            <img src="/Images/img1.jpg" class="d-block h-25 w-100" />
-        </div>
-    </div>
-</div>
-<!--Slider Ended-->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5">
-            <h2 class="text-center text-success">Information Panel</h2>
-            <% if(Notifications){ Notifications.forEach(function(e){ %>
-                <marquee scroll-down>
-                    <%= e.Notification_DT%>
-                        <%=e.Notification_Msg %>
-                </marquee>
-                <% }); } %>
-        </div>
-        <div class="col-sm-6 col-lg-5 border mb-5 mx-lg-5" id="aboutus">
-            <h2 class="text-center text-success mt-4">Subscribe us to get
-                updated</h2>
-            <input id="Name" name="Name" placeholder="Name" type="text" onchange="checkvalidation()"
-                value="" />
-            <input id="Email" name="Email" placeholder="Email" type="email" onchange="checkvalidation()"
-                value="" />
-            <button type="button" class="btn btn-success mt-3 mb-2"
-                id="SendCode"> Verify Email</button>
-            <input id="Code" name="Code" placeholder="Code Sent to your email"
-                type="hidden" value="" />
-            <button
-                class="g-recaptcha btn btn-danger btn-block mb-2 mt-4 d-none Subscribe_Btn"
-                data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
-                data-callback='onSubmit' data-theme="dark">Subscribe</button>
-        </div>
-    </div>
-    <!--About Us-->
-    <div class="row">
-        <img src="/Images/aboutus.jpg" alt="About Us"
-            class="col-sm-5 border mx-lg-5 mb-5">
-        <div class="col-sm-5 border mx-lg-5 mb-5">
-            <h2 class="text-center text-success mt-4 ">About Us</h2>
-            <p style="font-size:x-large;">StudyStudent is designed for the
-                purposes of learning.
-                Here,you will get updated with modern's technologies and tools.
-                You will get the tutorial/article related technologies.<br>
-                Subcribes us to get the tutorial as soon as it updated on
-                webpage.
-            </p>
-        </div>
-    </div>
-</div>
-<!--footer Started-->
-<footer class="bg-dark text-white">
-    <section class="text-center p-3 bg-dark border-bottom">
-        <span>Get connected with us on social networks:</span>
-        <br />
-        <a href="https://www.facebook.com" target="_blank" class="p-2"><i
-                class="bi bi-facebook" style="color:#347dc0;"></i></a>
-        <a href="https://www.twitter.com" target="_blank" class="p-2"><i
-                class="bi bi-twitter" style="color:#1156aa;"></i></a>
-        <a href="https://www.google.com" target="_blank" class="p-2"><i
-                class="bi bi-google" style="color:#1bbb34;"></i></a>
-        <a href="https://www.instagram.com" target="_blank" class="p-2"> <i
-                class="bi bi-instagram" style="color:#dd3427;"></i></a>
-        <a href="https://www.linkedin.com" class="p-2"><i class="bi bi-linkedin"
-                style="color:#347dc0;"></i></a>
-        <a href="https://www.github.com" class="p-2"><i class="bi bi-github"
-                style="color:#789b95;"></i></a>
-    </section>
-    <div class="row  pl-4 pr-0 mr-0">
-        <div class="col-sm-3 my-4">
-            <!-- Content -->
-            <h4> <a href="/">StudyStudent Private Ltd.</a> </h4>
 
-            <p>
-                We are located at Karwi (Chitrakoot), UP,
-                India<br>
-                Post Office:Karwi Chitrakoot.
-            </p>
-        </div>
-        <div class="col-sm-3 text-white  my-4 ">
-            <h6 class="text-uppercase ">Useful Links</h6>
-            <hr class="bg-white" />
-            <a href="/">Home</a><br />
-            <a href="#aboutus">About us</a><br />
-            <a href="/Home/Login">Login</a><br />
-            <a href="/Home/Contact">Help</a><br />
-        </div>
-        <div class="col-sm-3  my-4">
-            <h6 class="text-uppercase">Important Links</h6>
-            <hr class="bg-white" />
-            <a href="/Home/Contact">Contact Page</a><br />
-            <a href="/Home/Login">Sign In</a><br />
-            <a href="/Home/Registration">Sign Up</a>
-        </div>
-        <div class="col-sm-3 my-4" id="contact">
-            <h6 class="text-uppercase">Contact</h6>
-            <hr class="bg-white" />
-            <h6><i class="bi bi-house me-3"></i> Chitrakoot,Uttar Pradesh </h5>
-                <h6> <a href="mailto:rajgupta.ckt22@gmail.com"><i
-                            class="bi bi-envelope me-3"></i>
-                        StudyStudent@gmail.com</a> </h5>
-                    <h6>Raj Gupta </h5>
+
+        $(".learn-more").click(function (e) {
+            e.preventDefault();
+            $("html, body").animate({
+                scrollTop: $("#features").offset().top - 70  // adjust -70 if you have a fixed navbar
+            }, 800); // time in ms
+        });
+    });
+
+</script>
+<style>
+    .hero {
+        background: linear-gradient(to right, #4e54c8, #8f94fb);
+        color: white;
+        padding: 100px 0;
+    }
+
+    .feature-card {
+        transition: 0.3s;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-15px);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(to right, #a7aade, #8f94fb);
+    }
+</style>
+<!-- Hero Section -->
+<marquee onmouseover="stop()" onmouseout="start()">
+    <% if(Notifications){
+        Notifications.forEach(function(e){ %>
+                    <%=e.Notification_Msg %>
+                    <%= e.Notification_DT%>&emsp;&emsp;&emsp;&emsp;
+        <% });
+    } %>
+</marquee>
+<section class="hero text-center">
+    <div class="container">
+        <h1 class="display-4 font-weight-bold">Welcome to StudyStudent</h1>
+        <p class="lead mt-3">Your Personalized Digital Study Companion</p>
+        <a href="/Home/Registration" class="btn btn-light btn-lg mt-4 mr-2">Get
+            Started</a>
+        <a href="#features"
+            class="learn-more btn btn-outline-light btn-lg mt-4">Learn
+            More</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-4">
+    <div class="container">
+        <h2 class="text-center mb-5">Key Features</h2>
+        <div class="row">
+            <% const features=[ { title: "Assignments" ,
+                desc: "Submit and manage your assignments." }, {
+                title: "Study Materials" ,
+                desc: "Access tutorials and notes anytime." }, {
+                title: "Results" ,
+                desc: "Check academic performance in one place." }, {
+                title: "Student Management" ,
+                desc: "Admins can manage student records." }, {
+                title: "Google Sign-In" ,
+                desc: "Login securely using your Google account." }, {
+                title: "Feedback & Enquiry" ,
+                desc: "Send and view feedback with ease." } ]; %>
+                <% features.forEach(f=> { %>
+                    <div class="col-md-4 mb-4">
+                        <div class="card feature-card h-100 shadow-sm p-5">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <%= f.title %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= f.desc %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
         </div>
     </div>
-</footer>
+</section>
+
+<!-- Why Choose Section -->
+<section class="py-5  bg-light" style="min-height: 375px;">
+    <div class="container text-center my-4">
+        <h2 class="mb-5 ">Why Choose StudyStudent?</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <h5>24/7 Access</h5>
+                <p>Study anytime, from anywhere.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Secure</h5>
+                <p>Google Sign-in & reCAPTCHA integrated.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>Easy to Use</h5>
+                <p>Minimal UI, maximum productivity.</p>
+            </div>
+            <div class="col-md-3">
+                <h5>For Students & Admins</h5>
+                <p>Separate dashboards, role-based features.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="text-center  py-5 bg-primary text-white" style="min-height: 375px;">
+    <div class="my-5 py-5">
+        <h2 class="mb-3">Start your academic journey today!</h2>
+        <a href="/Home/Registration" class="btn btn-light btn-lg mr-2">Join
+            Now</a>
+        <a href="/Home/login" class="btn btn-outline-light btn-lg">Admin
+            Login</a>
+    </div>
+</section>

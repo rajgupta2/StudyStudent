@@ -1,11 +1,16 @@
 <script src="/JS/validation.js"></script>
 <div class="container my-5 pt-3">
     <h3 class="text-center text-success">Welcome to the Registration Page</h3>
-    <p id="presponse" class="alert alert-dark text-center h4 d-none">
-        <% if(locals.msg){ %>
+    <% if(locals.msg){ %>
+        <div class="alert alert-info alert-dismissible fade show"
+            role="alert">
             <%= msg%>
-                <% } %>
-    </p>
+                <button type="button" class="close" data-dismiss="alert"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+    <% } %>
     <form action="/Home/Registration" id="registration-form" method="post"
         class=" mb-5 px-5 pt-2" enctype="multipart/form-data">
         <div class="col-sm-4 border google-sign-box">

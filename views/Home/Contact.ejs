@@ -6,7 +6,7 @@
         var Email = $("#Email").val().toLowerCase().trim();
         var Contact = $("#Contact").val().trim();
         var Query1 = $("#Query").val().trim();
-        const nameReg=/^[a-zA-Z\s]+$/;
+        const nameReg = /^[a-zA-Z\s]+$/;
         $(".err").remove(); // Clear previous errors
 
         // === Name Validation ===
@@ -25,8 +25,8 @@
         if (Email.length === 0) {
             $("#Email").after("<span class='err text-danger'>Enter your email address.</span>");
             result = false;
-        } else if (Email.length > 20) {
-            $("#Email").after("<span class='err text-danger'>Email must not exceed 20 characters.</span>");
+        } else if (Email.length > 30) {
+            $("#Email").after("<span class='err text-danger'>Email must not exceed 30 characters.</span>");
             result = false;
         } else {
             var emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
@@ -48,13 +48,13 @@
 
         // === Query Validation ===
         if (Query1.length === 0) {
-            $("#Query").after("<span class='err text-danger'>Enter your query.</span><br/>");
+            $("#Query").after("<span class='err text-danger'>Enter your query.<br/></span>");
             result = false;
         } else if (Query1.length < 10) {
-            $("#Query").after("<span class='err text-danger'>Describe your query in at least 10 characters.</span><br/>");
+            $("#Query").after("<span class='err text-danger'>Describe your query in at least 10 characters.<br/></span>");
             result = false;
         } else if (Query1.length > 80) {
-            $("#Query").after("<span class='err text-danger'>Query should not exceed 80 characters.</span><br/>");
+            $("#Query").after("<span class='err text-danger'>Query should not exceed 80 characters.<br/></span>");
             result = false;
         }
 
@@ -72,7 +72,7 @@
             var res = checkvalidation();
             if (res) {
                 var Name = $("#Name").val().trim();
-                var Email = $("#Email").val().trim();
+                var Email = $("#Email").val().toLowerCase().trim();
                 $.ajax({
                     type: "POST",
                     url: "/SendCode",
@@ -81,8 +81,7 @@
                     success: function (obj) {
                         if (obj.Success) {
                             $("#SendCode").addClass("d-none");
-                            $("#Code").attr("type", "text");
-                            $(".Save").removeClass("d-none");
+                            $(".Save,#Code").removeClass("d-none");
                         } else
                             alert("Due to some error,we are unable to sent code." + obj);
                     }
@@ -92,54 +91,65 @@
     });
 </script>
 <div class="container mt-lg-5 mb-5">
-    <p id="presponse" class="alert alert-dark text-center h4"
-        style="display:none;">
-        <% if(locals.msg){ %>
+
+    <% if(locals.msg){ %>
+        <div class="alert alert-info alert-dismissible fade show"
+            role="alert">
             <%= msg%>
-                <% } %>
-    </p>
-    </p>
+                <button type="button" class="close" data-dismiss="alert"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+        </div>
+    <% } %>
+
     <div class="row  py-5">
         <div class="col-sm-5 mt-4 mr-5">
             <h2>Query</h2>
-            <form id="contact-form" action="/Home/Contact" method="post">
-                <input id="Name" name="Name" placeholder="Name" type="text" onchange="checkvalidation()"
+            <form id="contact-form" action="/Home/Contact"
+                method="post">
+                <input id="Name" name="Name" placeholder="Name"
+                    type="text" onchange="checkvalidation()" value="" />
+                <input id="Email" name="Email" placeholder="Email"
+                    type="email" onchange="checkvalidation()"
                     value="" />
-                <input id="Email" name="Email" placeholder="Email" type="email" onchange="checkvalidation()"
+                <input id="Contact" name="Contact" placeholder="Phone"
+                    onchange="checkvalidation()" type="number"
                     value="" />
-                <input id="Contact" name="Contact" placeholder="Phone" onchange="checkvalidation()"
-                    type="number" value="" />
-                <textarea cols="20" id="Query" name="Query" onchange="checkvalidation()"
+                <textarea cols="20" id="Query" name="Query"
+                    onchange="checkvalidation()"
                     placeholder="Type your query here.." rows="2"
                     style="resize:none"></textarea>
+                <input id="Code" name="Code" class="d-none"
+                    placeholder="Code Sent to your email" value="" />
                 <button type="button" class="btn  btn-success mt-3 mb-2"
                     id="SendCode"> Verify Email</button>
-                <input id="Code" name="Code"
-                    placeholder="Code Sent to your email" type="hidden"
-                    value="" />
                 <button
                     class="g-recaptcha btn btn-success btn-block mt-4 Save d-none"
                     data-sitekey="<%=process.env.RECAPTCHA_SITEKEY%>"
-                    data-theme="dark" data-callback="onSubmit">Save</button>
+                    data-theme="dark"
+                    data-callback="onSubmit">Save</button>
             </form>
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-5 mt-lg-4">
             <!-- Content -->
-            <h2>
-                <a href="/Home">StudyStudent Pvt. Ltd.</a>
-            </h2>
-            <p class="pl-2">
+            <h4>
+                <a href="/Home" class="text-small">StudyStudent Pvt.
+                    Ltd.</a>
+            </h4>
+            <p>
                 We are located at Karwi,Chitrakoot,UP,
                 India&emsp;Post Office:Karwi
             </p>
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3609.6506873457674!2d80.92771131493399!3d25.214999983887903!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3984af6da7a30a83%3A0x4e0b04136c965312!2sPunjab%20National%20Bank!5e0!3m2!1sen!2sin!4v1664677135747!5m2!1sen!2sin"
-                width="100%" height="250" style="border:0;" allowfullscreen=""
-                loading="lazy"
+                width="100%" height="250" style="border:0;"
+                allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <i class="bi bi-house"></i> Karwi,Chitrakoot,UP
-            <a href="mailto:rajgupta.ckt22@gmail.com "><i
-                    class="bi bi-envelope ml-2"></i>
+            Karwi,
+            Chitrakoot, UP, India
+            <a href="mailto:rajgupta.ckt22@gmail.com "
+                class="text-info">
                 StudyStudent@gmail.com</a><br />
         </div>
     </div>
