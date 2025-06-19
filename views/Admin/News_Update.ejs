@@ -25,7 +25,7 @@
         });
     });
 </script>
-<ul class="nav nav-tabs mt-3" id="myTab" role="tablist">
+<ul class="nav nav-tabs my-3" id="myTab" role="tablist">
     <li class="nav-item" role="presentation">
         <h5 class="nav-link active" id="addNotification" data-toggle="tab">Add Notification </h5>
     </li>
@@ -33,13 +33,14 @@
         <h5 id="previ_Notification" data-toggle="tab" class="nav-link">Manage Previous Notification</h5>
     </li>
 </ul>
-<div class="container mt-5 py-5" id="newUpdate">
-    <p id="presponse" class="alert alert-dark text-center h4 " style="display:none;">
-        <% if(locals.addmsg){ %>
+<div class="container py-5" id="newUpdate"  style="background: linear-gradient(185deg,#bae752,#7b65c3)">
+    <% if(locals.addmsg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4">
             <%= addmsg%>
-            <% } %>
-    </p>
-    <div class="row py-5" style="background: linear-gradient(185deg,#ffffff,#726f6f)">
+        </p>
+    <% } %>
+
+    <div class="row py-5">
         <div class="col-sm-5 my-5 pb-5">
             <h1>Add Some Update</h1>
         </div>
@@ -52,13 +53,13 @@
     </div>
 </div>
 
-<div class="container mt-2" id="previousNotification" style="display:none;">
-    <h2>Manage Previous Notification</h2>
+<div  id="previousNotification" style="display:none;min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
-            <table class="table table-hover">
-                <thead class="table-info text-success">
-                    <tr>
+            <% if(Notification!==undefined){ %>
+            <table class="table table-hover text-center" >
+                <thead>
+                    <tr class="text-dark">
                         <th>S.No</th>
                         <th>Notification Message</th>
                         <th>Notification Date</th>
@@ -66,18 +67,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% var x=1; %> 
-                     <%  Notification.forEach(function(e){ %>
+                   <%  Notification.map(function(e,ind){ %>
                      <tr>
-                        <td><%=x%></td>
+                        <td><%=ind + 1%></td>
                         <td><%= e.Notification_Msg%></td>
                         <td><%= e.Notification_DT%></td>
                         <td><a href="/Admin/DeleteNotification?pk=<%=e._id%>" class="btn btn-warning">Delete</a></td>
                      </tr>
-                        <% x++ %>
-                        <% }); %>
+                    <% }); %>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no more notification. You need to create one.</h5>
+            <% } %>
         </div>
     </div>
 </div>

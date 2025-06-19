@@ -1,27 +1,29 @@
-<div class="container">
+<div class="mt-4" style="min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
-            <h1 class="text-lg-center text-success">Subscribers</h1>
-            <table class="table table-hover  table-bordered text-center" >
+            <h2>Subscribers</h2>
+            <% if(Subscribers!==undefined){ %>
+            <table class="table table-hover  text-center" >
                 <thead>
-                    <tr class="text-dark table-primary">
+                    <tr class="text-dark">
                         <th>Name</th>
                         <th>Email-ID</th>
                         <th>Subscribing Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                       <% 
-                       if(Subscribers!=undefined)
-                       Subscribers.forEach(function(e){ %>
+                    <% Subscribers.forEach(function(e){ %>
                         <tr>
                         <td><%= e.Name%></td>
                         <td><%= e.Email%></td>
                         <td><%= e.Date%></td>
                         </tr>
-                        <% }); %>
+                    <% }); %>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no subscribers yet.</h5>
+            <% } %>
         </div>
     </div>
 </div>

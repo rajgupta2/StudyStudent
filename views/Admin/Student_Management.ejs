@@ -1,10 +1,11 @@
-<div class="container mt-5">
-    <h2>Student's Record</h2>
+<div style="min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
-            <table class="table table-hover">
-                <thead class="table-info">
-                    <tr>
+            <h2>Student's Record</h2>
+            <% if(StdData!==undefined){ %>
+            <table class="table table-hover text-center" >
+                <thead>
+                    <tr class="text-dark">
                         <th>Enrollment Number</th>
                         <th>Name</th>
                         <th>Email</th>
@@ -18,9 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                 <% 
-                 if(StdData!=undefined)
-                 StdData.forEach(function(e){  %>
+                    <% StdData.forEach(function(e){  %>
                         <tr>
                             <td><%= e.EnrollmentNumber %></td>
                             <td><%= e.Name %></td>
@@ -42,12 +41,17 @@
                                         <%}%>
                                             <a class="dropdown-item" href="/Admin/DeleteStudent?pk=<%=e.Email %>"  >Delete</a>
                                     </div>
-                                </div> 
+                                </div>
                             </td>
                         </tr>
-                        <% })  %>
+                   <% })%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">
+
+                </h5>
+            <% } %>
         </div>
     </div>
 </div>

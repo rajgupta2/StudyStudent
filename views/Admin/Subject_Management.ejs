@@ -18,7 +18,7 @@
         <h5 id="Add" data-toggle="tab" class="nav-link">Add New Subject</h5>
     </li>
 </ul>
-<div class="container mt-5 pb-5" id="hi">
+<div class="mt-5 pb-5" id="hi">
     <% if(locals.addmsg){ %>
         <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
         <%= addmsg%>
@@ -29,17 +29,17 @@
         <div class="col-sm-12">
             <div class="float-right">
                 <form action="/Admin/Subject_Management" method="post">
-                    <input type="text" name="searchSubject" class="form-control-sm">
-                    <button class="btn btn-success" type="submit">Search a Subject</button>
+                    <div class="input-group mb-3">
+                        <input type="text" name="searchSubject" class="form-control" placeholder="Search subject">
+                        <button class="btn btn-success" type="submit">Search</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
     <div class="row">
-
-        <%
-        if(Subjects!=undefined)
-        Subjects.forEach(function(t){%>
+        <% if(Subjects!==undefined)
+            Subjects.forEach(function(t){%>
             <div class="card mx-3 my-3 px-0 mh-100">
                 <div class="card-body py-5">
                     <h3 class="text-center text-dark"><%=t.Subject%></h3>

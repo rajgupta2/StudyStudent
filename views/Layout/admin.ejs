@@ -21,8 +21,8 @@
     <script src="/JS/bootstrap.min.js"></script>
     <!--Google Recaptcha API-->
     <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script
-        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <!-- <script
+        src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> -->
     <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link href="/css/bootstrap-grid.min.css" rel="stylesheet" />
@@ -31,7 +31,7 @@
         $(document).ready(function () {
             //Adding Some Effect On messeging from server-side
             if ($("#presponse").text().trim().length > 0) {
-                $("#presponse").fadeToggle(1500).delay(2000).fadeToggle(1000);
+                $("#presponse").fadeToggle(1500).delay(2000);
                 $("input,textarea").text("");
             }
             var fg = $("[href*='#']");

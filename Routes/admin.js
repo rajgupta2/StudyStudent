@@ -73,7 +73,7 @@ Admin.post("/Give_Assignment", isAuthenticated, function (req, res) {
 
 //Show Enquiry
 Admin.get("/ShowEnquiry", isAuthenticated, function (req, res) {
-    DB.Colls_Query.find().then(function (err, q) {
+    DB.Colls_Query.find().then(function (q) {
         res.render("./Admin/ShowEnquiry.ejs", { DBqueries: q });
     }).catch((err) => {
         res.render("./Admin/ShowEnquiry.ejs", { msg: err.message });
@@ -116,9 +116,10 @@ Admin.get("/DeleteNotification", isAuthenticated, function (req, res) {
 
 //Student_Management
 Admin.get("/Student_Management", isAuthenticated, function (req, res) {
-    DB.Colls_StdData.find().then(function (err, sm) {
+    DB.Colls_StdData.find().then(function (sm) {
         res.render("./Admin/Student_Management.ejs", { StdData: sm });
     }).catch(function (err) {
+        console.log(err.message);
         res.render("./Admin/Student_Management.ejs", { msg: err.message });
     });
 });
@@ -134,6 +135,7 @@ Admin.get("/News_Update", isAuthenticated, function (req, res) {
 //Feedback
 Admin.get("/View_Feedback", isAuthenticated, function (req, res) {
     DB.Colls_Feedback.find().then(function (succ) {
+        console.log(succ)
         res.render("./Admin/View_Feedback.ejs", { Feedbacks: succ });
     });
 });
@@ -359,7 +361,7 @@ Admin.get("/DeleteStudent", isAuthenticated, function (req, res) {
 Admin.get("/ManageQuestion", isAuthenticated, function (req, res) {
     if (req.query.sub != undefined)
         Admin.set("Subject", req.query.sub);
-    DB.Colls_Questions.find({ Subject: Admin.get("Subject") }).then(function (err, ques) {
+    DB.Colls_Questions.find({ Subject: Admin.get("Subject") }).then(function (ques) {
         res.render("./Admin/ManageQuestion.ejs", { Questions: ques, msg: req.query.msg });
     });
 });
@@ -402,14 +404,12 @@ Admin.get("/ChangePassword", isAuthenticated, function (req, res) {
 });
 
 Admin.post("/ChangePassword", isAuthenticated, function (req, res) {
-    DB.Colls_StdData.findByUsername(req.user.username).then(function (err, user) {
-        req.user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
-            if (err) {
-                res.render("./Admin/ChangePassword.ejs", { msg: "Old Password is incorrect." });
-            } else {
-                res.render("./Admin/ChangePassword.ejs", { msg: "Password changed successfully.." });
-            }
-        });
+    req.user.changePassword(req.body.Password, req.body.NewPassword, function (err) {
+        if (err) {
+            res.render("./Admin/ChangePassword.ejs", { msg: "Old Password is incorrect." });
+        } else {
+            res.render("./Admin/ChangePassword.ejs", { msg: "Password changed successfully.." });
+        }
     });
 });
 

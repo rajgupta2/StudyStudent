@@ -1,5 +1,5 @@
 
-<div class="container mt-5">
+<div class="mt-5" style="min-height: 400px;">
     <h2>Result Management</h2>
     <% if(locals.msg){ %>
         <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
@@ -8,6 +8,7 @@
     <% } %>
     <div class="row">
         <div class="col-sm-12">
+            <% if(Results!==undefined){ %>
             <table class="table table-hover">
                 <thead class="table-info text-success">
                     <tr>
@@ -20,9 +21,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% 
-                    if(Results!=undefined)
-                    Results.forEach(function(e){ %>
+                    <% Results.forEach(function(e){ %>
                             <tr>
                                 <td><%=e.Name (e.Email_OF_Student) %>td>
                                 <td><%=e.Course%></td>
@@ -34,6 +33,9 @@
                     <%});%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no more results available.</h5>
+            <% } %>
         </div>
     </div>
 </div>

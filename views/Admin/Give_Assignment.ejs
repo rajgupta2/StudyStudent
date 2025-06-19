@@ -1,72 +1,123 @@
-
 <script>
     $(document).ready(function () {
         $("input,textarea").addClass("form-control");
-        $("label").addClass("text-warning");
+
         //Change on the selecting of file tag
         $(".custom-file-input").change(function () {
             var filename = $(this).val().split("\\").pop();
             $(".custom-file-label").html(filename);
         });
 
-            $("#submit").click(function () {
-                var Title = $("#Title").val().trim();
-                var Deadline = $("#Deadline").val().trim();
-                var Description = $("#Description").val().trim();
-                var Attachment = $("#Attachment").val().trim();
-                $('.err').remove();
-                var result = true;
-                if (Title.length == 0) {
+        $("#submit").click(function (e) {
+            var Title = $("#Title").val().trim();
+            var Deadline = $("#Deadline").val().trim();
+            var Description = $("#Description").val().trim();
+            var fileInput = $("#Attachment")[0];
+            var file = fileInput.files[0];
+            $('.err').remove();
+            var result = true;
+
+            const specialCharRegex = /[^a-zA-Z0-9\s]/;
+            if (Title.length == 0) {
+                result = false;
+                $("#Title").after("<span class='err'>Enter Title of assignment.<br></span>");
+            } else if (specialCharRegex.test(Title)) {
+                result = false;
+                $("#Title").after("<span class='err'>Title should not contain special characters.<br></span>");
+            }
+
+            if (Deadline.length == 0) {
+                result = false;
+                $("#Deadline").after("<span class='err'>Enter deadline of assignment submission.<br></span>");
+            } else {
+                var now = new Date();
+                var deadlineDate = new Date(Deadline);
+                if (deadlineDate < now.setHours(0, 0, 0, 0)) {
                     result = false;
-                    $("#Title").after("<span class='err'>Enter Title of project.<br></span>");
+                    $("#Deadline").after("<span class='err'>Deadline must be a future date.<br></span>");
                 }
-                if (Deadline.length == 0) {
+            }
+
+            if (Description.length < 8) {
+                result = false;
+                $("#Description").after("<span class='err'>Describe your project briefly.<br></span>");
+            }
+            const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!file) {
+                result = false;
+                $("#Attachment").after("<span class='err'>Upload Attachment.<br></span>");
+            } else {
+                if (!allowedFileTypes.includes(file.type)) {
                     result = false;
-                    $("#Deadline").after("<span class='err'>Enter deadline of project submission.<br></span>");
+                    $("#Attachment").after("<span class='err'>Invalid file type.<br></span>");
                 }
-                if (Description.length< 8 ) {
+                // Check file size (10 MB = 10 * 1024 * 1024 bytes)
+                if (file.size > 10 * 1024 * 1024) {
                     result = false;
-                    $("#Description").after("<span class='err'>Describe your project briefly.<br></span>");
+                    $("#Attachment").after("<span class='err'>File size must be less than 10 MB.<br></span>");
                 }
-                //if (Attachment.length == 0) {
-                //    result = false;
-                //    $("#Attachment").after("<span class='err'>Enter Attachment.<br></span>")
-                //}
-                $('.err').addClass("text-warning");
-                return result;
-            });
+            }
+            $('.err').addClass("text-danger");
+            return result;
+        });
 
     });
 </script>
-<div class="container my-5 py-lg-5">
-    <p id="presponse" class="alert alert-dark text-center h4 text " style="min-height:40px; width:100%;display:none;"><% if(locals.upmsg){ %>
-        <%= upmsg%>
+<div class="container my-5">
+    <% if(locals.upmsg){ %>
+        <p id="presponse" class="alert alert-dark text-center h4">
+            <%= upmsg %>
+        </p>
         <% } %>
-    </p>
-    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#000000,#808080)">
-        <div class="col-sm-6 pt-5">
-            <h2 class="text-success mt-3">
-                Upload some tasks for students and make their future bright.
-            </h2>
-        </div>
-        <div class="col-sm-5">
-            <h2 class="text-info">Give Assignment</h2>
-            <form action="/Admin/Give_Assignment" method="post" enctype="multipart/form-data">
-                <label for="Title">Title</label>
-                <input id="Title" name="Title" placeholder="Title of Assignment" type="text" value="" />
-                <label for="Description">Description</label>
-                <textarea cols="20" id="Description" name="Description" placeholder="Description about assignment" rows="2" style="resize:none;">
-</textarea>
-                <label for="Deadline">Deadline</label>
-                <input id="Deadline" name="Deadline" type="date" value="" />
-                <label for="Attachment">Attachment</label>
-                <div class="custom-file mb-4">
-                    <label class="custom-file-label">Attachment</label>
-                    <input type="file" class="custom-file-input" id="Attachment" name="Attachment" />
+            <div class="row shadow-lg rounded bg-dark text-white">
+                <!-- Left Column -->
+                <div
+                    class="col-md-6 d-flex flex-column justify-content-center align-items-center p-4">
+                    <h2 class="text-success font-weight-bold">Upload some tasks
+                        for students</h2>
+                    <h4 class="mt-3">and make their future bright.</h4>
                 </div>
-                <input type="submit" id="submit" value="Save" class="btn btn-info" />
-            </form>
-        </div>
-    </div>
-</div>
 
+                <!-- Right Column (Form) -->
+                <div class="col-md-6 bg-light text-dark p-5">
+                    <h3 class="text-info mb-4">Give Assignment</h3>
+                    <form action="/Admin/Give_Assignment" method="post"
+                        enctype="multipart/form-data">
+
+                        <div class="form-group">
+                            <label for="Title">Title</label>
+                            <input type="text" class="form-control" id="Title"
+                                name="Title" placeholder="Title of Assignment"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Description">Description</label>
+                            <textarea class="form-control" id="Description"
+                                name="Description" rows="3"
+                                placeholder="Description about assignment"
+                                style="resize: none;" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Deadline">Deadline</label>
+                            <input type="date" class="form-control"
+                                id="Deadline" name="Deadline" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Attachment">Attachment</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input"
+                                    id="Attachment" name="Attachment">
+                                <label class="custom-file-label"
+                                    for="Attachment">Choose file</label>
+                            </div>
+                        </div>
+
+                        <button id="submit" type="submit"
+                            class="btn btn-info btn-block mt-4">Save</button>
+                    </form>
+                </div>
+            </div>
+</div>

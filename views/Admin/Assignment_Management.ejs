@@ -1,14 +1,13 @@
-
-
-<div class="container mt-5">
+<div class="mt-5">
     <h2>Assignment Management</h2>
     <% if(locals.msg){ %>
-        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
-        <%=msg%>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;">
+            <%=msg%>
         </p>
     <% } %>
     <div class="row">
         <div class="col-sm-12">
+            <% if(ASSIGNMENTS!==undefined || ASSIGNMENTS.length!==0 ){%>
             <table class="table table-hover">
                 <thead class="table-info text-success">
                     <tr>
@@ -21,20 +20,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                        <% 
-                        if(!ASSIGNMENTS)
-                          ASSIGNMENTS.forEach(function(e){ %>
-                             <tr>
-                                <td><%=e.Title%></td>
-                                <td><%=e.Description%></td>
-                                <td><%=e.Date%></td>
-                                <td><%=e.Deadline%></td>
-                                <td><a href="/Admin/Download?file=AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
-                                <td><a href="/Admin/DeleteAssignment?pk=<%=e._id%>" class="nav-link">Delete</a></td>
-                            </tr>
-                        <%});%>
+                    <% ASSIGNMENTS.forEach(function(e){ %>
+                        <tr>
+                        <td><%=e.Title%></td>
+                        <td><%=e.Description%></td>
+                        <td><%=e.Date%></td>
+                        <td><%=e.Deadline%></td>
+                        <td><a href="/Admin/Download?file=AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
+                        <td><a href="/Admin/DeleteAssignment?pk=<%=e._id%>" class="nav-link">Delete</a></td>
+                        </tr>
+                    <%});%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no more assignments.</h5>
+            <% } %>
         </div>
     </div>
 </div>

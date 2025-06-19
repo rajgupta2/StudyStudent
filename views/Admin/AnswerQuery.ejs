@@ -1,8 +1,21 @@
-<div class="container my-5 pt-lg-5">
+<script>
+    $(document).ready(()=>{
+       $("#querysubmit").click(()=>{
+        var textarea=$("textarea[name='Answer']").val().trim();
+        $(".err").remove();
+        if(textarea.length<15){
+            $("textarea[name='Answer']").after("<span class='err text-danger'>This field should contains atleast 15 characters.<br/></span>");
+            return false;
+        }
+        return true;
+       });
+    })
+</script>
+<div class="container my-5 pt-lg-5" style="min-height: 400px;">
     <h2>AnswerQuery</h2>
     <div class="row">
         <% if(locals.msg){ %>
-            <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
+            <p id="presponse" class="alert alert-dark text-center h4 w-100">
             <%=msg%>
             </p>
         <% } %>
@@ -17,8 +30,8 @@
                 <label>Query</label>
                 <textarea type="text" name="Query" class="form-control" readonly style="resize:none;" rows="3"><%= AnswerOf.Query%></textarea><br />
                 <label>Answer</label>
-                <textarea placeholder="Type your answer here..." name="Answer" class="form-control" style="resize:none;" rows="4"></textarea><br />
-                <button class="btn btn-success w-50" type="submit">Send Answer</button>
+                <textarea  placeholder="Type your answer here..." name="Answer" class="form-control" style="resize:none;" rows="4" required></textarea><br />
+                <button class="btn btn-success w-50" type="submit" id="querysubmit">Send Answer</button>
                 <% } %>
             </form>
         </div>

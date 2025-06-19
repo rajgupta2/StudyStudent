@@ -1,23 +1,20 @@
-
-<div class="container">
+<div class="mt-5"  style="min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
-            <h1 class="text-center text-success">View Feedback</h1>
-            <table class="table table-hover  table-bordered text-center">
+            <h2>Feedbacks</h2>
+            <% if(Feedbacks.length!==0){%>
+              <table class="table table-hover text-center" >
                 <thead>
-                    <tr class="text-dark table-primary">
+                    <tr class="text-dark">
                         <th>Name</th>
                         <th>Student-ID</th>
                         <th>Subject</th>
                         <th>Message</th>
                         <th>Date</th>
-
                     </tr>
                 </thead>
                 <tbody>
-                   <%
-                   if(Feedbacks!==undefined)
-                   Feedbacks.forEach(function(e){%>
+                  <% Feedbacks.forEach(function(e){%>
                         <tr>
                             <td><%=e.Student_Name%></td>
                             <td><%=e.Student_Id%></td>
@@ -28,7 +25,9 @@
                     <%});%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no feedbacks available.</h5>
+            <% } %>
         </div>
     </div>
 </div>
-

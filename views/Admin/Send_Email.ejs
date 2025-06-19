@@ -1,9 +1,44 @@
+<script>
+$(document).ready(function () {
+    $("#sendEmail").click(function (e) {
+        $(".err").remove();
+        let result = true;
+
+        // Get form values
+        var email = $("input[name='SendTo']").val().trim();
+        var subject = $("input[name='Subject']").val().trim();
+        var message = $("textarea[name='Message']").val().trim();
+
+        // Email validation (basic)
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (email.length === 0) {
+            result = false;
+            $("input[name='SendTo']").after("<span class='err text-danger'>Email is required.<br></span>");
+        } else if (!emailRegex.test(email)) {
+            result = false;
+            $("input[name='SendTo']").after("<span class='err text-danger'>Enter a valid email.<br></span>");
+        }
+
+        if (subject.length < 10 ) {
+            result = false;
+            $("input[name='Subject']").after("<span class='err text-danger'>Subject should contains atleast 10 characters.<br></span>");
+        }
+
+        if (message.length < 15) {
+            result = false;
+            $("textarea[name='Message']").after("<span class='err text-danger'>Message should contains atleast 15 characters.<br></span>");
+        }
+        return result;
+    });
+});
+</script>
 
 <div class="container my-5 pt-lg-5 shadow">
     <h2>Send_Email</h2>
     <% if(locals.msg){ %>
-        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;display:none;">
-        <%=msg%>
+        <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;">
+            <%=msg%>
         </p>
     <% } %>
     <div class="row">
@@ -13,7 +48,7 @@
                 <input type="email" placeholder="Send To" name="SendTo" class="form-control" /><br />
                 <input type="text" placeholder="Subject Of Email" name="Subject" class="form-control" /><br />
                 <textarea rows="8" placeholder="Type your message here..." name="Message" class="form-control" style="resize:none;"></textarea><br />
-                <button class="btn btn-success w-50" type="submit">Send Email</button>
+                <button class="btn btn-success w-50" type="submit" id="sendEmail">Send Email</button>
             </form>
         </div>
     </div>

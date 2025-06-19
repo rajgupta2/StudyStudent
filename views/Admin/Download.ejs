@@ -1,7 +1,8 @@
-<div class="container mt-5" >
+<div class="mt-5" style="min-height: 400px;" >
     <h2>Submitted Assignment by students</h2>
     <div class="row">
         <div class="col-sm-12">
+          <% if(Assignment!==undefined && Assignment.length>0) {%>
             <table class="table table-hover">
                 <thead class="table-info text-success">
                     <tr>
@@ -13,9 +14,7 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    <% if(Assignment!=undefined) {
-                     Assignment.forEach(function(e){ %>
+                    <% Assignment.forEach(function(e){ %>
                         <tr>
                             <td><%=e.Student_Name%></td>
                             <td><%=e.Student_Email%></td>
@@ -23,10 +22,12 @@
                             <td><a href="/Admin/Download?file=SubmittedAssignment/<%=e.Assignment%>" download>View</a></td>
                             <td><%=e.Date%></td>
                         </tr>
-                    <%});
-                    }%>
+                    <%});%>
                 </tbody>
             </table>
+          <% }else{ %>
+                <h5 class="text-info">There are no files available yet.</h5>
+          <% } %>
         </div>
     </div>
 </div>
