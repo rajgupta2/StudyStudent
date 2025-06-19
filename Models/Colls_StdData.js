@@ -29,7 +29,11 @@ const StudentRegistrationSchema=mongoose.Schema({
         type:String,
         default:d.getDate()+"/"+(d.getMonth()+1)+"/"+d.getFullYear()
     },
-    googleId:String
+    googleId:String,
+    role:{
+        type:String,
+        default:"student"
+    }
 });
 
 //For Encryption and hashing

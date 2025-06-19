@@ -23,7 +23,10 @@ Student.use(express.json());
 Student.use(express.urlencoded({ extended: true }));
 
 function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) return next();
+    if (req.isAuthenticated()){
+        if(req.user.role==="student") return next();
+        return res.status(403).send("Forbidden: You are not allowed to access this page.");
+    }
     return res.redirect('/Home/Login');
 }
 
@@ -150,7 +153,7 @@ Student.get("/logout", (req, res) => {
 
 Student.get("/Test", isAuthenticated, (req, res) => {
     DB.Colls_Questions.find({ Subject: req.query.sub }).then( function (ques) {
-        return res.render("./Student/Test.ejs", { Questions: ques });
+        return res.render("./Student/Test.ejs", { Questions: ques , Subject:req.query.sub });
     }).catch( function (err) {
         return res.render("./Student/Test.ejs", { msg: err.message });
     });
@@ -162,7 +165,7 @@ Student.post("/Test", isAuthenticated, (req, res) => {
         var id = field.substring(field.indexOf("_") + 1);
         DB.Colls_Questions.findOne({ _id: new ObjectId(id) }).then( function (QA) {
             var UserAns = `${req.body[field]}`;
-            if (UserAns == QA.Answer) {
+            if (UserAns === QA.Answer) {
                 var preresult = Student.get("result");
                 Student.set("result", preresult + 1);//result++
             }
@@ -171,7 +174,7 @@ Student.post("/Test", isAuthenticated, (req, res) => {
         });
     }
     //Saving Result in Database
-    DB.Colls_StdData.find({ Email: req.user.username || req.user.Email }).then( function (std) {
+    DB.Colls_StdData.findOne({ Email: req.user.username || req.user.Email }).then( function (std) {
         var tr = DB.Colls_Result({
             Email_OF_Student: req.user.username || req.user.Email,
             Marks_Obtained: Student.get("result"),

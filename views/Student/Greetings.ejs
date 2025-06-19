@@ -54,6 +54,9 @@
             );
         });
         $(".dashboardItemsContainer").html(data);
+
+        var testlink=$(".TestLink");
+        $(".navbar-nav").append(testlink);
     });
 </script>
 
@@ -67,12 +70,6 @@
         box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         background: linear-gradient(to right, #a7aade, #8f94fb);
     }
-    .TestLink {
-        position: fixed;
-        right: 27%;
-        top: 0px;
-        z-index: 1050;
-    }
 </style>
 
 <!--Navbar Link-->
@@ -85,7 +82,7 @@
                 <a class="nav-link" href="/Student/Test?sub=<%=e.Subject%>">
                     <%=e.Subject%>
                 </a>
-                <% }) %>
+            <% }) %>
         </div>
     </li>
 <% } %>

@@ -20,15 +20,11 @@
         <h5 id="SubmittedAssBtn"  data-toggle="tab" data-target="#myAssignment"  class="nav-link text-info">My Submitted Assignment</h5>
     </li>
 </ul>
-<div class="container mt-2" id="Assignment">
-    <% if(locals.msg){ %>
-        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">
-            <%= msg%>
-        </p>
-        <% } %>
+<div class="mt-2" id="Assignment" style="min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
             <h4>Given Assignment</h4>
+            <% if(Assignment!=undefined) { %>
             <table class="table table-hover">
                 <thead class="table-info text-success">
                     <tr>
@@ -40,8 +36,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if(Assignment!=undefined) {
-                        Assignment.forEach(function(e){ %>
+                    <%  Assignment.forEach(function(e){ %>
                             <tr>
                                 <td><%=e.Title%></td>
                                 <td><%=e.Description%></td>
@@ -49,24 +44,22 @@
                                 <td><%=e.Deadline%></td>
                                 <td><a href="/Student/Download?file=/AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
                             </tr>
-                       <%});
-                       }%>
+                       <%});%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">There are no assignments available yet.</h5>
+            <% } %>
         </div>
     </div>
 </div>
 
 
-<div class="container mt-2" id="myAssignment" style="display:none;">
-    <h4>Submitted Assignments</h4>
-    <% if(locals.msg){ %>
-    <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">
-        <%= msg%>
-    </p>
-    <% } %>
+<div class="mt-2" id="myAssignment" style="display:none;min-height: 400px;">
     <div class="row">
         <div class="col-sm-12">
+            <h4>Submitted Assignments</h4>
+            <% if(SubmittedAssignment!==undefined && SubmittedAssignment.length>0) { %>
             <table class="table table-hover">
                 <thead class="table-info text-success">
                     <tr>
@@ -76,17 +69,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% if(SubmittedAssignment!=null) {
-                        SubmittedAssignment.forEach(function(e){ %>
+                    <% SubmittedAssignment.forEach(function(e){ %>
                             <tr>
                                 <td><%=e.Subject%></td>
                                 <td><a href="/Student/Download?file=/SubmittedAssignment/<%=e.Assignment%>" class="nav-link">View</a></td>
                                 <td><%=e.Date%></td>
                             </tr>
-                       <%});
-                       }%>
+                       <%});%>
                 </tbody>
             </table>
+            <% }else{ %>
+                <h5 class="text-info">You have not submitted any assignment yet.</h5>
+            <% } %>
         </div>
     </div>
 </div>

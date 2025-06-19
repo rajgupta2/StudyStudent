@@ -174,10 +174,10 @@ app.post("/Home/Contact", function (req, res) {
 
 //Registration Post
 app.post("/Home/Registration", function (req, res) {
-    req.body.Email = req.body.Email.toLowerCase();
     var msg = "";
     var form = new formidable.IncomingForm();
     form.parse(req, function (err, fields, file) {
+        fields.Email=fields.Email.toLowerCase();
         verifyRecaptcha(fields['g-recaptcha-response'], (ans) => {
             if (ans) {
                 //VerifyEmail
@@ -247,10 +247,6 @@ app.post("/Home/Login", (req, res) => {
     req.body.Email = req.body.Email.toLowerCase();
     verifyRecaptcha(req.body['g-recaptcha-response'], (ans) => {
         if (ans) {
-            const user = new DB.Colls_StdData({
-                username: req.body.Email,
-                Password: req.body.Password
-            });
             const authenticate = DB.Colls_StdData.authenticate();
             authenticate(req.body.Email, req.body.Password, function (err, result) {
                 // If correct, returns the user object.
@@ -280,7 +276,6 @@ app.post("/Home/Login", (req, res) => {
         } else
             res.render("./Home/Login.ejs", { msg: "Captcaha couldn't verify." });
     });
-
 });
 
 //Registration Page

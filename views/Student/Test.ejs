@@ -1,4 +1,4 @@
-<div class="container mt-5 pt-5" id="BeforeExam">
+<div class="container mt-5 pt-5" id="BeforeExam" style="min-height: 400px;">
     <center class=" mx-lg-5">
         <div class="row mt-5 pt-5 mx-lg-5">
             <div class="col-sm-12 mt-5 pt-lg-5">
@@ -22,7 +22,7 @@
     <span class="alert alert-success text-dark float-right" id="timer" style="font-size:30px;display:none;"></span>
     <div class="row">
         <div class="col-sm-12 py-4">
-            <form action="/Student/Test" method="post">
+            <form action="/Student/Test?sub=<%=locals.Subject%>" method="post">
                <% if(locals.Questions)
                   Questions.forEach(function(e){
                   var x = 1; %>
@@ -56,7 +56,7 @@
         //Timer for exam
         var d = new Date();
         d.setMinutes(20);
-        d.setSeconds(01);
+        d.setSeconds(0);
         var min = d.getMinutes();
         var sec = d.getSeconds();
         //function for timer

@@ -18,40 +18,60 @@
                     result = false;
                     $("#Subject").after("<span class='err'>Enter Subject of assignment.<br></span>");
                 }
-                if (Assignment.length == 0) {
+                var fileInput = $("#Assignment")[0];
+                var file = fileInput.files[0];
+                const allowedFileTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!file) {
                     result = false;
-                    $("#Assignment").after("<span class='err'>Upload Assignment.<br></span>")
+                    $("#Assignment").after("<span class='err'>Upload Assignment.<br></span>");
+                } else {
+                    if (!allowedFileTypes.includes(file.type)) {
+                        result = false;
+                        $("#Assignment").after("<span class='err'>Invalid file type.<br></span>");
+                    }
+                    // Check file size (10 MB = 10 * 1024 * 1024 bytes)
+                    if (file.size > 10 * 1024 * 1024) {
+                        result = false;
+                        $("#Assignment").after("<span class='err'>File size must be less than 10 MB.<br></span>");
+                    }
                 }
-                $('.err').addClass("text-warning");
+                $('.err').addClass("text-danger");
                 return result;
             });
-
     });
 </script>
 <div class="container my-5 py-lg-5">
     <h2 class="text-info">Submit Assignment</h2>
     <% if(locals.msg){ %>
-        <p id="presponse" class="alert alert-dark text-center h4" style="display:none;">
+        <p id="presponse" class="alert alert-dark text-center h4 w-100">
             <%= msg%>
         </p>
-        <% } %>
-    <div class="row py-5 px-5" style="background:linear-gradient(135deg,#423838,#bc81eb)">
-        <div class="col-sm-6 pt-5">
-            <h2 class="text-success mt-3">
-                Submit assignment and be happy.
-            </h2>
+    <% } %>
+    <div class="row py-5 px-5 text-white" style="background: linear-gradient(135deg, #3b8db0, #8925db); border-radius: 20px;">
+        <!-- Left Column with Heading -->
+        <div class="col-md-6 d-flex align-items-center">
+            <div>
+            <h1 class="display-5 fw-bold mb-4">Submit Assignment & Be Happy</h1>
+            <p class="lead">Stay ahead by submitting your assignments on time with ease and confidence.</p>
+            </div>
         </div>
-        <div class="col-sm-5">
 
+        <!-- Right Column with Form -->
+        <div class="col-md-6 bg-white text-dark p-4 rounded shadow">
+            <h4 class="mb-4">Submit Your Assignment</h4>
             <form action="/Student/Submit_Assignment" method="post" enctype="multipart/form-data">
-                <label for="Subject">Subject</label>
-                <input id="Subject" name="Subject" placeholder="Subject" type="text" value="" />
-                <label for="Assignment">Assignment</label>
-                <div class="custom-file mb-4">
-                    <label class="custom-file-label">Assignment</label>
-                    <input type="file" class="custom-file-input" id="Assignment" name="Assignment" />
+                <div class="mb-3">
+                    <label for="Subject" class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="Subject" name="Subject" placeholder="Enter Subject" />
                 </div>
-                <input type="submit" id="submit" value="Save" class="btn btn-info" />
+                <div class="mb-3">
+                    <label for="Assignment" class="form-label">Upload Assignment</label>
+                    <div class="custom-file mb-4">
+                        <label class="custom-file-label">An assignment file</label>
+                        <input type="file" class="custom-file-input" id="Assignment" name="Assignment" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" id="submit">Submit Assignment</button>
             </form>
         </div>
     </div>

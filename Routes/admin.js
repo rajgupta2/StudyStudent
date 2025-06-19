@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const ObjectId = require("mongodb").ObjectId;
 const Email = require("../config/Email.js");
+const { log } = require("console");
 const Admin = express();
 
 //Static Files
@@ -22,7 +23,10 @@ Admin.use(express.json());
 Admin.use(express.urlencoded({ extended: true }));
 
 function isAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) return next();
+    if (req.isAuthenticated()){
+        if(req.user.role==="admin") return next();
+        return res.status(403).send("Forbidden: You are not allowed to access this page.");
+    }
     return res.redirect('/Home/Login');
 }
 //Welcome
@@ -297,16 +301,16 @@ Admin.get("/Assignment_Management", isAuthenticated, function (req, res) {
 
 //Result_Management
 Admin.get("/ResultManagement", isAuthenticated, function (req, res) {
-    DB.Colls_Result.find().then(function (err, sa) {
-        res.render("./Admin/ResultManagement.ejs", { Results: sa });
+    DB.Colls_Result.find().then(function (sa) {
+        res.render("./Admin/ResultManagement.ejs", { Results: sa,msg:req.query.msg });
     });
 });
 
 Admin.get("/DeleteResult", isAuthenticated, function (req, res) {
     DB.Colls_Result.deleteOne({ _id: req.query.pk }).then(function (err) {
-        res.redirect("/Admin/ResultManagement");
-    }).catch(() => {
-        res.redirect("/Admin/ResultManagement");
+        res.redirect("/Admin/ResultManagement?msg=Deleted successfully.");
+    }).catch((err) => {
+        res.redirect(`/Admin/ResultManagement?msg=${err}`);
     });
 });
 

@@ -23,10 +23,10 @@
                 <tbody>
                     <% Results.forEach(function(e){ %>
                             <tr>
-                                <td><%=e.Name (e.Email_OF_Student) %>td>
+                                <td><%=e.Name%><%= e.Email_OF_Student %></td>
                                 <td><%=e.Course%></td>
                                 <td><%=e.Subject%></td>
-                                <td><%=e.Marks_Obtained / e.Full_Marks%></td>
+                                <td><%=e.Marks_Obtained %> /<%= e.Full_Marks%></td>
                                 <td><%=e.Date_Of_Exam%></td>
                                 <td><a href="/Admin/DeleteResult?pk=<%=e._id%>" class=" nav-link">Delete</a></td>
                             </tr>

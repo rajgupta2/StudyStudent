@@ -1,37 +1,33 @@
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <h1 class="text-lg-center text-success">Study Materials</h1>
-            <table class="table table-hover  table-bordered text-center">
-                <thead>
-                    <tr class="text-dark table-primary">
-                        <th>S.No.</th>
-                        <th>Subject</th>
-                        <th>Description</th>
-                        <th>Study Materials</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% 
-                    var x = 1;
-                    if(StudyMaterials!=undefined){
-                        StudyMaterials.forEach(function(e){ %>
+<div class="mt-2" id="StudyMat" style="min-height:400px;"  >
+        <h2>Study Materials</h2>
+        <div class="row">
+            <div class="col-sm-12">
+               <% if(StudyMaterials!==undefined && StudyMaterials.length>0){ %>
+                <table class="table table-hover">
+                    <thead class="table-info text-success">
+                        <tr>
+                            <th>S.No</th>
+                            <th>Subject</th>
+                            <th>Description</th>
+                            <th>Attachment</th>
+                            <th>Uploaded Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <% StudyMaterials.map(function(e,ind){ %>
                             <tr>
-                                <td><%=x%></td>
+                                <td><%=ind+1%></td>
                                 <td><%=e.Subject%></td>
                                 <td><%=e.Description%></td>
-                                <td><a href="/Student/Download?file=StudyMaterials/<%=e.StudyMaterial%>">Download</td>
+                                <td><a href="/Admin/Download?file=StudyMaterials/<%=e.StudyMaterial%>">Download</td>
                                 <td><%=e.Date%></td>
                             </tr>
-               <% x++;
-                         });
-                    } %>
-                </tbody>
-            </table>
+                       <% });%>
+                    </tbody>
+                </table>
+               <% }else{ %>
+                <h5 class="text-info">There are no study materials available yet.</h5>
+               <% } %>
+            </div>
         </div>
     </div>
-</div>
-
-
-
