@@ -139,7 +139,6 @@ Admin.get("/News_Update", isAuthenticated, function (req, res) {
 //Feedback
 Admin.get("/View_Feedback", isAuthenticated, function (req, res) {
     DB.Colls_Feedback.find().then(function (succ) {
-        console.log(succ)
         res.render("./Admin/View_Feedback.ejs", { Feedbacks: succ });
     });
 });

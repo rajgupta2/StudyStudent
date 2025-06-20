@@ -34,16 +34,15 @@ $(document).ready(function () {
 });
 </script>
 
-<div class="container my-5 pt-lg-5 shadow">
-    <h2>Send_Email</h2>
+<div class="container shadow">
     <% if(locals.msg){ %>
         <p id="presponse" class="alert alert-dark text-center h4 " style="min-height:40px; width:100%;">
             <%=msg%>
         </p>
     <% } %>
-    <div class="row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-6 my-5">
+    <div class="row bg-light">
+        <div class="col-md-6 py-5 bg-light rounded center">
+            <h2>Send_Email</h2>
             <form action="/Admin/Send_Email" method="post">
                 <input type="email" placeholder="Send To" name="SendTo" class="form-control" /><br />
                 <input type="text" placeholder="Subject Of Email" name="Subject" class="form-control" /><br />
@@ -51,5 +50,6 @@ $(document).ready(function () {
                 <button class="btn btn-success w-50" type="submit" id="sendEmail">Send Email</button>
             </form>
         </div>
+        <div class="col-md-6" style="background:linear-gradient(325deg,blue,pink);"></div>
     </div>
 </div>

@@ -22,6 +22,6 @@ a {
 }
 
 .grecaptcha-badge {
-    bottom:35px !important;
+    bottom:15px !important;
     z-index: 4000;
 }

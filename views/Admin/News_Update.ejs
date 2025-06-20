@@ -33,18 +33,18 @@
         <h5 id="previ_Notification" data-toggle="tab" class="nav-link">Manage Previous Notification</h5>
     </li>
 </ul>
-<div class="container py-5" id="newUpdate"  style="background: linear-gradient(185deg,#bae752,#7b65c3)">
+<div class="container py-5 rounded shadow-lg" id="newUpdate"  style="background: linear-gradient(185deg,#bae752,#7b65c3)">
     <% if(locals.addmsg){ %>
         <p id="presponse" class="alert alert-dark text-center h4">
             <%= addmsg%>
         </p>
     <% } %>
 
-    <div class="row py-5">
+    <div class="row py-5 ">
         <div class="col-sm-5 my-5 pb-5">
             <h1>Add Some Update</h1>
         </div>
-        <div class="col-sm-6 mt-5">
+        <div class="col-sm-6 pt-5 bg-light rounded shadow">
             <form action="/Admin/News_Update" method="post">
                 <textarea   id="Notification_Msg" name="Notification_Msg" placeholder = "Type your notification here...." class = "form-control" style = "resize:none;" ></textarea><br />
                 <input type="submit" id="submit" class="btn btn-success btn-block" value="Save" />
