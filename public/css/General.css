@@ -15,8 +15,8 @@ a {
 }
 #backtotop {
     position: fixed;
-    right: 80px;
-    bottom: 50px;
+    right: 20px;
+    bottom: 30px;
     border-radius: 50%;
     z-index: 5000;
 }
