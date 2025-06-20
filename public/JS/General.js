@@ -16,9 +16,6 @@ $(document).ready(function () {
     (fg.next()).mouseleave(function () {
         $(this).hide();
     });
-    if ($("html,body").width() < 1000) {
-        $("#navBtn").css({ position: "absolute", left: $("html,body").width() - 100 });
-    }
     $(window).scroll(function () {
         if ($(window).scrollTop() > 20) {
             $("#backtotop").show();
@@ -31,8 +28,8 @@ $(document).ready(function () {
     $(".navbar-toggler-icon").click(function () {
         $(".navbar").addClass("alert-dark");
         $(".navbar-brand").removeClass("text-white");
-
     });
+    $(".navbar-toggler").addClass("border-0");
 
     //backtotop
     $("#backtotop").click(function () {

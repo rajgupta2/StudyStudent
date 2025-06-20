@@ -44,7 +44,7 @@
         <div class="col-sm-5 my-5 pb-5">
             <h1>Add Some Update</h1>
         </div>
-        <div class="col-sm-6 pt-5 bg-light rounded shadow">
+        <div class="col-sm-6 py-5 bg-light rounded shadow">
             <form action="/Admin/News_Update" method="post">
                 <textarea   id="Notification_Msg" name="Notification_Msg" placeholder = "Type your notification here...." class = "form-control" style = "resize:none;" ></textarea><br />
                 <input type="submit" id="submit" class="btn btn-success btn-block" value="Save" />
@@ -54,32 +54,30 @@
 </div>
 
 <div  id="previousNotification" style="display:none;min-height: 400px;">
-    <div class="row">
-        <div class="col-sm-12">
-            <% if(Notification!==undefined){ %>
-            <table class="table table-hover text-center" >
-                <thead>
-                    <tr class="text-dark">
-                        <th>S.No</th>
-                        <th>Notification Message</th>
-                        <th>Notification Date</th>
-                        <th>Delete</th>
+    <div class="table-responsive">
+        <% if(Notification!==undefined){ %>
+        <table class="table table-hover text-center" >
+            <thead>
+                <tr class="text-dark">
+                    <th>S.No</th>
+                    <th>Notification Message</th>
+                    <th>Notification Date</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%  Notification.map(function(e,ind){ %>
+                    <tr>
+                    <td><%=ind + 1%></td>
+                    <td><%= e.Notification_Msg%></td>
+                    <td><%= e.Notification_DT%></td>
+                    <td><a href="/Admin/DeleteNotification?pk=<%=e._id%>" class="btn btn-warning">Delete</a></td>
                     </tr>
-                </thead>
-                <tbody>
-                   <%  Notification.map(function(e,ind){ %>
-                     <tr>
-                        <td><%=ind + 1%></td>
-                        <td><%= e.Notification_Msg%></td>
-                        <td><%= e.Notification_DT%></td>
-                        <td><a href="/Admin/DeleteNotification?pk=<%=e._id%>" class="btn btn-warning">Delete</a></td>
-                     </tr>
-                    <% }); %>
-                </tbody>
-            </table>
-            <% }else{ %>
-                <h5 class="text-info">There are no more notification. You need to create one.</h5>
-            <% } %>
-        </div>
+                <% }); %>
+            </tbody>
+        </table>
+        <% }else{ %>
+            <h5 class="text-info">There are no more notification. You need to create one.</h5>
+        <% } %>
     </div>
 </div>

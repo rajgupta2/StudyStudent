@@ -1,33 +1,31 @@
 <div class="mt-2" id="StudyMat" style="min-height:400px;"  >
         <h2>Study Materials</h2>
-        <div class="row">
-            <div class="col-sm-12">
-               <% if(StudyMaterials!==undefined && StudyMaterials.length>0){ %>
-                <table class="table table-hover">
-                    <thead class="table-info text-success">
+        <div class="table-responsive">
+            <% if(StudyMaterials!==undefined && StudyMaterials.length>0){ %>
+            <table class="table table-hover">
+                <thead class="table-info text-success">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Subject</th>
+                        <th>Description</th>
+                        <th>Attachment</th>
+                        <th>Uploaded Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <% StudyMaterials.map(function(e,ind){ %>
                         <tr>
-                            <th>S.No</th>
-                            <th>Subject</th>
-                            <th>Description</th>
-                            <th>Attachment</th>
-                            <th>Uploaded Date</th>
+                            <td><%=ind+1%></td>
+                            <td><%=e.Subject%></td>
+                            <td><%=e.Description%></td>
+                            <td><a href="/Admin/Download?file=StudyMaterials/<%=e.StudyMaterial%>">Download</td>
+                            <td><%=e.Date%></td>
                         </tr>
-                    </thead>
-                    <tbody>
-                    <% StudyMaterials.map(function(e,ind){ %>
-                            <tr>
-                                <td><%=ind+1%></td>
-                                <td><%=e.Subject%></td>
-                                <td><%=e.Description%></td>
-                                <td><a href="/Admin/Download?file=StudyMaterials/<%=e.StudyMaterial%>">Download</td>
-                                <td><%=e.Date%></td>
-                            </tr>
-                       <% });%>
-                    </tbody>
-                </table>
-               <% }else{ %>
-                <h5 class="text-info">There are no study materials available yet.</h5>
-               <% } %>
-            </div>
+                    <% });%>
+                </tbody>
+            </table>
+            <% }else{ %>
+            <h5 class="text-info">There are no study materials available yet.</h5>
+            <% } %>
         </div>
-    </div>
+</div>

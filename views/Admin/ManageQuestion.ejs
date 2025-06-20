@@ -21,41 +21,39 @@
             </h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-           <% if(Questions!==undefined && Questions.length>0){ %>
-            <table class="table table-hover">
-                <thead class="table-info">
-                    <tr>
-                        <td>S.N.</td>
-                        <td>Questions</td>
-                        <td>Option1</td>
-                        <td>Option2</td>
-                        <td>Option3</td>
-                        <td>Option4</td>
-                        <td>Answer</td>
-                        <td>Remove Question</td>
-                    </tr>
-                </thead>
-                <tbody>
-                   <% Questions.map(function(e,ind){ %>
-                    <tr>
-                        <td><%= ind+1 %></td>
-                        <td><%=e.Question%></td>
-                        <td><%=e.Option1%></td>
-                        <td><%=e.Option2%></td>
-                        <td><%=e.Option3%></td>
-                        <td><%=e.Option4%></td>
-                        <td><%=e.Answer%></td>
-                        <td><a href="/Admin/RemoveQuestion?pk=<%=e._id%>">Delete</a></td>
-                    </tr>
-                   <% });%>
-                </tbody>
-            </table>
-            <% }else{ %>
-                <h5 class="text-info">There are no questions available yet.</h5>
-            <% } %>
-        </div>
+    <div class="table-responsive">
+        <% if(Questions!==undefined && Questions.length>0){ %>
+        <table class="table table-hover">
+            <thead class="table-info">
+                <tr>
+                    <td>S.N.</td>
+                    <td>Questions</td>
+                    <td>Option1</td>
+                    <td>Option2</td>
+                    <td>Option3</td>
+                    <td>Option4</td>
+                    <td>Answer</td>
+                    <td>Remove Question</td>
+                </tr>
+            </thead>
+            <tbody>
+                <% Questions.map(function(e,ind){ %>
+                <tr>
+                    <td><%= ind+1 %></td>
+                    <td><%=e.Question%></td>
+                    <td><%=e.Option1%></td>
+                    <td><%=e.Option2%></td>
+                    <td><%=e.Option3%></td>
+                    <td><%=e.Option4%></td>
+                    <td><%=e.Answer%></td>
+                    <td><a href="/Admin/RemoveQuestion?pk=<%=e._id%>">Delete</a></td>
+                </tr>
+                <% });%>
+            </tbody>
+        </table>
+        <% }else{ %>
+            <h5 class="text-info">There are no questions available yet.</h5>
+        <% } %>
     </div>
 </div>
 

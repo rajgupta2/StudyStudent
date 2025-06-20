@@ -21,66 +21,62 @@
     </li>
 </ul>
 <div class="mt-2" id="Assignment" style="min-height: 400px;">
-    <div class="row">
-        <div class="col-sm-12">
-            <h4>Given Assignment</h4>
-            <% if(Assignment!=undefined) { %>
-            <table class="table table-hover">
-                <thead class="table-info text-success">
-                    <tr>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Uploaded Date</th>
-                        <th>Deadline</th>
-                        <th>Attachment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%  Assignment.forEach(function(e){ %>
-                            <tr>
-                                <td><%=e.Title%></td>
-                                <td><%=e.Description%></td>
-                                <td><%=e.Date%></td>
-                                <td><%=e.Deadline%></td>
-                                <td><a href="/Student/Download?file=/AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
-                            </tr>
-                       <%});%>
-                </tbody>
-            </table>
-            <% }else{ %>
-                <h5 class="text-info">There are no assignments available yet.</h5>
-            <% } %>
-        </div>
+    <h4>Given Assignment</h4>
+    <div class="table-responsive">
+        <% if(Assignment!=undefined) { %>
+        <table class="table table-hover">
+            <thead class="table-info text-success">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Uploaded Date</th>
+                    <th>Deadline</th>
+                    <th>Attachment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%  Assignment.forEach(function(e){ %>
+                        <tr>
+                            <td><%=e.Title%></td>
+                            <td><%=e.Description%></td>
+                            <td><%=e.Date%></td>
+                            <td><%=e.Deadline%></td>
+                            <td><a href="/Student/Download?file=/AssignmentAttachments/<%=e.Attachment%>" class="nav-link">View</a></td>
+                        </tr>
+                    <%});%>
+            </tbody>
+        </table>
+        <% }else{ %>
+            <h5 class="text-info">There are no assignments available yet.</h5>
+        <% } %>
     </div>
 </div>
 
 
 <div class="mt-2" id="myAssignment" style="display:none;min-height: 400px;">
-    <div class="row">
-        <div class="col-sm-12">
-            <h4>Submitted Assignments</h4>
-            <% if(SubmittedAssignment!==undefined && SubmittedAssignment.length>0) { %>
-            <table class="table table-hover">
-                <thead class="table-info text-success">
-                    <tr>
-                        <th>Subject</th>
-                        <th>Assignment</th>
-                        <th>Uploaded Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% SubmittedAssignment.forEach(function(e){ %>
-                            <tr>
-                                <td><%=e.Subject%></td>
-                                <td><a href="/Student/Download?file=/SubmittedAssignment/<%=e.Assignment%>" class="nav-link">View</a></td>
-                                <td><%=e.Date%></td>
-                            </tr>
-                       <%});%>
-                </tbody>
-            </table>
-            <% }else{ %>
-                <h5 class="text-info">You have not submitted any assignment yet.</h5>
-            <% } %>
-        </div>
+    <h4>Submitted Assignments</h4>
+    <div class="table-responsive">
+        <% if(SubmittedAssignment!==undefined && SubmittedAssignment.length>0) { %>
+        <table class="table table-hover">
+            <thead class="table-info text-success">
+                <tr>
+                    <th>Subject</th>
+                    <th>Assignment</th>
+                    <th>Uploaded Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% SubmittedAssignment.forEach(function(e){ %>
+                        <tr>
+                            <td><%=e.Subject%></td>
+                            <td><a href="/Student/Download?file=/SubmittedAssignment/<%=e.Assignment%>" class="nav-link">View</a></td>
+                            <td><%=e.Date%></td>
+                        </tr>
+                <%});%>
+            </tbody>
+        </table>
+        <% }else{ %>
+            <h5 class="text-info">You have not submitted any assignment yet.</h5>
+        <% } %>
     </div>
 </div>

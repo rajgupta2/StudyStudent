@@ -1,58 +1,56 @@
 <div style="min-height: 400px;">
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>Student's Record</h2>
-            <% if(StdData!==undefined){ %>
-            <table class="table table-hover text-center" >
-                <thead>
-                    <tr class="text-dark">
-                        <th>Enrollment Number</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Gender</th>
-                        <th>Photo</th>
-                        <th>Course(Year)</th>
-                        <th>Contact</th>
-                        <th>Address</th>
-                        <th>Status</th>
-                        <th>Take Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% StdData.forEach(function(e){  %>
-                        <tr>
-                            <td><%= e.EnrollmentNumber %></td>
-                            <td><%= e.Name %></td>
-                            <td><%= e.Email %></td>
-                            <td><%= e.Gender %></td>
-                            <td><a href="/Admin/Download?file=StudentProfileImage/<%=e.ProfilePicture%>">View Photo</a></td>
-                            <td><%= e.Course %> <%= e.Year %></td>
-                            <td><%= e.Contact %></td>
-                            <td><%= e.Address %></td>
-                            <td><%= e.Status %></td>
-                            <td>
-                              <div class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Action</a>
-                                    <div class="dropdown-menu">
-                                        <%if(e.Status == "Active"){%>
-                                            <a class="dropdown-item" href="/Admin/Block?pk=<%= e.Email %>">Block</a>
-                                        <%}else{ %>
-                                            <a class="dropdown-item" href="/Admin/Unblock?pk=<%= e.Email %>">Unblock</a>
-                                        <%}%>
-                                            <a class="dropdown-item" href="/Admin/DeleteStudent?pk=<%=e.Email %>"  >Delete</a>
-                                    </div>
+    <h2>Student's Record</h2>
+    <div class="table-responsive">
+        <% if(StdData!==undefined){ %>
+        <table class="table table-hover text-center" >
+            <thead>
+                <tr class="text-dark">
+                    <th>Enrollment Number</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Photo</th>
+                    <th>Course(Year)</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Take Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% StdData.forEach(function(e){  %>
+                    <tr>
+                        <td><%= e.EnrollmentNumber %></td>
+                        <td><%= e.Name %></td>
+                        <td><%= e.Email %></td>
+                        <td><%= e.Gender %></td>
+                        <td><a href="/Admin/Download?file=StudentProfileImage/<%=e.ProfilePicture%>">View Photo</a></td>
+                        <td><%= e.Course %> <%= e.Year %></td>
+                        <td><%= e.Contact %></td>
+                        <td><%= e.Address %></td>
+                        <td><%= e.Status %></td>
+                        <td>
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" href="#">Action</a>
+                                <div class="dropdown-menu">
+                                    <%if(e.Status == "Active"){%>
+                                        <a class="dropdown-item" href="/Admin/Block?pk=<%= e.Email %>">Block</a>
+                                    <%}else{ %>
+                                        <a class="dropdown-item" href="/Admin/Unblock?pk=<%= e.Email %>">Unblock</a>
+                                    <%}%>
+                                        <a class="dropdown-item" href="/Admin/DeleteStudent?pk=<%=e.Email %>"  >Delete</a>
                                 </div>
-                            </td>
-                        </tr>
-                   <% })%>
-                </tbody>
-            </table>
-            <% }else{ %>
-                <h5 class="text-info">
+                            </div>
+                        </td>
+                    </tr>
+                <% })%>
+            </tbody>
+        </table>
+        <% }else{ %>
+            <h5 class="text-info">
 
-                </h5>
-            <% } %>
-        </div>
+            </h5>
+        <% } %>
     </div>
 </div>
 
