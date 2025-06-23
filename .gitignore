@@ -3,5 +3,9 @@ node_modules/
 
 .env
 .scannerwork/
+Content/AssignmentAttachments/*
+Content/StudentProfileImage/*
+Content/StudyMaterials/*
+Content/SubmittedAssignment/*
 sonar-project.properties
 studystudent-zip-file.zip
