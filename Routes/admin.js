@@ -49,9 +49,10 @@ Admin.post("/Give_Assignment", isAuthenticated, function (req, res) {
         var newpath = "./Content/AssignmentAttachments/" + AssignmentAttachments;
         fs.readFile(oldPath, function (err, data) {
             fs.writeFile(newpath, data, function (err) {
-                if (err)
+                if (err){
                     msg = "Oops! error occured in saving the attachement.";
-                else {
+                    return res.render("./Admin/Give_Assignment.ejs", { upmsg: err });
+                }else {
                     const ass = new DB.Colls_GiveAssignment({
                         Title: fields.Title,
                         Deadline: fields.Deadline,
@@ -60,9 +61,9 @@ Admin.post("/Give_Assignment", isAuthenticated, function (req, res) {
                     });
                     ass.save().then(function (succ) {
                         msg = "Saved assignment successfully.";
-                        res.render("./Admin/Give_Assignment.ejs", { upmsg: msg });
+                        return  res.render("./Admin/Give_Assignment.ejs", { upmsg: msg });
                     }).catch((err) => {
-                        res.render("./Admin/Give_Assignment.ejs", { upmsg: "Sorry! Due to some technicle issue we are unable to upload assignment." });
+                        return res.render("./Admin/Give_Assignment.ejs", { upmsg: "Sorry! Due to some technicle issue we are unable to upload assignment." });
                     });
                 }
             });
@@ -70,6 +71,7 @@ Admin.post("/Give_Assignment", isAuthenticated, function (req, res) {
             fs.unlink(oldPath, function (err) {
                 if (err)
                     msg = "Oops! error occured in deleting the temporary file.";
+                return res.render("./Admin/Give_Assignment.ejs", { upmsg: err });
             });
         });
     });
