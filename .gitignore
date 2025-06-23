@@ -3,6 +3,5 @@ node_modules/
 
 .env
 .scannerwork/
-Content/StudentProfileImage/
 sonar-project.properties
 studystudent-zip-file.zip
