@@ -144,7 +144,6 @@ Student.post("/ChangePassword", isAuthenticated, (req, res) => {
 
 
 Student.get("/logout", (req, res,next) => {
-    req.session.destroy();
     req.logout(function (err) {
         if (err) { return next(err); }
         res.redirect('/Home/Login');
