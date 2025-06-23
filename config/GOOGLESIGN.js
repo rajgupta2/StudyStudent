@@ -24,7 +24,7 @@ passport.use(new GoogleStrategy({
     DB.Colls_StdData.findOne({ googleId: profile.id }).then( function (user) {
       if (!user) {
         //Downloading user's Profile Pic.
-        DownloadImage(Photo_URL);
+        //DownloadImage(Photo_URL);
         newuser.save().then(()=>{
           return cb(null,newuser);
         });
