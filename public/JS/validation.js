@@ -140,8 +140,8 @@ function RegistrationFormValidation() {
         }
     }
     // === Password ===
-    if (Password.length !== 8) {
-        $("#Password").after("<span class='err text-danger'>Password must be exactly 8 characters.</span>");
+    if (Password.length < 8) {
+        $("#Password").after("<span class='err text-danger'>Password filed should contains atleast 8 characters.</span>");
         result = false;
     } else {
         var hasUpper = /[A-Z]/.test(Password);

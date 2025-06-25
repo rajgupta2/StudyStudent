@@ -13,14 +13,11 @@ const StudentRegistrationSchema=mongoose.Schema({
     College:String,
     Course:String,
     Year:{
-        type:Number,
-        min:1,
-        max:4
+        type:Number
     },
     Contact:String,
     Address:String,
     ProfilePicture:String,
-    Password:String,
     Status:{
         type:String,
         default:"Active"
@@ -37,5 +34,7 @@ const StudentRegistrationSchema=mongoose.Schema({
 });
 
 //For Encryption and hashing
-StudentRegistrationSchema.plugin(passportLocalMongoose);
+StudentRegistrationSchema.plugin(passportLocalMongoose,{
+  usernameField: "Email"
+});
 module.exports=StudentRegistrationSchema;

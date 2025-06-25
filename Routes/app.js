@@ -37,12 +37,11 @@ app.use(session({
 }));
 
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
+
+// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy({ usernameField: 'Email', passwordField: 'Password' },
-    DB.Colls_StdData.authenticate()
-));
+
 passport.serializeUser(DB.Colls_StdData.serializeUser());
 passport.deserializeUser(DB.Colls_StdData.deserializeUser());
 
@@ -61,16 +60,12 @@ app.use("/Admin", AdminRoute);
 const StudentRoute = require("./Student.js");
 app.use("/Student", StudentRoute);
 
-const APIRoute = require("../config/coll_stddatas.js");
-app.use("/API", APIRoute);
-
-
 //Google Sign in code
 const Google_Sign = require("../config/GOOGLESIGN.js");
 app.use("/Google", Google_Sign);
 
 //Index
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
     DB.Colls_Notification.find().then((nt) => {
         res.render("./Home/index", { Notifications: nt });
     }).catch((err) => {
@@ -181,61 +176,51 @@ app.post("/Home/Registration", function (req, res) {
         verifyRecaptcha(fields['g-recaptcha-response'], (ans) => {
             if (ans) {
                 //VerifyEmail
-                Email.confirmEmail({ Email: fields.Email, Student_Name: fields.Name, Code: fields.Code }, (err, val, message) => {
+                Email.confirmEmail({ Email: fields.Email, Student_Name: fields.Name, Code: fields.Code }, (err, isVerify, message) => {
                     if (err)
-                        res.render("./Home/Registration", { msg: "An error occured." });
-                    if (val) {
-                        DB.Colls_StdData.find({ Email: fields.Email }, function (err, std) {
-                            if (std.length <= 0) {
+                       return res.render("./Home/Registration", { msg: "An error occured in Email Verification." });
+                    if (isVerify===true) {
+                        var oldPath = file.ProfilePicture.filepath;
+                        var StudentProfileImage = file.ProfilePicture.newFilename + path.extname(file.ProfilePicture.originalFilename);
+                        var newpath = "./Content/StudentProfileImage/" + StudentProfileImage;
+                        fs.readFile(oldPath, function (err, data) {
+                            fs.writeFile(newpath, data, function (err) {
                                 if (err)
-                                    msg = "Oops! error occured.";
+                                    msg = "Oops! error occured in saving the profile picture.";
                                 else {
-                                    var oldPath = file.ProfilePicture.filepath;
-                                    var StudentProfileImage = file.ProfilePicture.newFilename + path.extname(file.ProfilePicture.originalFilename);
-                                    var newpath = "./Content/StudentProfileImage/" + StudentProfileImage;
-                                    fs.readFile(oldPath, function (err, data) {
-                                        fs.writeFile(newpath, data, function (err) {
-                                            if (err)
-                                                msg = "Oops! error occured in saving the profile picture.";
-                                            else {
-                                                const stdData = new DB.Colls_StdData({
-                                                    username: fields.Email,
-                                                    Email: fields.Email,
-                                                    EnrollmentNumber: fields.EnrollmentNumber,
-                                                    Name: fields.Name,
-                                                    Gender: fields.Gender,
-                                                    College: fields.College,
-                                                    Course: fields.Course,
-                                                    Year: fields.Year,
-                                                    Contact: fields.Contact,
-                                                    Address: fields.Address,
-                                                    ProfilePicture: StudentProfileImage
-                                                });
-
-                                                DB.Colls_StdData.register(stdData, fields.Password, function (err, user) {
-                                                    if (err) {
-                                                        res.render("./Home/Registration", { msg: "Sorry! Due to some technicle issue we are unable to registerd you." + err });
-                                                    } else {
-                                                        res.render("./Home/Login", { msg: "You are successfully registered.Please continue to login." });
-                                                    }
-                                                });
-                                            }
-                                        });
+                                    const stdData = new DB.Colls_StdData({
+                                        Email: fields.Email,
+                                        EnrollmentNumber: fields.EnrollmentNumber,
+                                        Name: fields.Name,
+                                        Gender: fields.Gender,
+                                        College: fields.College,
+                                        Course: fields.Course,
+                                        Year: fields.Year,
+                                        Contact: fields.Contact,
+                                        Address: fields.Address,
+                                        ProfilePicture: StudentProfileImage,
                                     });
-                                    //Deleting file from temporary location
-                                    fs.unlink(oldPath, function (err) {
-                                        if (err)
-                                            // console.log(err);
-                                            msg = "Oops! error occured in deleting the temporary file.";
+
+                                    DB.Colls_StdData.register(stdData, fields.Password).then((user)=>{
+                                            res.render("./Home/Login", { msg: "You are successfully registered.Please continue to login." });
+                                    }).catch((err)=>{
+                                          if (err.name === 'UserExistsError') {
+                                                return res.render("./Home/Registration", { msg: "User already exists."});
+                                            }
+                                            res.render("./Home/Registration", { msg: "Registration failed." + err });
                                     });
                                 }
-                            } else
-                                res.render("./Home/Registration", { msg: "Email Already registered. Please Login" });
+                            });
+                        });
+                        //Deleting file from temporary location
+                        fs.unlink(oldPath, function (err) {
+                            if (err)
+                                // console.log(err);
+                                msg = "Oops! error occured in deleting the temporary file.";
                         });
                     } else
                         res.render("./Home/Registration", { msg: message });
                 });
-
             } else
                 res.render("./Home/Registration", { msg: "Captcha couldn't verify." });
         });
