@@ -109,7 +109,7 @@ Student.get("/Download", isAuthenticated, (req, res) => {
 });
 
 Student.get("/Give_FeedBack", isAuthenticated, (req, res) => {
-    res.render("./Student/Give_FeedBack.ejs", { User_Email: (req.user.username || req.user.Email) });
+    res.render("./Student/Give_Feedback.ejs", { User_Email: (req.user.username || req.user.Email) });
 });
 
 Student.post("/Give_FeedBack", isAuthenticated, (req, res) => {
@@ -120,9 +120,9 @@ Student.post("/Give_FeedBack", isAuthenticated, (req, res) => {
         Message: req.body.Message,
     });
     fd.save().then(()=>{
-        res.render("./Student/Give_FeedBack.ejs", { User_Email: (req.user.username || req.user.Email), msg: "Saved Successfully." });
+        res.render("./Student/Give_Feedback.ejs", { User_Email: (req.user.username || req.user.Email), msg: "Saved Successfully." });
     }).catch(function (err) {
-            res.render("./Student/Give_FeedBack.ejs", { User_Email: (req.user.username || req.user.Email), msg: "Failed to save." });
+            res.render("./Student/Give_Feedback.ejs", { User_Email: (req.user.username || req.user.Email), msg: "Failed to save." });
     });
 });
 Student.get("/ChangePassword", isAuthenticated, (req, res) => {
