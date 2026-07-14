@@ -83,7 +83,10 @@ const SendEmailForVerification=function(Send,cb){
     const data=await rese.json()
 
     if(rese.status==200)
-      cb(null,data);
+    {
+      cb(null, data);
+      return;
+    }
 
     cb("Failed to Send Email");
   }
