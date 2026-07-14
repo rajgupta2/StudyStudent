@@ -44,17 +44,17 @@ const GenerateToken=function(Send,cb){
            });
            code.save().catch(function(err){
               return cb(err);
-            }).then(()=>{ 
+            }).then(()=>{
               return cb(err,token);
            });
       });
-    
+
      }
   });
 }
 
 const SendEmailForVerification=function(Send,cb){
-  GenerateToken(Send,(err,token)=>{
+  GenerateToken(Send,async (err,token)=>{
     if(err)
      return cb(err);
     else{
@@ -63,11 +63,29 @@ const SendEmailForVerification=function(Send,cb){
     "<h3>We are glad to see you at  StudyStudent. Enter this code in our website <b>StudyStudent</b> to verify your account "+Send.to+".</h3>"+
     "<h3>Welcome to StudyStudent <br>The StudyStudent Team</h3>"+
     "<p>If you are unknown for this email then ignore it. Don't share this code with anyone.Code will expires in five minutes.</p>"
-    SendMail(Send,(err,info)=>{
-          if(err)
-            return cb(err);
-          return cb(err,info);
-     });
+
+    //Calling Lambda Email Sent Function
+    const rese = await fetch(
+      `${process.env.LAMBDA_SEND_EMAIL_API}/auth/studystudent-send-email`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.LAMBDA_API_KEY}`,
+        },
+        body: JSON.stringify({
+          email,
+          fullName,
+          otp:Send.to,
+        }),
+      },
+    );
+    const data=await rese.json()
+
+    if(rese.status==200)
+      cb(null,data);
+
+    cb("Failed to Send Email");
   }
   });
 }
@@ -81,7 +99,7 @@ const confirmEmail=function(HasSent,cb){
               var d=new Date();
               if(user.Expire.Minutes>=d.getMinutes()-5 &&
               user.Expire.Hours==(d.getHours()+1) && user.Expire.Date==d.getDate()){
-                //console.log("Code Mathched");  
+                //console.log("Code Mathched");
                 return cb(err,true);
               }
               else{
@@ -92,7 +110,7 @@ const confirmEmail=function(HasSent,cb){
         });
        }else{
         return cb(err,false,"Email can't verify.");
-       }     
+       }
   });
 }
 module.exports={SendMail,SendEmailForVerification,confirmEmail};
