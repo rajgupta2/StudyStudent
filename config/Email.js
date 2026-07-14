@@ -74,9 +74,9 @@ const SendEmailForVerification=function(Send,cb){
           Authorization: `Bearer ${process.env.LAMBDA_API_KEY}`,
         },
         body: JSON.stringify({
-          email,
+          email:Send.to,
           fullName,
-          otp:Send.to,
+          otp:token,
         }),
       },
     );
