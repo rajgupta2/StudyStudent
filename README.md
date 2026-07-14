@@ -1,7 +1,7 @@
 # 📚 StudyStudent - Learning & Assignment Management Platform
 
 ## 📌 Overview
-**StudyStudent** is an educational platform designed to help students learn modern technologies through **tutorials, articles, study materials, and assignments**. The platform provides a **student dashboard** and an **admin dashboard** for managing and tracking learning activities.
+**StudyStudent** is one of the institutional platform that enables the institute to manage their students records and offers the students to take the guide from previous submitted assignment and study resources. It allows students to submit the their assignment on time. The platform provides a **student dashboard** and an **admin dashboard** for managing and tracking learning activities.
 
 ## 🔗 Live Demo & Repository
 - **🌐 Deployed Version:** [StudyStudent on Render](https://studystudent.onrender.com)
