@@ -75,7 +75,7 @@ const SendEmailForVerification=function(Send,cb){
         },
         body: JSON.stringify({
           email:Send.to,
-          fullName,
+          fullName:Send.Name,
           otp:token,
         }),
       },
